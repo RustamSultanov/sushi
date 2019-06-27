@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+     {% block title %} <title>Title</title>{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=no">
+    <!-- import Material Icons from Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <link rel="stylesheet" href="{% static "assets/css/bundle.css" %}">
+     {% block script %}
+
+        {% endblock %}
+</head>
+<body class="mdc-typography">
+<aside class="mdc-drawer mdc-drawer--modal">
+    <div class="mdc-drawer__content">
+        <nav class="mdc-list">
+            <a class="mdc-list-item mdc-list-item--activated" href="#" aria-selected="true">
+                <span class="mdc-list-item__text">Бренды</span>
+            </a>
+            <a class="mdc-list-item" href="#">
+                <span class="mdc-list-item__text">Магазины</span>
+            </a>
+            <a class="mdc-list-item" href="#">
+                <span class="mdc-list-item__text">Отзывы</span>
+            </a>
+            <a class="mdc-list-item" href="#">
+                <span class="mdc-list-item__text">Чаты</span>
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<div class="mdc-drawer-scrim"></div>
+<div class="drawer-frame-app-content">
+    <header class=" mdc-top-app-bar mdc-top-app-bar--raised" id="top-app-bar">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <button class="material-icons mdc-top-app-bar__navigation-icon">menu</button></section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+                <button class="material-icons mdc-top-app-bar__action-item" aria-label="Favorite">favorite</button>
+                <button class="material-icons mdc-top-app-bar__action-item" aria-label="Search">search</button>
+                <button class="material-icons mdc-top-app-bar__action-item" aria-label="Bookmark this page">more_vert</button>
+            </section>
+        </div>
+    </header>
+
+       
+        
+
+
+        {% block content %}{% endblock %}
+
+{% block script2 %}{% endblock %}
+</div>
+<script src="{% static "assets/js/bundle.js" %}"></script>
+
+</body>
+</html>

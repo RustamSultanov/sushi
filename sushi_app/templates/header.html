@@ -1,0 +1,52 @@
+{% load static %}
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-2">
+    <div class="layout-inner">
+
+        <!-- Layout container -->
+        <div class="layout-container">
+            <!-- Layout navbar -->
+            <nav class="navbar fixed-top navbar-expand-lg bg-white">
+                <div class="container">
+
+                    <a href="{% url 'base' %}" class="navbar-brand flex-grow-0 text-large font-weight-bolder line-height-1 py-3 mr-5">
+                        <img src="{% static "assets/img/logo.png" %}" alt="logo" style="width: 80px;">
+                    </a>
+
+                   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".header-1">
+                        <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
+                    </button>
+
+                    <div class="header-1 navbar-collapse collapse justify-content-center flex-grow-1 mb-4 mb-lg-0">
+                        <div class="navbar-nav navbar-my-menu">
+                            <a class="nav-item" href="{% url 'upload_track' %}">Загрузить трек</a>
+                           
+                        </div>
+                    </div>
+
+                    <div class="header-1 navbar-collapse collapse justify-content-lg-end flex-grow-0">
+                        <div class="nav navbar-nav align-items-lg-center">
+
+                      
+
+                            <div class="demo-navbar-user nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                  <span class="d-inline-flex flex-lg-row-reverse align-items-center align-middle">
+                  {% if request.user.profile_picture %}  <img src="{{ request.user.profile_picture.url }}" alt class="d-block ui-w-30 rounded-circle">{% else %}{% endif %}
+
+                    <span class="px-1 mr-lg-2 ml-2 ml-lg-0">{{ request.user.first_name }} {{ request.user.last_name }}</span>
+                  </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="{% url 'edit_employee' request.user.id %}" class="dropdown-item"><i class="ion ion-ios-person text-lightest"></i> &nbsp; Мой профиль</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="{% url 'logout' %}" class="dropdown-item"><i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </nav>
+            <!-- / Layout navbar -->
+  

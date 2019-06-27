@@ -1,0 +1,81 @@
+    {% extends "base.html" %}
+{% load static %}
+
+
+ {% block content %}
+    <div class="mdc-top-app-bar--fixed-adjust mh-100vh d-flex">
+        <div class="mdc-layout-grid d-flex h-100">
+            <div class="chat">
+                <div class="chat-wrap">
+                    <div class="chat-body">
+                        <div class="h-100">
+                            <div class="chat-column">
+                                <div class="mdc-layout-grid__inner chat-top">
+                                    <div class="mdc-layout-grid__cell">
+                                        <div class="mdc-card product-card">
+                                            <div class="mdc-card-content">
+                                                <div class="mdc-layout-grid__inner">
+                                                    <div class="mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-9-desktop">
+                                                        <div class="mdc-typography--overline">Детское питание</div>
+                                                        <h5 class="mdc-typography--headline5">{{ product.title }}</h5>
+                                                        <div class="mdc-typography--body2 product-card-muted">Чат {{ product.id }}</div>
+                                                    </div>
+                                                    <div class="mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-desktop">
+                                                        <img src="{% static "assets/img/nuppi-gold-small.png" %}" alt="">
+                                                    </div>
+                                                    <div class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop">
+                                                        <div class="mdc-chip">
+                                                            <img class="material-icons mdc-chip__icon mdc-chip__icon--leading" src="{% static "assets/img/avatar-placeholder.png" %}">
+                                                            <div class="mdc-chip__text">Вы</div>
+                                                        </div>
+                                                        <div class="mdc-chip mdc-chip--green">
+                                                            <img class="material-icons mdc-chip__icon mdc-chip__icon--leading" src="{% static "assets/img/avatar.png" %}">
+                                                            <div class="mdc-chip__text">{{ product.user.first_name }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="chat-messages-wrap">
+                                    <div class="chat-messages">
+                                        {% for messege in messeges %}
+ 
+                                                        {% if messege.user == request.user %}
+                                                        <div class="chat-message right">{{ messege.text }} </div>
+                                                        {% else %}<div class="chat-message">{{ messege.text }} </div>
+                                                        {% endif %}
+{% endfor %} 
+                                        
+                                    </div>
+                                </div>
+                                <div class="chat-bottom">
+                                    <form action="" method="post">    {% csrf_token %} 
+                                    <div class="mdc-text-field text-field mdc-text-field--outlined mdc-text-field--no-label" data-mdc-auto-init="MDCTextField">
+                                       {{ form.text }} 
+                                        <div class="mdc-notched-outline">
+                                            <div class="mdc-notched-outline__leading"></div>
+                                            <div class="mdc-notched-outline__notch">
+                                                <label for="message" class="mdc-floating-label">Сообщение</label>
+                                            </div>
+                                            <div class="mdc-notched-outline__trailing"></div>
+                                        </div>
+                                    </div>
+                                    <button class="mdc-icon-button material-icons mdc-icon-button--raised">attach_file</button>
+                                    <button type="submit" class="mdc-icon-button material-icons mdc-icon-button--raised">send</button>
+                                </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    {% endblock %}

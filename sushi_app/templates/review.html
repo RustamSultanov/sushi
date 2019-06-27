@@ -1,0 +1,109 @@
+ {% extends "base.html" %}
+{% load static %}
+
+
+ {% block content %}
+    <div class="mdc-top-app-bar--fixed-adjust">
+        <div class="mdc-layout-grid">
+            <div class="mdc-layout-grid__inner">
+                <div class="mdc-layout-grid__cell">
+                    <div class="mdc-card product-card">
+                        <div class="mdc-card-content">
+                            <div class="mdc-layout-grid__inner">
+                                <div class="mdc-layout-grid__cell--span-3-phone mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-9-desktop">
+                                    <div class="mdc-typography--overline">Детское питание</div>
+                                    <h5 class="mdc-typography--headline5">{{ product.title }}</h5>
+                                    <div class="mdc-typography--body2 product-card-muted">{{ product.short_descrip }}</div>
+                                </div>
+                                <div class="mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-3-desktop">
+                                    <img src="assets/img/nuppi-gold-small.png" alt="">
+                                </div>
+                                <div class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop">
+                                    <a href="{% url 'product' product.id %}" class="mdc-button gray-button">О продукте</a>
+                                    <a href="#" class="mdc-button gray-button">Чат</a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mdc-typography-text--center">
+                        <form enctype="multipart/form-data" action="" method="post">
+                        {% csrf_token %}
+                        <div class="mdc-typography--section">
+                            <h6 class="mdc-typography--headline6">Написать отзыв</h6>
+                            <div class="mdc-typography--body2 mdc-typography-text--muted">Вы можете оценить продукт или услугу только на основании подтверждающего документа (чек, купон, инвойс).</div>
+                        </div>
+                        <div class="mdc-typography--section">
+                            <div class="mdc-typography--body2">Общая оценка</div>
+                        </div>
+                        <div class="mdc-typography--section">
+                            <div class="ui-stars form-stars ui-stars--secondary large">
+                                {% for radio in form.rating reversed %}
+                                                   
+                                                   
+                                {{ radio.tag }}
+                                <label class="ui-star" for="id_rating_{{ forloop.revcounter0 }}">
+                                    <i class="material-icons">star</i>
+                                    <i class="material-icons">star</i>
+                                </label>
+                                
+                                 {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mdc-typography--section">
+                            <div class="field-container">
+                                <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--outlined-w100" data-mdc-auto-init="MDCTextField">
+                                    {{ form.adv }} 
+                                    <div class="mdc-notched-outline">
+                                        <div class="mdc-notched-outline__leading"></div>
+                                        <div class="mdc-notched-outline__notch">
+                                            <label for="textarea" class="mdc-floating-label">Преимущества</label>
+                                        </div>
+                                        <div class="mdc-notched-outline__trailing"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field-container">
+                                <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--outlined-w100" data-mdc-auto-init="MDCTextField">
+                                    {{ form.disadv }} 
+                                    <div class="mdc-notched-outline">
+                                        <div class="mdc-notched-outline__leading"></div>
+                                        <div class="mdc-notched-outline__notch">
+                                            <label for="textarea-2" class="mdc-floating-label">Недостатки</label>
+                                        </div>
+                                        <div class="mdc-notched-outline__trailing"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field-container">
+                                <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--outlined-w100" data-mdc-auto-init="MDCTextField">
+                                    {{ form.text }} 
+                                    <div class="mdc-notched-outline">
+                                        <div class="mdc-notched-outline__leading"></div>
+                                        <div class="mdc-notched-outline__notch">
+                                            <label for="textarea-3" class="mdc-floating-label">Комментарий</label>
+                                        </div>
+                                        <div class="mdc-notched-outline__trailing"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field-container">
+                                <label for="file">
+                                    {{ form.files }} 
+                                    <div class="mdc-button gray-button mdc-button-shaped mdc-button--ui-width-200"><span class="material-icons">attach_file</span>прикрепить файл</div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mdc-typography--section">
+                            <button type="submit" class="mdc-button mdc-button--raised mdc-button-shaped mdc-button--ui-width-200">
+                                ОТПРАВИТЬ
+                            </button>
+                        </div>
+                    </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "edit-profile.html" %}
+{% block create %}
+{% block name %}
+<h4 class="font-weight-bold py-3 mb-4">
+						Загрузка трека
+					</h4>
+{% endblock %}
+					<div class="nav-tabs-top">
+						
+						<div class="tab-content">
+							<!--Табы раз-->
+							<div class="tab-pane fade show active" id="user-edit-account">
+
+								{% block img %}
+								
+								<hr class="border-light m-0">
+								<div class="card-body pb-2">
+{% for message in form_user.errors.values %}
+                                    {{ message }}
+                                  {% endfor %}{# for message in form_user.errors.values #}
+                                 
+                                 
+							<div class="form-group">
+											<label class="form-label d-block mb-2">Обложка</label>
+											
+												{{ form_user.image }}
+											&nbsp;
+											<!-- <button type="button" class="btn btn-default btn-sm md-btn-flat">Сбросить</button> -->
+										</div>{% endblock %}
+									<div class="form-group">
+										<label class="form-label">Название трека</label>
+									{{ form_user.name }}	
+									</div>
+									<div class="form-group">
+										<label class="form-label">Исполнитель</label>
+										{{ form_user.artist }}
+									</div>{% block file %}
+									<div class="form-group">
+										<label class="form-label">Аудио-файл</label>
+									{{ form_user.audio_file }}	
+									</div>
+									{% endblock %}
+									<div class="form-group">
+										<label class="form-label">Оценка</label>
+										{{ form_user.rating }}
+										
+									</div>
+									
+									{% endblock %}
+									{% block button %}
+<input value="Загрузить" type="submit" class="btn btn-success">&nbsp;
+					<a href="{% url 'upload_track' %}">	<button type="button" class="btn btn-danger">Отменить</button></a>
+									{% endblock %}

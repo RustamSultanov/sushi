@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+{% block script %}
+<!-- Libs -->
+	<link rel="stylesheet" href="{% static "assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" %}">
+	<link rel="stylesheet" href="{% static "assets/vendor/libs/bootstrap-table/bootstrap-table.css" %}">
+	<!-- Page -->
+        {% endblock %}
+
+
+{% block content %}
+
+			<!-- Layout content -->
+			<div class="container flex-grow-1 container-p-y">
+
+				<h4 class="font-weight-light py-3 mb-4">
+					 MyPlaylistDjango - {{ track_count }} audios
+				</h4>
+
+				<div class="mb-5 text-right">
+					
+				</div>
+				<table id="employees-table" class="table-appeal" data-detail-view="false" data-minimum-count-columns="2" data-pagination="true" data-id-field="id" data-show-footer="false">
+					<thead>
+					<tr>
+						
+						<th data-sortable="true" data-field="id">Номер</th>
+						<th data-sortable="true">Автор</th>
+						<th data-sortable="true">Название трека</th>
+						<th ></th>
+						<th ></th>
+						<th>Дата загрузки</th>
+						<th data-sortable="true">Рейтинг</th>
+						<th>Действие</th>
+					</tr>
+					</thead>
+					<tbody>
+						{% for track in track_list reversed %}
+						<tr data-index="{{ forloop.counter }}">
+							
+							<td><a href="{% url 'edit_track' track.id %}">{{ forloop.counter }}</a></td>
+							<td>{% if track.artist %} {{ track.artist }}{% else %}{% endif %}</td>
+							<td>{{ track.name }}</td>
+							<td><audio src="{{ track.audio_file.url }}" onplay="other_pause({{ forloop.counter0 }})" controls>Your browser does not support the audio element.</audio></td>
+							<td>
+								{% if track.image %}<a href="{{ track.image.url }}">
+									<img src="{{ track.image.url }}" alt class="d-block ui-w-30 rounded-circle">
+								</a> {% else %}{% endif %}{# if track.image #}
+							</td>
+							<td>
+								<div>{{ track.created_date }}</div>
+								
+							</td>
+							<td>{% if track.rating == 5 %} 
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								{% elif track.rating == 4 %}
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								{% elif track.rating == 3 %}
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								{% elif track.rating == 2 %}
+								<i class="ion ion-md-star text-warning"></i>
+								<i class="ion ion-md-star text-warning"></i>
+								{% else %}
+								<i class="ion ion-md-star text-warning"></i>
+{% endif %}{# if track.rating == 5 #}
+
+							</td>
+							<td class="text-center text-nowrap"><a href="{% url 'edit_track' track.id %}"><button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat user-tooltip" title="" data-original-title="Edit"><i class="ion ion-md-create"></i></button></a>&nbsp;&nbsp;
+								<a name='delete' onclick="delll()" href="{% url 'delete_track' track.id %}"><button type="button" class="btn btn-default btn-xs icon-btn md-btn-flat dropdown-toggle hide-arrow user-tooltip" title="" data-original-title="Actions" ><i class="fa fa-times"></i></button></a></td>
+						</tr>{% endfor %}{# for track in track_list reversed #}
+
+					</tbody>
+				</table><script>
+function delll(){
+if ((confirm("Вы действительно хотите удалить трек?")) == false) {
+event.preventDefault();
+};
+} 
+</script>
+
+			</div>
+			<!-- Layout content -->
+
+		</div>
+		<!-- / Layout container -->
+
+	
+
+{% block script2 %}
+<script>
+var a=document.getElementsByTagName("audio");
+ 
+function other_pause(b){
+    for(i=0;i<a.length;i++){
+        if(!(i==b)){a[i].pause()};
+    }
+}
+ 
+</script>
+<script src="{% static "assets/vendor/libs/tableexport/tableexport.js" %}"></script>
+<script src="{% static "assets/vendor/libs/moment/moment.js" %}"></script>
+<link rel="stylesheet" href="{% static "assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css" %}">
+<script src="{% static "assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js" %}"></script>
+
+<script src="{% static "assets/vendor/libs/bootstrap-table/bootstrap-table.js" %}"></script>
+<script src="{% static "assets/vendor/libs/bootstrap-table/extensions/export/export.js" %}"></script>
+<script src="{% static "assets/js/tables_bootstrap-table.js" %}"></script>{% endblock %}
+{% endblock %}
