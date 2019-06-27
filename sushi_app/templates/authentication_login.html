@@ -2,7 +2,7 @@
 {% load static %}
 
   
-  {% block title %} <title>Вход в приложение MyPlaylist</title>{% endblock %}
+  {% block title %} <title>Вход в приложение Sushi</title>{% endblock %}
 
 
  {% block script %}
@@ -37,7 +37,7 @@
           <div class="d-flex justify-content-center align-items-center pb-2 mb-4">
             <div class="ui-w-60">
               <div class="w-100 position-relative" style="">
-								<img src="{% static "assets/img/logo.png" %}" alt="logo" style="width: 80px;">
+                <img src="{% static "assets/img/logo.png" %}" alt="logo" style="width: 80px;">
               </div>
             </div>
           </div>
@@ -49,7 +49,7 @@
           <form method="post">
             {% csrf_token %}
             <div class="form-group">
-              <label class="form-label">Email</label>
+              <label class="form-label">Логин</label>
               {{ form.username }}
               <span class="helper-text" data-error="Неправильный формат почты"></span>
             </div>
@@ -90,5 +90,3 @@
 {% block script2 %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 {% endblock %}
-
-  

@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     
 ]
 
-AUTH_USER_MODEL = 'music_app.User'
+# AUTH_USER_MODEL = 'User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
