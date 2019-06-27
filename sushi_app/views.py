@@ -13,6 +13,11 @@ User = get_user_model()
 
 # # Create your views here
 
+@login_required
+def base(request):
+    return render(request, 'index.html')
+
+
 def chat_view(request, product_id,user_id):
     product = Product.objects.get(id=product_id)
     qs1 = Messeges.objects.prefetch_related('user','accepter').filter(product=product,user=request.user.id)
