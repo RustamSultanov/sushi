@@ -52,7 +52,7 @@
             <!-- Brand demo (see assets/css/demo/demo.css) -->
             <a href="#" class="navbar-brand app-brand py-0 mr-xl-4">
               <span class="app-brand-logo demo">
-                <img src="img/logo.png" alt="">
+                <img src="{% static "img/logo.png" %}" alt="">
               </span>
             </a>
 
@@ -63,9 +63,9 @@
                 <div class="demo-navbar-user nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                             <span class="d-inline-flex align-items-center align-middle">
-                              <img src="img/avatars/1.png" alt class="d-block ui-w-30 rounded-circle">
+                              <img src="{% static "img/avatars/1.png" %}" alt class="d-block ui-w-30 rounded-circle">
                               <div class="ml-3 text-right">
-                                <div class="navbar-name">Владислав</div>
+                                <div class="navbar-name">{{ request.user }}</div>
                                   <div class="text-primary small">Партнер 3 уровня</div>
                               </div>
                             </span>
@@ -75,7 +75,7 @@
                         <a href="javascript:void(0)" class="dropdown-item">Сообщения</a>
                         <a href="javascript:void(0)" class="dropdown-item">Настройки</a>
                         <div class="dropdown-divider"></div>
-                        <a href="javascript:void(0)" class="dropdown-item">
+                        <a href="{% url 'logout' %}" class="dropdown-item">
                             <i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
 
                 <div class="swiper-container hero-slider" id="swiper-with-pagination">
                     <div class="swiper-wrapper">
-                        <div class="swiper-slide" style="background-image: url('img/slider.png')">
+                        <div class="swiper-slide" style="background-image: url("{% static 'img/slider.png' %}")">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-9">
@@ -152,7 +152,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="swiper-slide" style="background-image: url('img/slider.png')">
+                        <div class="swiper-slide" style="background-image: url("{% static 'img/slider.png' %}")">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-9">
@@ -163,7 +163,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="swiper-slide" style="background-image: url('img/slider.png')">
+                        <div class="swiper-slide" style="background-image: url("{% static 'img/slider.png' %}")">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-9">
@@ -217,7 +217,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="ui-bg-circle-180 d-none d-md-flex align-items-center text-center mt--3" style="background-image: url('img/bg-image-circle-1.png')">
+                                                <div class="ui-bg-circle-180 d-none d-md-flex align-items-center text-center mt--3" style="background-image: url("{% static 'img/bg-image-circle-1.png' %}")">
                                                     <div class="text-white h4 m-0 text-center w-100 px-2">Новое меню
                                                         для магазинов</div>
                                                 </div>
@@ -292,7 +292,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="ui-bg-circle-180 d-none d-md-flex align-items-center text-center mt--3" style="background-image: url('img/bg-image-circle-2.png')">
+                                            <div class="ui-bg-circle-180 d-none d-md-flex align-items-center text-center mt--3" style="background-image: url("{% static 'img/bg-image-circle-2.png' %}")">
                                                 <div class="text-white h4 m-0 text-center w-100 px-3">Сервировка
                                                     Курс №5</div>
                                             </div>
@@ -329,7 +329,7 @@
                                 <div class="card-body">
                                     <h4>Франшиза</h4>
                                     <div class="media align-items-center mb-3">
-                                        <img src="img/avatars/2.png" alt="" class="ui-w-60 rounded-circle">
+                                        <img src="{% static "img/avatars/2.png" %}" alt="" class="ui-w-60 rounded-circle">
                                         <div class="small ml-3">
                                             <div class="text-primary">Мария Петрова-Водкина</div>
                                             <div class="small text-muted">Руководитель направления</div>
@@ -349,7 +349,7 @@
                                 <div class="card-body">
                                     <h4>Бухгалтерия</h4>
                                     <div class="media align-items-center mb-3">
-                                        <img src="img/avatars/2.png" alt="" class="ui-w-60 rounded-circle">
+                                        <img src="{% static "img/avatars/2.png" %}" alt="" class="ui-w-60 rounded-circle">
                                         <div class="small ml-3">
                                             <div class="text-primary">Мария Петрова-Водкина</div>
                                             <div class="small text-muted">Главный бухгалтер</div>
@@ -369,7 +369,7 @@
                                 <div class="card-body">
                                     <h4>Общие вопросы</h4>
                                     <div class="media align-items-center mb-3">
-                                        <img src="img/avatars/2.png" alt="" class="ui-w-60 rounded-circle">
+                                        <img src="{% static "img/avatars/2.png" %}" alt="" class="ui-w-60 rounded-circle">
                                         <div class="small ml-3">
                                             <div class="text-primary">Ангелина Сидоренко</div>
                                             <div class="small text-muted">Стажер по работе с клиентами</div>
