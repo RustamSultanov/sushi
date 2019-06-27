@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, ProfileForm,RegistrationCustomForm,MessegesForm,FeedbackForm
+from .forms import LoginForm,MessegesForm,FeedbackForm
 from .models import *
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -32,25 +32,6 @@ def chat_view(request, product_id,user_id):
         new_disput.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     return render(request, 'chat-2.html', {'product':product,'messeges':messeges,'form': form})
-
-def registration_chat_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    form = RegistrationCustomForm(request.POST or None)
-    if form.is_valid():
-        new_user = form.save(commit=False)
-        phone_number = form.cleaned_data['phone_number']
-        first_name = form.cleaned_data['first_name']
-        new_user.username = phone_number
-        new_user.first_name = first_name
-        new_user.save()
-        user = User.objects.get(id=new_user.id)
-        if user:
-            login(request, user)
-            return HttpResponseRedirect(f'../product-chat/{product_id}-{user.id}')
-        else:
-            print(login_user,'wronn')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'chat.html', {'product': product,'form': form})
 
 def product_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -86,17 +67,3 @@ def feedback_view(request, product_id):
     return render(request, 'review.html', context)
 
 
-@login_required
-def edit_profile_view(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    form_user = ProfileForm(
-        request.POST or None,
-        request.FILES or None,
-        initial=model_to_dict(user),
-        instance=user)
-    if form_user.is_valid():
-        new_user = form_user.save()
-        new_user.save()
-        return HttpResponseRedirect(reverse('base'))
-    context = {'form_user': form_user, 'user': user}
-    return render(request, 'edit-profile.html', context)

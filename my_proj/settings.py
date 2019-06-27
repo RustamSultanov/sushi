@@ -58,7 +58,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'audiofield.middleware.threadlocals.ThreadLocals',
     'tz_detect.middleware.TimezoneMiddleware',
 ]
 
