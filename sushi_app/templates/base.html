@@ -1,61 +1,90 @@
 {% load static %}
+{% load tz_detect %}
 <!DOCTYPE html>
-<html>
+<html lang="ru" class="material-style">
+
 <head>
-     {% block title %} <title>Title</title>{% endblock %}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=no">
-    <!-- import Material Icons from Google Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
-    <link rel="stylesheet" href="{% static "assets/css/bundle.css" %}">
-     {% block script %}
+    
+   {% block title %} <title>Title</title>{% endblock %}
 
+   <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static "favicon.ico" %}">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
+
+    <!-- Icon fonts -->
+    <link rel="stylesheet" href="{% static "assets/vendor/fonts/fontawesome.css" %}">
+    <link rel="stylesheet" href="{% static "assets/vendor/fonts/ionicons.css" %}">
+    <link rel="stylesheet" href="{% static "assets/vendor/fonts/linearicons.css" %}">
+    <link rel="stylesheet" href="{% static "assets/vendor/fonts/open-iconic.css" %}">
+    <link rel="stylesheet" href="{% static "assets/vendor/fonts/pe-icon-7-stroke.css" %}">
+
+    <!-- Core stylesheets -->
+    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/bootstrap-material.css" %}" class="theme-settings-bootstrap-css">
+    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/appwork-material.css" %}" class="theme-settings-appwork-css">
+    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/theme-corporate-material.css" %}" class="theme-settings-theme-css">
+    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/colors-material.css" %}" class="theme-settings-colors-css">
+    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/uikit.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/custom.css" %}">
+
+    <script src="{% static "assets/vendor/js/material-ripple.js" %}"></script>
+    <script src="{% static "assets/vendor/js/layout-helpers.js" %}"></script>
+
+    <!-- Theme settings -->
+    <!-- This file MUST be included after core stylesheets and layout-helpers.js in the <head> section
+    <script src="{% static "assets/vendor/js/theme-settings.js" %}"></script>
+    <script>
+        window.themeSettings = new ThemeSettings({
+            cssPath: 'assets/vendor/css/rtl/',
+            themesPath: 'assets/vendor/css/rtl/'
+        });
+    </script>
+    -->
+    <!-- Core scripts -->
+    <script src="{% static "assets/vendor/js/pace.js" %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+    
+
+        {% block script %}
+<!-- Libs -->
+    <link rel="stylesheet" href="{% static "assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" %}">
+    <!-- Page -->
         {% endblock %}
-</head>
-<body class="mdc-typography">
-<aside class="mdc-drawer mdc-drawer--modal">
-    <div class="mdc-drawer__content">
-        <nav class="mdc-list">
-            <a class="mdc-list-item mdc-list-item--activated" href="#" aria-selected="true">
-                <span class="mdc-list-item__text">Бренды</span>
-            </a>
-            <a class="mdc-list-item" href="#">
-                <span class="mdc-list-item__text">Магазины</span>
-            </a>
-            <a class="mdc-list-item" href="#">
-                <span class="mdc-list-item__text">Отзывы</span>
-            </a>
-            <a class="mdc-list-item" href="#">
-                <span class="mdc-list-item__text">Чаты</span>
-            </a>
-        </nav>
-    </div>
-</aside>
-
-<div class="mdc-drawer-scrim"></div>
-<div class="drawer-frame-app-content">
-    <header class=" mdc-top-app-bar mdc-top-app-bar--raised" id="top-app-bar">
-        <div class="mdc-top-app-bar__row">
-            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-                <button class="material-icons mdc-top-app-bar__navigation-icon">menu</button></section>
-            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
-                <button class="material-icons mdc-top-app-bar__action-item" aria-label="Favorite">favorite</button>
-                <button class="material-icons mdc-top-app-bar__action-item" aria-label="Search">search</button>
-                <button class="material-icons mdc-top-app-bar__action-item" aria-label="Bookmark this page">more_vert</button>
-            </section>
-        </div>
-    </header>
-
-       
         
-
-
+        
+        </head>
+   {% block body %} <body class="padding-top-navbar">
+<div class="page-loader">
+    <div class="bg-primary"></div>
+</div>{% endblock %}
+        {% block header %}
+            {% include "header.html" %}
+        {% endblock %}
         {% block content %}{% endblock %}
+        {% tz_detect %}
+        <script src="{% static "js/jquery-3.3.1.min.js" %}"></script>
+        {% block footer %}
+            {% include "footer.html" %}
+        {% endblock %}
+
+
+<!-- / Content -->
+
+<!-- Core scripts -->
+<script src="{% static "assets/vendor/libs/popper/popper.js" %}"></script>
+<script src="{% static "assets/vendor/js/bootstrap.js" %}"></script>
+<script src="{% static "assets/vendor/js/sidenav.js" %}"></script>
+<!-- Libs -->
+<script src="{% static "assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js" %}"></script>
+
+<!-- Custom -->
 
 {% block script2 %}{% endblock %}
-</div>
-<script src="{% static "assets/js/bundle.js" %}"></script>
-
-</body>
+<script src="{% static "assets/js/main.js" %}"></script>
+    </body>
 </html>
