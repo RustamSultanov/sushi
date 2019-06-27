@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 
 <html lang="en" class="material-style">
@@ -30,7 +31,7 @@
     <link rel="stylesheet" href="{% static "css/app.css" %}">
 
     <!-- Layout helpers -->
-    <script src="js/layout-helpers.js"></script>
+    <script src="{% static "js/layout-helpers.js" %}"></script>
 
     <!-- Libs -->
 
@@ -434,19 +435,19 @@
 <!-- Core scripts -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="libs/popper/popper.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/sidenav.js"></script>
+<script src="{% static "libs/popper/popper.js" %}"></script>
+<script src="{% static "js/bootstrap.js" %}"></script>
+<script src="{% static "js/sidenav.js" %}"></script>
 
 <!-- Libs -->
-<script src="libs/swiper/swiper.js"></script>
-<script src="libs/chartjs/chartjs.js"></script>
+<script src="{% static "libs/swiper/swiper.js" %}"></script>
+<script src="{% static "libs/chartjs/chartjs.js" %}"></script>
 
 <!-- `perfect-scrollbar` library required by SideNav plugin -->
-<script src="libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+<script src="{% static "libs/perfect-scrollbar/perfect-scrollbar.js" %}"></script>
 
 
-<script src="js/landing.js"></script>
+<script src="{% static "js/landing.js" %}"></script>
 
 </body>
 </html>
