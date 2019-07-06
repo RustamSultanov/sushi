@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tz_detect/', include('tz_detect.urls')),
     path('', include('sushi_app.urls')),
+    path('', include('mickroservices.urls')),
 ]
 if settings.DEBUG:
     import debug_toolbar

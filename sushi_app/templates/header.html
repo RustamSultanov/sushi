@@ -19,7 +19,7 @@
 
                     <div class="header-1 navbar-collapse collapse justify-content-center flex-grow-1 mb-4 mb-lg-0">
                         <div class="navbar-nav navbar-my-menu">
-                            <a class="nav-item" href="{% url 'upload_track' %}">Загрузить трек</a>
+                            <a class="nav-item" href="{# {% url 'upload_track' %} #}">Загрузить трек</a>
                            
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                   </span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="{% url 'edit_employee' request.user.id %}" class="dropdown-item"><i class="ion ion-ios-person text-lightest"></i> &nbsp; Мой профиль</a>
+                                    <a href="{# {% url 'edit_employee' request.user.id %} #}" class="dropdown-item"><i class="ion ion-ios-person text-lightest"></i> &nbsp; Мой профиль</a>
                                     <div class="dropdown-divider"></div>
                                     <a href="{% url 'logout' %}" class="dropdown-item"><i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
                                 </div>

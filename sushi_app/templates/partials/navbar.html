@@ -1,0 +1,86 @@
+{% load static %}
+<!-- Layout navbar -->
+<nav class="layout-navbar navbar navbar-expand-xl align-items-xl-center bg-navbar-theme container-p-x" id="layout-navbar">
+
+    <!-- Brand demo (see assets/css/demo/demo.css) -->
+    <a href="#" class="navbar-brand app-brand py-0 mr-xl-4">
+      <span class="app-brand-logo demo">
+        <img src="{% static "img/logo.png" %}" alt="">
+      </span>
+    </a>
+
+    <button class="navbar-toggler ml-auto mr-3" type="button" data-toggle="collapse" data-target="#layout-navbar-collapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="order-xl-last navbar-nav">
+        <div class="demo-navbar-user nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                    <span class="d-inline-flex align-items-center align-middle">
+                      <img src="{% static "img/avatars/1.png" %}" alt class="d-block ui-w-30 rounded-circle">
+                      <div class="ml-3 text-right">
+                        <div class="navbar-name">{{ request.user }}</div>
+                          <div class="text-primary small">Партнер 3 уровня</div>
+                      </div>
+                    </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a href="javascript:void(0)" class="dropdown-item">Оповещения</a>
+                <a href="javascript:void(0)" class="dropdown-item">Сообщения</a>
+                <a href="javascript:void(0)" class="dropdown-item">Настройки</a>
+                <div class="dropdown-divider"></div>
+                <a href="{% url 'logout' %}" class="dropdown-item">
+                    <i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar-collapse collapse" id="layout-navbar-collapse">
+        <!-- Divider -->
+        <hr class="d-lg-none w-100 my-2">
+
+        <div class="navbar-nav align-items-lg-center mr-auto ml-xl-4">
+            <div class="nav-item">
+                <a href="#" class="nav-link nav-link__icon">
+                    <i class="icon-user"></i>
+                    <span>Сотрудники</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link nav-link__icon">
+                    <i class="icon-folder"></i>
+                    <span>Регламенты</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link nav-link__icon">
+                    <i class="icon-send"></i>
+                    <span>Новости</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link nav-link__icon">
+                    <i class="icon-star"></i>
+                    <span>Маркетинг</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link nav-link__icon">
+                    <i class="icon-help-question"></i>
+                    <span>Обучение</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="#" class="nav-link nav-link__icon">
+                    <i class="icon-settings"></i>
+                    <span>Техкарты</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="navbar-nav align-items-center ml-auto">
+            <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div>
+            <div class="btn btn-primary btn-round mr-xl-2">Предложить идею</div>
+        </div>
+    </div>
+</nav>
+<!-- / Layout navbar -->

@@ -4,87 +4,66 @@
 <html lang="ru" class="material-style">
 
 <head>
-    
-   {% block title %} <title>Title</title>{% endblock %}
-
-   <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="{% static "favicon.ico" %}">
 
+    <title>TITLE</title>
+
+    <!-- Main font -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
 
-    <!-- Icon fonts -->
-    <link rel="stylesheet" href="{% static "assets/vendor/fonts/fontawesome.css" %}">
-    <link rel="stylesheet" href="{% static "assets/vendor/fonts/ionicons.css" %}">
-    <link rel="stylesheet" href="{% static "assets/vendor/fonts/linearicons.css" %}">
-    <link rel="stylesheet" href="{% static "assets/vendor/fonts/open-iconic.css" %}">
-    <link rel="stylesheet" href="{% static "assets/vendor/fonts/pe-icon-7-stroke.css" %}">
+    <!-- Icons. Uncomment required icon fonts -->
+     <link rel="stylesheet" href="{% static "fonts/fontawesome.css" %}">
+    <link rel="stylesheet" href="{% static "fonts/ionicons.css" %}">
+    <link rel="stylesheet" href="{% static "fonts/sympletts-icons.css" %}">
+    <!-- <link rel="stylesheet" href="{% static "fonts/linearicons.css" %}"> -->
+    <!-- <link rel="stylesheet" href="{% static "fonts/open-iconic.css" %}"> -->
+    <!-- <link rel="stylesheet" href="{% static "fonts/pe-icon-7-stroke.css" %}"> -->
 
     <!-- Core stylesheets -->
-    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/bootstrap-material.css" %}" class="theme-settings-bootstrap-css">
-    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/appwork-material.css" %}" class="theme-settings-appwork-css">
-    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/theme-corporate-material.css" %}" class="theme-settings-theme-css">
-    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/colors-material.css" %}" class="theme-settings-colors-css">
-    <link rel="stylesheet" href="{% static "assets/vendor/css/rtl/uikit.css" %}">
-    <link rel="stylesheet" href="{% static "assets/css/custom.css" %}">
+    <!--<link rel="stylesheet" href="{% static "css/bootstrap-material.css" %}">-->
+    <!--<link rel="stylesheet" href="{% static "css/appwork-material.css" %}">-->
+    <!--<link rel="stylesheet" href="{% static "css/rtl/theme-vendors-material.css" %}">-->
+    <!--<link rel="stylesheet" href="{% static "css/colors-material.css" %}">-->
+    <!--<link rel="stylesheet" href="{% static "css/uikit.css" %}">-->
+    <link rel="stylesheet" href="{% static "libs/swiper/swiper.css" %}">
+    <link rel="stylesheet" href="{% static "css/app.css" %}">
 
-    <script src="{% static "assets/vendor/js/material-ripple.js" %}"></script>
-    <script src="{% static "assets/vendor/js/layout-helpers.js" %}"></script>
+    <!-- Layout helpers -->
+    <script src="{% static "js/layout-helpers.js" %}"></script>
 
-    <!-- Theme settings -->
-    <!-- This file MUST be included after core stylesheets and layout-helpers.js in the <head> section
-    <script src="{% static "assets/vendor/js/theme-settings.js" %}"></script>
-    <script>
-        window.themeSettings = new ThemeSettings({
-            cssPath: 'assets/vendor/css/rtl/',
-            themesPath: 'assets/vendor/css/rtl/'
-        });
-    </script>
-    -->
-    <!-- Core scripts -->
-    <script src="{% static "assets/vendor/js/pace.js" %}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Libs -->
+
+    <!-- `perfect-scrollbar` library required by SideNav plugin -->
+    <link rel="stylesheet" href="{% static "libs/perfect-scrollbar/perfect-scrollbar.css" %}">
+
+</head>
+    <body>
+
+        {% block layout %}{% endblock %}
 
 
-    
+        <!-- Core scripts -->
 
-        {% block script %}
-<!-- Libs -->
-    <link rel="stylesheet" href="{% static "assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" %}">
-    <!-- Page -->
-        {% endblock %}
-        
-        
-        </head>
-   {% block body %} <body class="padding-top-navbar">
-<div class="page-loader">
-    <div class="bg-primary"></div>
-</div>{% endblock %}
-        {% block header %}
-            {% include "header.html" %}
-        {% endblock %}
-        {% block content %}{% endblock %}
-        {% tz_detect %}
-        <script src="{% static "js/jquery-3.3.1.min.js" %}"></script>
-        {% block footer %}
-            {% include "footer.html" %}
-        {% endblock %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="{% static "libs/popper/popper.js" %}"></script>
+        <script src="{% static "js/bootstrap.js" %}"></script>
+        <script src="{% static "js/sidenav.js" %}"></script>
+
+        <!-- Libs -->
+        <script src="{% static "libs/swiper/swiper.js" %}"></script>
+        <script src="{% static "libs/chartjs/chartjs.js" %}"></script>
+
+        <!-- `perfect-scrollbar` library required by SideNav plugin -->
+        <script src="{% static "libs/perfect-scrollbar/perfect-scrollbar.js" %}"></script>
 
 
-<!-- / Content -->
+        <script src="{% static "js/landing.js" %}"></script>
 
-<!-- Core scripts -->
-<script src="{% static "assets/vendor/libs/popper/popper.js" %}"></script>
-<script src="{% static "assets/vendor/js/bootstrap.js" %}"></script>
-<script src="{% static "assets/vendor/js/sidenav.js" %}"></script>
-<!-- Libs -->
-<script src="{% static "assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js" %}"></script>
+        {% block extrascripts %}{% endblock %}
 
-<!-- Custom -->
-
-{% block script2 %}{% endblock %}
-<script src="{% static "assets/js/main.js" %}"></script>
     </body>
+
 </html>

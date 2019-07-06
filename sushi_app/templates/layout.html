@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block layout %}
+
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-1 layout-without-sidenav">
+    <!-- Layout inner -->
+    <div class="layout-inner">
+        {% include 'partials/navbar.html'%}
+        <div class="layout-container">
+            <div class="layout-content">
+                <!-- Page content -->
+                <!-- Page content -->
+                    {% block content %}{% endblock %}
+                <!-- / Page content -->
+                {% include 'partials/footer.html'%}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

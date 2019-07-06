@@ -15,6 +15,7 @@ django-phonenumber-field = "^3.0"
 django-tz-detect = "^0.2.10"
 django-registration = "^3.0"
 phonenumbers = "^8.10"
+django-widget-tweaks = "^1.4"
 
 [tool.poetry.dev-dependencies]
 

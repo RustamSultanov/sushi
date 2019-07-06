@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
     'my_proj',
     'sushi_app',
     'tz_detect',
+    'mickroservices',
     
 ]
 
@@ -150,7 +152,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-STATIC_ROOT = '/root/sushi/sushi_app/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'public', 'static')
+#STATIC_ROOT = '/root/sushi/sushi_app/'
 
 if DEBUG:
     INTERNAL_IPS = ('127.0.0.1',)
@@ -180,3 +183,7 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'INTERCEPT_REDIRECTS': False,
     }
+
+DEFAULT_SUPORT_EMAIL = env('DEFAULT_SUPORT_EMAIL')
+DEFAULT_PROTOCOL = env('DEFAULT_PROTOCOL')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')

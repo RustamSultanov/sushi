@@ -1,0 +1,98 @@
+{% extends 'layout.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+ {% block content %}
+                <div class="container flex-grow-1 container-p-y">
+                    <h2 class="text-light font-weight-normal mt-4 mb-1">FAQ</h2>
+                    <ol class="breadcrumb small mb-4">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">Главная</a>
+                        </li>
+                        <li class="breadcrumb-item active">FAQ</li>
+                    </ol>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <div class="card my-4">
+                        <div class="card-body">
+                            <form action="{% url 'mickroservices:faq' %}" method="post">
+                                {% csrf_token %}
+                                <h4>Задать вопрос</h4>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label">Email</label>
+                                        {% render_field form.email placeholder="Email" class+="form-control" %}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-label">Телефон</label>
+                                        {% render_field form.phone_number placeholder="Телефон" class+="form-control" %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Заголовок</label>
+                                    {% render_field form.theme placeholder="Заголовок" class+="form-control" %}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Вопрос</label>
+                                    {% render_field form.body placeholder="Вопрос" class+="form-control" %}
+                                </div>
+                                <div class="text-right">
+                                    <button class="btn btn-primary btn-round">Отправить</button>
+                                </div>
+                            </form>
+                            {{status}}
+                            {{errors}}
+                        </div>
+                    </div>
+
+                    <div class="my-4">
+                        <h4>Ответы на часто задаваемые вопросы</h4>
+                        <div class="bg-white ui-bordered mb-2">
+                            <a href="#company-faq-1" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
+                                Ne ornatus albucius ius?
+                                <span class="collapse-icon"></span>
+                            </a>
+                            <div id="company-faq-1" class="collapse text-muted">
+                                <div class="px-4 pb-3">Lorem ipsum dolor sit amet, mea in pertinax hendrerit gloriatur.</div>
+                            </div>
+                        </div>
+                        <div class="bg-white ui-bordered mb-2">
+                            <a href="#company-faq-2" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
+                                Quo insolens intellegam dissentiet at?
+                                <span class="collapse-icon"></span>
+                            </a>
+                            <div id="company-faq-2" class="collapse text-muted">
+                                <div class="px-4 pb-3">Ex fugit legimus fuisset per. Ex quidam option diceret ius.</div>
+                            </div>
+                        </div>
+                        <div class="bg-white ui-bordered mb-2">
+                            <a href="#company-faq-3" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
+                                Ad his assum delenit blandit?
+                                <span class="collapse-icon"></span>
+                            </a>
+                            <div id="company-faq-3" class="collapse text-muted">
+                                <div class="px-4 pb-3">Ne ornatus albucius ius, nostrum dignissim repudiandae an usu.</div>
+                            </div>
+                        </div>
+                        <div class="bg-white ui-bordered mb-2">
+                            <a href="#company-faq-4" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
+                                Dapibus ac facilisis in?
+                                <span class="collapse-icon d-inline-block ml-1"></span>
+                            </a>
+                            <div id="company-faq-4" class="collapse text-muted">
+                                <div class="px-4 pb-3">Lorem ipsum dolor sit amet, ius virtute suscipit te. Ius prima euismod consequat eu.</div>
+                            </div>
+                        </div>
+                        <div class="bg-white ui-bordered mb-2">
+                            <a href="#company-faq-5" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
+                                Cras justo odio?
+                                <span class="collapse-icon d-inline-block ml-1"></span>
+                            </a>
+                            <div id="company-faq-5" class="collapse text-muted">
+                                <div class="px-4 pb-3">Etiam vivendo eu sea, purto ponderum mediocritatem at pro.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+ {% endblock %}
