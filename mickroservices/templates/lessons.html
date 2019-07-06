@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+                <div class="container flex-grow-1 container-p-y">
+                    <h2 class="text-light font-weight-normal mt-4 mb-1">Обучение</h2>
+                    <ol class="breadcrumb small mb-4">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">Главная</a>
+                        </li>
+                        <li class="breadcrumb-item active">Обучение</li>
+                    </ol>
+                    <div class="responsive-video mb-4">
+                        <iframe src="https://www.youtube.com/embed/Hen8tPH0A2w" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <div class="my-5">
+                        <div class="row">
+                            {% for course in object_list %}
+                                <div class="col-md-4 mb-5">
+                                    <div class="card hoverable">
+                                        <div class="card-body">
+                                            <h4 class="card-title mb-3">{{course.title}}</h4>
+                                            <p class="card-text">{{course.description|truncatechars:25}}</p>
+                                            <a href="#" class="btn btn-sm btn-primary btn-round">Перейти</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if is_paginated %}
+                            <nav class="my-4">
+                                <ul class="pagination justify-content-center">
+                                    {% if page_obj.has_previous %}
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="javascript:void(0)">«</a>
+                                        </li>
+                                    {% endif %}
+                                    {% for num_page in page_obj.paginator.num_pages %}
+                                        <li class="page-item {% if page_obj.number == num_page %}active{%endif%}">
+                                            <a class="page-link" href="javascript:void(0)">{{num_page}}</a>
+                                        </li>
+                                    {% endfor %}
+                                        {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="javascript:void(0)">»</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                    </div>
+                </div>
+{% endblock %}

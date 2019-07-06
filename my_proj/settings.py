@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'my_proj',
     'sushi_app',
     'tz_detect',
-    'mickroservices',
+    'mickroservices.apps.MickroservicesConfig',
     
 ]
 

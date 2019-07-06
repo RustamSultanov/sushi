@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+                <div class="container flex-grow-1 container-p-y">
+                    <h2 class="text-light  font-weight-normal mt-4 mb-1">Text</h2>
+                    <ol class="breadcrumb small mb-4">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">Главная</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">Обучение</a>
+                        </li>
+                        <li class="breadcrumb-item active">Расписание</li>
+                    </ol>
+                    <h3 class="text-light">{{object}}</h3>
+                    {% for schedule in object.schedule.all %}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>{{schedule.number_day}} день - {{schedule.date_schedule|date}} {{schedule.title}}
+                                </h4>
+                            </div>
+                            {% for planday in schedule.plansday.all %}
+                                <div class="card-body">
+                                    <h5 class="mb-1">{{planday.title}}<span class="badge badge-outline-primary small">planday.type</span></h5>
+                                    <div class="text-muted small mb-3">{{planday}}</div>
+                                    <div class="media align-items-center mb-3">
+                                        <img src="img/avatars/2.png" alt="" class="ui-w-30 rounded-circle">
+                                        <div class="small ml-3">
+                                            <div class="text-primary">{{planday.lecturer}}</div>
+                                            <div class="text-muted small">Менеджер отдела маркетинга</div>
+                                        </div>
+                                    </div>
+                                    {{planday.body}}
+                                </div>
+                                {% if forloop.last %}
+                                    <hr class="my-0">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                        {% if is_paginated %}
+                            <nav class="my-4">
+                                <ul class="pagination justify-content-center">
+                                    {% if page_obj.has_previous %}
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="javascript:void(0)">«</a>
+                                        </li>
+                                    {% endif %}
+                                    {% for num_page in page_obj.paginator.num_pages %}
+                                        <li class="page-item {% if page_obj.number == num_page %}active{%endif%}">
+                                            <a class="page-link" href="javascript:void(0)">{{num_page}}</a>
+                                        </li>
+                                    {% endfor %}
+                                        {% if page_obj.has_next %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="javascript:void(0)">»</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                        {% endif %}
+                </div>
+{% endblock %}

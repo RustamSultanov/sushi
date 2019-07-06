@@ -5,14 +5,18 @@
 <div class="layout-wrapper layout-1 layout-without-sidenav">
     <!-- Layout inner -->
     <div class="layout-inner">
-        {% include 'partials/navbar.html'%}
+        {% if user.is_authenticated %}
+            {% include 'partials/navbar.html'%}
+        {% endif %}
         <div class="layout-container">
             <div class="layout-content">
                 <!-- Page content -->
                 <!-- Page content -->
                     {% block content %}{% endblock %}
                 <!-- / Page content -->
-                {% include 'partials/footer.html'%}
+                {% if user.is_authenticated %}
+                    {% include 'partials/footer.html'%}
+                {% endif %}
             </div>
         </div>
     </div>

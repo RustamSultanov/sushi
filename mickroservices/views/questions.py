@@ -3,9 +3,9 @@ from django.template.response import TemplateResponse
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 
-from .models import QuestionModel
-from .forms import QuestionForm
-from .utils import send_message
+from mickroservices.models import QuestionModel
+from mickroservices.forms import QuestionForm
+from mickroservices.utils import send_message
 
 
 class QuestionView(FormView):
@@ -13,6 +13,11 @@ class QuestionView(FormView):
     template_name = 'faq.html'      
     success_url = reverse_lazy('faqview')
     form_class = QuestionForm
+
+    def get_context_data(self, **kwargs):
+        ctx = super(QuestionView, self).get_context_data(**kwargs)
+        ctx['questions_ok'] = QuestionModel.objects.filter(status=QuestionModel.ST_OK)[:5]
+        return ctx
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()

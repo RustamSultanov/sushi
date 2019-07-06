@@ -45,54 +45,21 @@
                             {{errors}}
                         </div>
                     </div>
-
-                    <div class="my-4">
-                        <h4>Ответы на часто задаваемые вопросы</h4>
-                        <div class="bg-white ui-bordered mb-2">
-                            <a href="#company-faq-1" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
-                                Ne ornatus albucius ius?
-                                <span class="collapse-icon"></span>
-                            </a>
-                            <div id="company-faq-1" class="collapse text-muted">
-                                <div class="px-4 pb-3">Lorem ipsum dolor sit amet, mea in pertinax hendrerit gloriatur.</div>
-                            </div>
+                    {% if questions_ok %}
+                        <div class="my-4">
+                            <h4>Ответы на часто задаваемые вопросы</h4>
+                            {% for question in questions_ok %}
+                                <div class="bg-white ui-bordered mb-2">
+                                    <a href="#company-faq-1" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
+                                        {{question.body}}
+                                        <span class="collapse-icon"></span>
+                                    </a>
+                                    <div id="company-faq-1" class="collapse text-muted">
+                                        <div class="px-4 pb-3">{{question.answer}}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                        <div class="bg-white ui-bordered mb-2">
-                            <a href="#company-faq-2" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
-                                Quo insolens intellegam dissentiet at?
-                                <span class="collapse-icon"></span>
-                            </a>
-                            <div id="company-faq-2" class="collapse text-muted">
-                                <div class="px-4 pb-3">Ex fugit legimus fuisset per. Ex quidam option diceret ius.</div>
-                            </div>
-                        </div>
-                        <div class="bg-white ui-bordered mb-2">
-                            <a href="#company-faq-3" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
-                                Ad his assum delenit blandit?
-                                <span class="collapse-icon"></span>
-                            </a>
-                            <div id="company-faq-3" class="collapse text-muted">
-                                <div class="px-4 pb-3">Ne ornatus albucius ius, nostrum dignissim repudiandae an usu.</div>
-                            </div>
-                        </div>
-                        <div class="bg-white ui-bordered mb-2">
-                            <a href="#company-faq-4" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
-                                Dapibus ac facilisis in?
-                                <span class="collapse-icon d-inline-block ml-1"></span>
-                            </a>
-                            <div id="company-faq-4" class="collapse text-muted">
-                                <div class="px-4 pb-3">Lorem ipsum dolor sit amet, ius virtute suscipit te. Ius prima euismod consequat eu.</div>
-                            </div>
-                        </div>
-                        <div class="bg-white ui-bordered mb-2">
-                            <a href="#company-faq-5" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
-                                Cras justo odio?
-                                <span class="collapse-icon d-inline-block ml-1"></span>
-                            </a>
-                            <div id="company-faq-5" class="collapse text-muted">
-                                <div class="px-4 pb-3">Etiam vivendo eu sea, purto ponderum mediocritatem at pro.</div>
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
  {% endblock %}

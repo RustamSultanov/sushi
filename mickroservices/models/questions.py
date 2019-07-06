@@ -3,7 +3,7 @@ from django.db import models
 
 
 class QuestionModel(models.Model):
-    """docstring for FAQModel"""
+    """docstring for QuestionModel"""
 
     ST_CONSIDERATION, ST_OK, ST_REJECTED = range(3)
     STATUS_CHOICE = (
@@ -22,7 +22,14 @@ class QuestionModel(models.Model):
     body = models.CharField(max_length=1000, blank=False, null=False,
                             verbose_name='Сообщение')
     status = models.IntegerField(choices=STATUS_CHOICE, default=ST_CONSIDERATION)
+    answer = models.CharField(max_length=1000, blank=False, null=False,
+                            verbose_name='Ответ')
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
     class Meta:
         verbose_name = 'Вопрос от пользователя'
         verbose_name_plural = 'Вопросы от пользоватлей'
+        ordering = ['-date_created']
+
+    def __str__(self):
+        return f'{self.body} от {self.name}'
