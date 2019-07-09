@@ -43,6 +43,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
+
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.core',
+
+    'modelcluster',
+    'taggit',
+
     'my_proj',
     'sushi_app',
     'tz_detect',
@@ -61,6 +77,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tz_detect.middleware.TimezoneMiddleware',
+    'wagtail.core.middleware.SiteMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'my_proj.urls'
@@ -83,6 +101,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'my_proj.wsgi.application'
 
+
+WAGTAIL_SITE_NAME = 'SushiShop'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -112,16 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Frontend widget values
-# 0-Keep original, 1-Mono, 2-Stereo
-CHANNEL_TYPE_VALUE = 0
 
-# 0-Keep original, 8000-8000Hz, 16000-16000Hz, 22050-22050Hz,
-# 44100-44100Hz, 48000-48000Hz, 96000-96000Hz
-FREQ_TYPE_VALUE = 8000
-
-# 0-Keep original, 1-Convert to MP3, 2-Convert to WAV, 3-Convert to OGG
-CONVERT_TYPE_VALUE = 0
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -146,7 +157,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
+# https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+
+# ManifestStaticFilesStorage is recommended in production, to prevent outdated
+# Javascript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
+# See https://docs.djangoproject.com/en/2.2/ref/contrib/staticfiles/#manifeststaticfilesstorage
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -183,7 +205,6 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {
         'INTERCEPT_REDIRECTS': False,
     }
-
 DEFAULT_SUPORT_EMAIL = env('DEFAULT_SUPORT_EMAIL')
 DEFAULT_PROTOCOL = env('DEFAULT_PROTOCOL')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
