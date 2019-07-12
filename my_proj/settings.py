@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'wagtail.documents',
     'wagtail.images',
     'wagtail.search',
+    'wagtail.contrib.postgres_search',
     'wagtail.admin',
     'wagtail.core',
 
@@ -65,6 +66,12 @@ INSTALLED_APPS = [
     'mickroservices.apps.MickroservicesConfig',
     
 ]
+
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.contrib.postgres_search.backend',
+    },
+}
 
 # AUTH_USER_MODEL = 'User'
 
