@@ -4,9 +4,9 @@ from django.contrib.auth import views as auth_view
 from .forms import LoginForm
 
 urlpatterns = [
-   path(
-        '', views.base, name='base'), 
-   path(
+    path(
+        '', views.base, name='base'),
+    path(
         'accounts/login/',
         auth_view.LoginView.as_view(
             template_name='authentication_login.html',
@@ -15,6 +15,7 @@ urlpatterns = [
         'logout',
         auth_view.LogoutView.as_view(next_page="login"),
         name='logout'),
+    path('employee/<int:user_id>', views.employee_info, name='employee_info'),
     path(
         'prod/<int:product_id>', views.product_view, name='product'),
     path(

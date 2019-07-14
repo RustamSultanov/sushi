@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load wagtailcore_tags %}
+{% block content %}
+                <!-- Page content -->
+                <div class="container flex-grow-1 container-p-y">
+                    <div class="media align-items-center py-3 mb-3">
+                       {% if user.wagtail_userprofile.avatar %} <img src="{{ user.wagtail_userprofile.avatar.url }}" alt="" class="d-block ui-w-100 rounded-circle">
+                       {% else %}{% endif %}
+                        <div class="media-body ml-4">
+                            <h4 class="font-weight-bold mb-0">{{ user.first_name }} {{ user.last_name }}
+                            </h4>
+                            <div class="text-muted mb-2">{{ user.user_profile.position }}</div>
+                            <a href="javascript:void(0)" class="btn btn-default btn-sm">
+                                <i class="fas fa-envelope"></i>&nbsp;Написать письмо
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card my-4">
+                        <div class="card-body">
+                            <h6 class="mb-3">Ключевые обязанности</h6>
+                            {{ user.user_profile.key_responsibilities | richtext }}
+                            <h6 class="mt-4 mb-3">Социальные сети</h6>
+                            <table class="table user-view-table m-0">
+                                <tbody>
+                                <tr>
+                                    <td>Twitter:</td>
+                                    <td>
+                                        <a href="{{ user.user_profile.twitter }}">{{ user.user_profile.twitter }}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Facebook:</td>
+                                    <td>
+                                        <a href="{{ user.user_profile.facebook }}">{{ user.user_profile.facebook }}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Instagram:</td>
+                                    <td>
+                                        <a href="{{ user.user_profile.instagram }}">{{ user.user_profile.instagram }}</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <h6 class="mt-4 mb-3">Контакты</h6>
+                            <table class="table user-view-table m-0">
+                                <tbody>
+                                <tr>
+                                    <td>Телефон:</td>
+                                    <td>{{ user.user_profile.phone_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Watsapp:</td>
+                                    <td>{{ user.user_profile.whatsapp }}</td>
+                                </tr>
+                                <tr>
+                                    <td>E-mail:</td>
+                                    <td>{{ user.email }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- / Page content -->
+{% endblock %}

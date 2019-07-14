@@ -17,6 +17,11 @@ User = get_user_model()
 def base(request):
     return render(request, 'index.html')
 
+@login_required
+def employee_info(request, user_id):
+    user = User.objects.get(id=user_id)
+    return render(request, 'employee.html', {'user':user})
+
 
 def chat_view(request, product_id,user_id):
     product = Product.objects.get(id=product_id)
