@@ -21,7 +21,7 @@ class CourseModel(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False,
                             verbose_name='Название курса')
     description = models.CharField(max_length=255, blank=False, null=False,
-                            verbose_name='Оисание курса')
+                            verbose_name='Описание курса')
     
     class Meta:
         verbose_name = 'Курс обучения'

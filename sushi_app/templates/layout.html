@@ -10,13 +10,19 @@
         {% endif %}
         <div class="layout-container">
             <div class="layout-content">
-                <!-- Page content -->
-                <!-- Page content -->
-                    {% block content %}{% endblock %}
-                <!-- / Page content -->
+                {%block slider %}{% endblock %}
+                <div class="container flex-grow-1 container-p-y">
+                    <!-- Page content -->
+                    <!-- Page content -->
+                        {% block page_title %}{% endblock %}
+                        {% block  breadcrumb%}{% endblock %}
+                        {% block  content %}{% endblock %}
+                    <!-- / Page content -->
+                </div>
+                {% block  additional_content %}{% endblock %}
                 {% if user.is_authenticated %}
                     {% include 'partials/footer.html'%}
-                {% endif %}
+                {% endif %}                
             </div>
         </div>
     </div>

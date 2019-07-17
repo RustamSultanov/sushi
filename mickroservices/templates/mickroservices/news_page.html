@@ -1,23 +1,31 @@
 {% extends 'layout.html' %}
 
-{% load wagtailcore_tags %} 
+{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %} 
 {% load widget_tweaks %}
 {% load static %}
 
-{% block body_class %} template-homepage {% endblock %} 
+{% block body_class %} template-homepage{% endblock %} 
 
-{% block content %} 
-    <div class="container flex-grow-1 container-p-y">
-        <h2 class="text-light font-weight-normal mt-4 mb-1">Text</h2>
+{% block page_title %}<h2 class="text-light font-weight-normal mt-4 mb-1">{{ page.title }}</h2>{% endblock %}
+
+{% block  breadcrumb %}
         <ol class="breadcrumb small mb-4">
             <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Главная</a>
+                <a href="{% url 'base' %}">Главная</a>
             </li>
             <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Новости</a>
+                <a href="{% url 'mickroservices:news' %}">Новости</a>
             </li>            
-            <li class="breadcrumb-item active">Текст</li>
+            <li class="breadcrumb-item active">{{ page.title }}</li>
         </ol>
-{{ page.body | richtext }} 
+{% endblock %}
+
+{% block content %} 
+        <div class="mb-4 text-muted small text-uppercase">
+            {{ page.owner }} - {{ page.first_published_at }}
+        </div>
+        {% image page.image max-896x597%}
+        <p>{{ page.body | richtext }}</p>
 {% endblock %}
 

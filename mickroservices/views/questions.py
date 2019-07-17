@@ -17,6 +17,7 @@ class QuestionView(FormView):
     def get_context_data(self, **kwargs):
         ctx = super(QuestionView, self).get_context_data(**kwargs)
         ctx['questions_ok'] = QuestionModel.objects.filter(status=QuestionModel.ST_OK)[:5]
+        ctx['breadcrumb'] = [{'title':'FAQ'}]
         return ctx
 
     def post(self, request, *args, **kwargs):

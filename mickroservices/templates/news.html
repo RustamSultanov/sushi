@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block page_title %}
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Новости</h2>
+{% endblock %}
+
+{% block  breadcrumb%}
+        {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+
+{% block content %} 
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div class="my-5">
+        <div class="row">
+            {% for new in news %}
+                {% include "partials/item_preview.html"  with post=new %}
+            {% empty %}
+                Новых постов нет
+            {% endfor %}
+        </div>
+    </div>
+    {% if is_paginated %}
+        {% include 'partials/pagination.html' with posts=page_obj %}
+    {% endif %}
+{% endblock %}

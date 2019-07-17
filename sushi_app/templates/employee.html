@@ -3,7 +3,6 @@
 {% load wagtailcore_tags %}
 {% block content %}
                 <!-- Page content -->
-                <div class="container flex-grow-1 container-p-y">
                     <div class="media align-items-center py-3 mb-3">
                        {% if user.wagtail_userprofile.avatar %} <img src="{{ user.wagtail_userprofile.avatar.url }}" alt="" class="d-block ui-w-100 rounded-circle">
                        {% else %}{% endif %}
@@ -62,6 +61,5 @@
                             </table>
                         </div>
                     </div>
-                </div>
                 <!-- / Page content -->
 {% endblock %}
