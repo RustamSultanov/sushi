@@ -1,5 +1,5 @@
-
 from django.db import models
+from django.urls import reverse
 
 from wagtail.core.models import Page
 from wagtail.core.fields import RichTextField
@@ -25,3 +25,12 @@ class NewsPage(Page):
 
     class Meta:
         verbose_name = "Новости"
+
+    def get_context(self, request):
+        context = super(NewsPage, self).get_context(request)
+        context['breadcrumb'] = [
+            {'title': 'Новости',
+             'url': reverse('mickroservices:news')},
+            {'title': self.title}
+        ]
+        return context

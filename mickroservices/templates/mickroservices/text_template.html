@@ -4,25 +4,21 @@
 {% load widget_tweaks %}
 {% load static %}
 
+{% block title %}{{ page.title }}{% endblock %}
 {% block body_class %} template-homepage {% endblock %} 
 
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Text</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">{{page.title}}</h2>
 {% endblock %}
 
 {% block  breadcrumb%}
-        <ol class="breadcrumb small mb-4">
-            <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Главная</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="javascript:void(0)">Новости</a>
-            </li>            
-            <li class="breadcrumb-item active">Текст</li>
-        </ol>
+        {% include 'partials/breadcrumb.html' %}
 {% endblock %}
 
-{% block content %} 
+{% block content %}
+    {% if page.type != None %}
+        {{page.type_str }}
+    {% endif %}
     <p>{{ page.body | richtext }} </p>
 {% endblock %}
 

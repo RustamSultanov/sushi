@@ -18,4 +18,7 @@ urlpatterns = [
     path('news/',
          login_required(views.NewsView.as_view()),
          name='news'),
+    path('marketing/',
+         login_required(views.MarketingView.as_view()),
+         name='marketing'),
 ]

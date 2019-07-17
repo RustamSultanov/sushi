@@ -3,10 +3,16 @@
 
 <div class="col-md-4 mb-5">
     <div class="card hoverable">
-        {% image post.image fill-283x188 class="card-img-top" %}
+        {% if post.image %}
+            {% image post.image fill-283x188 class="card-img-top" %}
+        {% endif %}
         <div class="card-body">
             <h4 class="card-title mb-1">{{post.title}}</h4>
-            <div class="small text-muted mb-3">{{post.first_published_at}}</div>
+            {% if post.type != None %}
+                {{post.type_str }}
+            {% else %}
+                <div class="small text-muted mb-3">{{post.first_published_at}}</div>
+            {% endif %}
             <p class="card-text">
                 {%if post.preview%}
                     {{post.preview}}
