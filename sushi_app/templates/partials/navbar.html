@@ -3,7 +3,7 @@
 <nav class="layout-navbar navbar navbar-expand-xl align-items-xl-center bg-navbar-theme container-p-x" id="layout-navbar">
 
     <!-- Brand demo (see assets/css/demo/demo.css) -->
-    <a href="#" class="navbar-brand app-brand py-0 mr-xl-4">
+    <a href="{% url 'base' %}" class="navbar-brand app-brand py-0 mr-xl-4">
       <span class="app-brand-logo demo">
         <img src="{% static "img/logo.png" %}" alt="">
       </span>
@@ -14,7 +14,7 @@
     </button>
     <div class="order-xl-last navbar-nav">
         <div class="demo-navbar-user nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+            <a class="nav-link dropdown-toggle" href="{% url 'manager_lk' %}" data-toggle="dropdown">
                     <span class="d-inline-flex align-items-center align-middle">
                       <img src="{{ user.wagtail_userprofile.avatar.url }}" alt class="d-block ui-w-30 rounded-circle">
                       <div class="ml-3 text-right">
@@ -78,7 +78,7 @@
         </div>
 
         <div class="navbar-nav align-items-center ml-auto">
-            <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div>
+           <a href="{% url 'mickroservices:faq' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div></a>
             <div class="btn btn-primary btn-round mr-xl-2">Предложить идею</div>
         </div>
     </div>

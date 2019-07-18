@@ -18,6 +18,10 @@ def manager_check(user):
     return user.user_profile.is_manager
 
 
+def partner_check(user):
+    return user.user_profile.is_partner
+
+
 @login_required
 def base(request):
     return render(request, 'index.html')
@@ -33,6 +37,15 @@ def employee_info(request, user_id):
 @login_required
 @user_passes_test(manager_check)
 def manager_lk_view(request):
+    partner_list = UserProfile.objects.prefetch_related('user')\
+        .filter(manager=request.user.wagtail_userprofile)
+    return render(request, 'dashboard_manager.html', {'partner_list': partner_list,
+                                                      'breadcrumb': [{'title': 'Личный кабинет'}]})
+
+
+@login_required
+@user_passes_test(partner_check)
+def partner_lk_view(request):
     partner_list = UserProfile.objects.prefetch_related('user')\
         .filter(manager=request.user.wagtail_userprofile)
     return render(request, 'dashboard_manager.html', {'partner_list': partner_list,
