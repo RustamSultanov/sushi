@@ -46,10 +46,11 @@ def manager_lk_view(request):
 @login_required
 @user_passes_test(partner_check)
 def partner_lk_view(request):
-    partner_list = UserProfile.objects.prefetch_related('user')\
-        .filter(manager=request.user.wagtail_userprofile)
-    return render(request, 'dashboard_manager.html', {'partner_list': partner_list,
-                                                      'breadcrumb': [{'title': 'Личный кабинет'}]})
+    shop_list = Shop.objects.prefetch_related('checks', 'docs')\
+        .filter(partner=request.user)
+    return render(request, 'dashboard_partner.html', {'shop_list': shop_list,
+                                                      'breadcrumb': [{'title': 'Личный кабинет'}],
+                                                      'manager': request.user.user_profile.manager})
 
 
 def chat_view(request, product_id, user_id):

@@ -17,6 +17,7 @@ urlpatterns = [
         name='logout'),
     path('employee/<int:user_id>', views.employee_info, name='employee_info'),
     path('manager-lk', views.manager_lk_view, name='manager_lk'),
+    path('partner-lk', views.partner_lk_view, name='partner_lk'),
     path(
         'prod/<int:product_id>', views.product_view, name='product'),
     path(

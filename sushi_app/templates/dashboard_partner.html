@@ -15,10 +15,35 @@
 
                     <div class="row">
                         <div class="col">
+
+                            <div class="media align-items-center mb-3">
+                                {% if manager.avatar %}
+                                <img src="{{ manager.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                                  {% else %}
+                                    {% endif %}
+                                <div class="small ml-3">
+                                    <div class="text-muted">Ваш менеджер</div>
+                                    <div class="text-primary">{{ manager.user.get_full_name }}</div>
+                                    <a href="#" class="btn btn-xs btn-round btn-outline-dark">Написать в чат</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="py-1 mb-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Введите запрос">
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-primary">
+                                    <i class="ion ion-ios-search"></i>&nbsp; Поиск</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
                             <div class="nav-tabs-top mb-4">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item">
-                                        <a class="nav-link active show" data-toggle="tab" href="#partners">Партнеры</a>
+                                        <a class="nav-link active show" data-toggle="tab" href="#shops">Магазины</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#requests">Запросы</a>
@@ -34,28 +59,45 @@
                                     </li>
                                 </ul>
                                 <div class="tab-content no-shadow">
-                                    <div class="tab-pane fade active show" id="partners">
-                                        <div class="row my-4">
-                                            {% for partner in partner_list %}
-                                            <div class="col-md-6 col-lg-4 mb-4">
-                                                <div href="{% url 'employee_info' partner.id %}" class="card hoverable">
-                                                    <div class="card-body">
-                                                        <div class="media align-items-center mb-3">
-                                                          {% if partner.user.wagtail_userprofile.avatar %}
-                                                              <img src="{{ partner.user.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
-                                                            {% else %}
-                                                            {% endif %}
-                                                            <div class="small ml-3">
-                                                                <a href="{% url 'employee_info' partner.id %}" class="text-primary">{{ partner.user.first_name }} {{ partner.user.last_name }}</a>
-                                                                <div class="small text-muted">{{ partner.position }}</div>
+                                    <div class="tab-pane fade active show" id="shops">
+                                        <div class="my-4 row">
+                                            {% for shop in shop_list %}
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div class="h5 mb-0 font-weight-semibold">{{ shop.address }}</div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
                                                             </div>
                                                         </div>
-                                                        <div class="small text-muted mb-3">
-                                                            {{ partner.phone_number }}
-                                                            <br>Whatsapp {{ partner.whatsapp }}
-                                                            <br>{{ partner.user.email }}
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="font-weight-semibold">Файлы</div>
+                                                        {% for doc in shop.docs.all %}
+                                                        <div class="mb-1 d-inline-block mr-3">
+                                                            <span class="small text-muted">{{ doc.title }}</span>
+                                                            <a href="{{ doc.url }}" class="text-primary"><span class="ion-ios-search"></span></a>
+                                                            <a href="{{ doc.url }}" class="text-primary"><span class="ion-md-cloud-download"></span></a>
                                                         </div>
-                                                        <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>
+                                                       {% endfor %}
+                                                        <div class="font-weight-semibold">Последние проверки</div>
+                                                        {% for check in shop.checks.all %}
+                                                        <div class="mb-1 d-inline-block mr-3">
+                                                            <span class="small text-muted">{{ check.title }}</span>
+                                                            <a href="{{ check.url }}" class="text-primary"><span class="ion-ios-search"></span></a>
+                                                            <a href="{{ check.url }}" class="text-primary"><span class="ion-md-cloud-download"></span></a>
+                                                        </div>
+                                                       {% endfor %}
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -454,18 +496,6 @@
                                             <div class="col-md-6 col-lg-4 p-1">
                                                 <div class="project-attachment ui-bordered p-2">
                                                     <div class="project-attachment-file display-4">
-                                                        <i class="fas fa-folder-plus"></i>
-                                                    </div>
-                                                    <div class="media-body ml-3">
-                                                        <div>
-                                                            <a href="javascript:void(0)">Добавить папку</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 col-lg-4 p-1">
-                                                <div class="project-attachment ui-bordered p-2">
-                                                    <div class="project-attachment-file display-4">
                                                         <i class="fas fa-folder"></i>
                                                     </div>
                                                     <div class="media-body ml-3">
@@ -567,9 +597,7 @@
                             </div>
                         </div>
                     </div>
-
-
-                {% block extrascripts %}
+                 {% block extrascripts %}
                 <script src="{% static "libs/dropzone/dropzone.js" %}"></script>
                 <script src="{% static "js/dashboard.js" %}"></script>
                 {% endblock %}

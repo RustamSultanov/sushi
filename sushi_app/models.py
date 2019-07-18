@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import BaseUserManager
+from wagtail.documents.models import Document, AbstractDocument
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from wagtail.core.fields import RichTextField
 import wagtail.users.models
+from wagtail.documents.models import get_document_model
 
 
 class UserProfile(models.Model):
@@ -25,6 +26,30 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.get_username()
+
+
+class Shop(models.Model):
+    address = models.CharField(max_length=255, blank=False, null=False,
+                               verbose_name='Адрес магазина')
+    docs = models.ManyToManyField(
+        get_document_model(),
+        blank=True,
+        related_name='+'
+    )
+    checks = models.ManyToManyField(
+        get_document_model(),
+        blank=True,
+        related_name='+'
+    )
+    partner = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL)
+    date_create = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.address}"
+
+    class Meta:
+        verbose_name = 'Магазин'
+        verbose_name_plural = 'Магазины'
 
 
 class Product(models.Model):

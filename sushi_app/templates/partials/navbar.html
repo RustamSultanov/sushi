@@ -40,7 +40,10 @@
 
         <div class="navbar-nav align-items-lg-center mr-auto ml-xl-4">
             <div class="nav-item">
-                <a href="{% url 'manager_lk' %}" class="nav-link nav-link__icon">
+               {% if user.user_profile.is_manager %} <a href="{% url 'manager_lk' %}" class="nav-link nav-link__icon">
+                {% elif user.user_profile.is_partner %}<a href="{% url 'partner_lk' %}" class="nav-link nav-link__icon">
+                {% else %}
+                {% endif %}
                     <i class="icon-user"></i>
                     <span>Сотрудники</span>
                 </a>
