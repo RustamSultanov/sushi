@@ -1,0 +1,575 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block css %}<link rel="stylesheet" href="{% static "libs/dropzone/dropzone.css" %}">{% endblock %}
+
+{% block title %}Личный кабинет{% endblock %}
+{% block page_title %}
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Личный кабинет</h2>
+{% endblock %}
+
+{% block  breadcrumb%}
+    {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+    {% block content %}
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="nav-tabs-top mb-4">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link active show" data-toggle="tab" href="#partners">Партнеры</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#requests">Запросы</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tasks">Задачи</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#reviews">Отзывы</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#files">Файлы</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content no-shadow">
+                                    <div class="tab-pane fade active show" id="partners">
+                                        <div class="row my-4">
+                                            {% for partner in partner_list %}
+                                            <div class="col-md-6 col-lg-4 mb-4">
+                                                <div href="{% url 'employee_info' partner.id %}" class="card hoverable">
+                                                    <div class="card-body">
+                                                        <div class="media align-items-center mb-3">
+                                                          {% if partner.user.wagtail_userprofile.avatar %}  <img src="{{ partner.user.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                                                            {% else %}
+                                                            {% endif %}
+                                                            <div class="small ml-3">
+                                                                <a href="{% url 'employee_info' partner.id %}" class="text-primary">{{ partner.user.first_name }} {{ partner.user.last_name }}</a>
+                                                                <div class="small text-muted">{{ partner.position }}</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="small text-muted mb-3">
+                                                            {{ partner.phone_number }}
+                                                            <br>Whatsapp {{ partner.whatsapp }}
+                                                            <br>{{ partner.user.email }}
+                                                        </div>
+                                                        <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="requests">
+                                        <div class="my-4 small text-right">
+                                            <span class="text-muted">Сортировать: </span>
+                                            <a href="#" class="text-muted active">Все</a>
+                                            <a href="#" class="text-muted">Решен</a>
+                                            <a href="#" class="text-muted">Обрабатывается</a>
+                                            <a href="#" class="text-muted">Отклонен</a>
+                                        </div>
+                                        <div class="my-4 row">
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Тема запроса Lorem ipsum dolor sit amet, ad tibique blandit qui</span>
+                                                                <span class="badge badge-outline-success badge-pill">решен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <a href="#" class="text-dark">Мария Петрова-Водкина</a>
+                                                                <span class="text-muted">25.06.2019</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание запроса. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Тема запроса</span>
+                                                                <span class="badge badge-outline-warning badge-pill">обрабатывается</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <a href="#" class="text-dark">Мария Петрова-Водкина</a>
+                                                                <span class="text-muted">25.06.2019</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание запроса. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Тема запроса Lorem ipsum dolor sit amet</span>
+                                                                <span class="badge badge-outline-danger badge-pill">отклонен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <a href="#" class="text-dark">Мария Петрова-Водкина</a>
+                                                                <span class="text-muted">25.06.2019</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание запроса. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Тема запроса</span>
+                                                                <span class="badge badge-outline-success badge-pill">решен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <a href="#" class="text-dark">Мария Петрова-Водкина</a>
+                                                                <span class="text-muted">25.06.2019</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание запроса. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="tasks">
+                                        <div class="my-4 small text-right">
+                                            <span class="text-muted">Сортировать: </span>
+                                            <a href="#" class="text-muted active">Все</a>
+                                            <a href="#" class="text-muted">Решен</a>
+                                            <a href="#" class="text-muted">Обрабатывается</a>
+                                            <a href="#" class="text-muted">Отклонен</a>
+                                        </div>
+                                        <div class="my-4 row">
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Тема запроса Lorem ipsum dolor sit amet, ad tibique blandit qui</span>
+                                                                <span class="badge badge-outline-success badge-pill">решен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <a href="#" class="text-dark">Мария Петрова-Водкина</a>
+                                                                <span class="text-muted">25.06.2019</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание запроса. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Тема запроса</span>
+                                                                <span class="badge badge-outline-warning badge-pill">обрабатывается</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <a href="#" class="text-dark">Мария Петрова-Водкина</a>
+                                                                <span class="text-muted">25.06.2019</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание запроса. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Тема запроса Lorem ipsum dolor sit amet</span>
+                                                                <span class="badge badge-outline-danger badge-pill">отклонен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <a href="#" class="text-dark">Мария Петрова-Водкина</a>
+                                                                <span class="text-muted">25.06.2019</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание запроса. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Тема запроса</span>
+                                                                <span class="badge badge-outline-success badge-pill">решен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <a href="#" class="text-dark">Мария Петрова-Водкина</a>
+                                                                <span class="text-muted">25.06.2019</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание запроса. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem.</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="reviews">
+                                        <div class="my-4 small text-right">
+                                            <span class="text-muted">Сортировать: </span>
+                                            <a href="#" class="text-muted active">Все</a>
+                                            <a href="#" class="text-muted">Решен</a>
+                                            <a href="#" class="text-muted">Обрабатывается</a>
+                                            <a href="#" class="text-muted">Не решен</a>
+                                        </div>
+                                        <div class="my-4 row">
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Мария Петрова-Водкина</span>
+                                                                <span class="text-muted">+7 000 000 0000</span>
+                                                                <span class="badge badge-outline-danger badge-pill">не решен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <span class="text-muted">25.06.2019 12:00</span>
+                                                                <br>
+                                                                <span class="text-muted">Магазин: ул. Демёхина 24</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Текст отзыва. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem...</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Мария Петрова-Водкина</span>
+                                                                <span class="text-muted">+7 000 000 0000</span>
+                                                                <span class="badge badge-outline-danger badge-pill">не решен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <span class="text-muted">25.06.2019 12:00</span>
+                                                                <br>
+                                                                <span class="text-muted">Магазин: ул. Демёхина 24</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Текст отзыва. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem...</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div>
+                                                                <span class="font-weight-semibold">Мария Петрова-Водкина</span>
+                                                                <span class="text-muted">+7 000 000 0000</span>
+                                                                <span class="badge badge-outline-success badge-pill">решен</span>
+                                                            </div>
+                                                            <div class="small">
+                                                                <span class="text-muted">25.06.2019 12:00</span>
+                                                                <br>
+                                                                <span class="text-muted">Магазин: ул. Демёхина 24</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Текст отзыва. Lorem ipsum dolor sit amet, ad tibique blandit qui, error zril eleifend ut vel. Et paulo labores molestiae has, ei eos virtute dolorem...</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="files">
+                                        <div class="my-4">
+                                            <form action="/upload" class="dropzone needsclick" id="dropzone-files">
+                                                <div class="dz-message needsclick">
+                                                    Перетащите файлы сюда или нажмите, чтобы загрузить
+                                                    <span class="note needsclick">(Это демонстрационная версия. Файлы не будут загружены на сервер.)</span>
+                                                </div>
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="my-4 small text-right">
+                                            <span class="text-muted">Сортировать: </span>
+                                            <a href="#" class="text-muted active">По порядку</a>
+                                            <a href="#" class="text-muted">По дате</a>
+                                            <a href="#" class="text-muted">По размеру</a>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-lg-4 p-1">
+                                                <div class="project-attachment ui-bordered p-2">
+                                                    <div class="project-attachment-file display-4">
+                                                        <i class="fas fa-folder-plus"></i>
+                                                    </div>
+                                                    <div class="media-body ml-3">
+                                                        <div>
+                                                            <a href="javascript:void(0)">Добавить папку</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-4 p-1">
+                                                <div class="project-attachment ui-bordered p-2">
+                                                    <div class="project-attachment-file display-4">
+                                                        <i class="fas fa-folder"></i>
+                                                    </div>
+                                                    <div class="media-body ml-3">
+                                                        <strong class="project-attachment-filename">Промоутинг лето 2019</strong>
+                                                        <div class="text-muted small">11 файлов</div>
+                                                        <div>
+                                                            <a href="javascript:void(0)">Просмотреть</a> &nbsp;
+                                                            <a href="javascript:void(0)">Загрузить</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="btn-group project-actions align-self-start">
+                                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                            <i class="ion ion-ios-more"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-4 p-1">
+                                                <div class="project-attachment ui-bordered p-2">
+                                                    <div class="project-attachment-img" style="background-image: url(img/5.jpg)"></div>
+                                                    <div class="media-body ml-3">
+                                                        <strong class="project-attachment-filename">image_1.jpg</strong>
+                                                        <div class="text-muted small">527KB</div>
+                                                        <div>
+                                                            <a href="javascript:void(0)">Просмотреть</a> &nbsp;
+                                                            <a href="javascript:void(0)">Загрузить</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="btn-group project-actions align-self-start">
+                                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                            <i class="ion ion-ios-more"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6 col-lg-4 p-1">
+                                                <div class="project-attachment ui-bordered p-2">
+                                                    <div class="project-attachment-file display-4">
+                                                        <i class="far fa-file-pdf"></i>
+                                                    </div>
+                                                    <div class="media-body ml-3">
+                                                        <strong class="project-attachment-filename">assignment_letter.pdf</strong>
+                                                        <div class="text-muted small">156KB</div>
+                                                        <div>
+                                                            <a href="javascript:void(0)">Просмотреть</a> &nbsp;
+                                                            <a href="javascript:void(0)">Загрузить</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="btn-group project-actions align-self-start">
+                                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                            <i class="ion ion-ios-more"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-4 p-1">
+                                                <div class="project-attachment ui-bordered p-2">
+                                                    <div class="project-attachment-file display-4">
+                                                        <i class="far fa-file-archive"></i>
+                                                    </div>
+                                                    <div class="media-body ml-3">
+                                                        <strong class="project-attachment-filename">app_update.zip</strong>
+                                                        <div class="text-muted small">1.35MB</div>
+                                                        <div>
+                                                            <a href="javascript:void(0)">Загрузить</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="btn-group project-actions align-self-start">
+                                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                            <i class="ion ion-ios-more"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- / Page content -->
+                {% block extrascripts %}
+                <script src="{% static "libs/dropzone/dropzone.js" %}"></script>
+                <script src="{% static "js/dashboard.js" %}"></script>
+                {% endblock %}
+{% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth.models import BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from wagtail.core.fields import RichTextField
+import wagtail.users.models
 
 
 class UserProfile(models.Model):
@@ -17,6 +18,10 @@ class UserProfile(models.Model):
     facebook = models.URLField(null=True, max_length=200, blank=True)
     instagram = models.URLField(null=True, max_length=200, blank=True)
     key_responsibilities = RichTextField(blank=True)
+    is_partner = models.BooleanField(blank=True, default=False)
+    is_manager = models.BooleanField(blank=True, default=False)
+    manager = models.ForeignKey(on_delete=models.CASCADE, to=wagtail.users.models.UserProfile, related_name='manager',
+                                null=True, blank=True)
 
     def __str__(self):
         return self.user.get_username()

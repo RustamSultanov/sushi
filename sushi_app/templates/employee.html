@@ -4,12 +4,12 @@
 {% block content %}
                 <!-- Page content -->
                     <div class="media align-items-center py-3 mb-3">
-                       {% if user.wagtail_userprofile.avatar %} <img src="{{ user.wagtail_userprofile.avatar.url }}" alt="" class="d-block ui-w-100 rounded-circle">
+                       {% if employee.wagtail_userprofile.avatar %} <img src="{{ employee.wagtail_userprofile.avatar.url }}" alt="" class="d-block ui-w-100 rounded-circle">
                        {% else %}{% endif %}
                         <div class="media-body ml-4">
-                            <h4 class="font-weight-bold mb-0">{{ user.first_name }} {{ user.last_name }}
+                            <h4 class="font-weight-bold mb-0">{{ employee.first_name }} {{ employee.last_name }}
                             </h4>
-                            <div class="text-muted mb-2">{{ user.user_profile.position }}</div>
+                            <div class="text-muted mb-2">{{ employee.user_profile.position }}</div>
                             <a href="javascript:void(0)" class="btn btn-default btn-sm">
                                 <i class="fas fa-envelope"></i>&nbsp;Написать письмо
                             </a>
@@ -18,26 +18,30 @@
                     <div class="card my-4">
                         <div class="card-body">
                             <h6 class="mb-3">Ключевые обязанности</h6>
-                            {{ user.user_profile.key_responsibilities | richtext }}
+                            {{ employee.user_profile.key_responsibilities | richtext }}
                             <h6 class="mt-4 mb-3">Социальные сети</h6>
                             <table class="table user-view-table m-0">
                                 <tbody>
                                 <tr>
                                     <td>Twitter:</td>
-                                    <td>
-                                        <a href="{{ user.user_profile.twitter }}">{{ user.user_profile.twitter }}</a>
+                                    <td>{% if employee.user_profile.twitter %}
+                                        <a href="{{ employee.user_profile.twitter }}">{{ employee.user_profile.twitter }}</a>
+                                         {% else %}{% endif %}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Facebook:</td>
                                     <td>
-                                        <a href="{{ user.user_profile.facebook }}">{{ user.user_profile.facebook }}</a>
+                                       {% if employee.user_profile.facebook %} <a href="{{ employee.user_profile.facebook }}">{{ employee.user_profile.facebook }}</a>
+                                         {% else %}{% endif %}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Instagram:</td>
                                     <td>
-                                        <a href="{{ user.user_profile.instagram }}">{{ user.user_profile.instagram }}</a>
+                                        {% if employee.user_profile.instagram %}
+                                        <a href="{{ employee.user_profile.instagram }}">{{ employee.user_profile.instagram }}</a>
+                                         {% else %}{% endif %}
                                     </td>
                                 </tr>
                                 </tbody>
@@ -47,15 +51,17 @@
                                 <tbody>
                                 <tr>
                                     <td>Телефон:</td>
-                                    <td>{{ user.user_profile.phone_number }}</td>
+                                    <td>{% if employee.user_profile.phone_number %}{{ employee.user_profile.phone_number }}
+                                     {% else %}{% endif %}</td>
                                 </tr>
                                 <tr>
                                     <td>Watsapp:</td>
-                                    <td>{{ user.user_profile.whatsapp }}</td>
+                                    <td>{% if employee.user_profile.whatsapp %}{{ employee.user_profile.whatsapp }}
+                                     {% else %}{% endif %}</td>
                                 </tr>
                                 <tr>
                                     <td>E-mail:</td>
-                                    <td>{{ user.email }}</td>
+                                    <td>{{ employee.email }}</td>
                                 </tr>
                                 </tbody>
                             </table>

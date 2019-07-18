@@ -3,6 +3,7 @@ from .models import *
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
+import wagtail.users.models
 
 
 # Now register the new UserAdmin# ... and, since we're not using Django's built-in permissions,
@@ -15,9 +16,15 @@ class UserProfileInline(admin.StackedInline):
     verbose_name_plural = 'Users'
 
 
+class WagtailUserProfileInline(admin.StackedInline):
+    model = wagtail.users.models.UserProfile
+    can_delete = False
+    verbose_name_plural = 'WagtailUsers'
+
+
 # Define a new User admin
 class UserAdmin(BaseUserAdmin):
-    inlines = (UserProfileInline,)
+    inlines = (UserProfileInline, WagtailUserProfileInline)
 
 
 # Re-register UserAdmin

@@ -16,9 +16,9 @@
         <div class="demo-navbar-user nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                     <span class="d-inline-flex align-items-center align-middle">
-                      <img src="{% static "img/avatars/1.png" %}" alt class="d-block ui-w-30 rounded-circle">
+                      <img src="{{ user.wagtail_userprofile.avatar.url }}" alt class="d-block ui-w-30 rounded-circle">
                       <div class="ml-3 text-right">
-                        <div class="navbar-name">{{ request.user }}</div>
+                        <div class="navbar-name">{{ user.first_name }}</div>
                           <div class="text-primary small">Партнер 3 уровня</div>
                       </div>
                     </span>
@@ -40,7 +40,7 @@
 
         <div class="navbar-nav align-items-lg-center mr-auto ml-xl-4">
             <div class="nav-item">
-                <a href="#" class="nav-link nav-link__icon">
+                <a href="{% url 'manager_lk' %}" class="nav-link nav-link__icon">
                     <i class="icon-user"></i>
                     <span>Сотрудники</span>
                 </a>
