@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block page_title %}
+    <h2 class="text-light  font-weight-normal mt-4 mb-1">{{title}}</h2>
+{% endblock %}
+
+{% block  breadcrumb%}
+    {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label">Даты занятий</label>
+              {{form.date_schedule}}
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ссылка на расписание</label>
+            {% render_field form.url_lesson placeholder="Ссылка на расписание" class+="form-control" %}
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-round">Сохранить</button>
+        </div>
+    </form>
+    {% if status_ms %}
+        {{message}}
+    {% endif %}
+{% endblock %}
