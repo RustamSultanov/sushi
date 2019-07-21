@@ -8,6 +8,13 @@ import wagtail.users.models
 from wagtail.documents.models import get_document_model
 
 
+class Department(models.Model):
+    name = models.CharField(max_length=256, db_index=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_profile'
@@ -21,8 +28,12 @@ class UserProfile(models.Model):
     key_responsibilities = RichTextField(blank=True)
     is_partner = models.BooleanField(blank=True, default=False)
     is_manager = models.BooleanField(blank=True, default=False)
-    manager = models.ForeignKey(on_delete=models.CASCADE, to=wagtail.users.models.UserProfile, related_name='manager',
+    manager = models.ForeignKey(on_delete=models.SET_NULL, to=wagtail.users.models.UserProfile, related_name='manager',
                                 null=True, blank=True)
+    head = models.ForeignKey(on_delete=models.SET_NULL, to='self', related_name='employee',
+                             null=True, blank=True)
+    department = models.ForeignKey(on_delete=models.SET_NULL, to=Department, related_name='member',
+                                   null=True, blank=True)
 
     def __str__(self):
         return self.user.get_username()

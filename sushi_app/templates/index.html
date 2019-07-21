@@ -153,66 +153,33 @@
     <div class="container my-5">
         <h2 class="text-light font-weight-normal mb-5">Сотрудники</h2>
         <div class="row">
+            {% for employee in employee_list %}
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="card hoverable">
                     <div class="card-body">
-                        <h4>Франшиза</h4>
+                      {% if employee.department %}  <h4>{{ employee.department }}</h4>
+                        {% else %}
+                        {% endif %}
                         <div class="media align-items-center mb-3">
-                            <img src="{% static "img/avatars/2.png" %}" alt="" class="ui-w-60 rounded-circle">
+                            {% if employee.user.wagtail_userprofile.avatar %}
+                          <img src="{{ employee.user.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                        {% else %}
+                        {% endif %}
                             <div class="small ml-3">
-                                <div class="text-primary">Мария Петрова-Водкина</div>
-                                <div class="small text-muted">Руководитель направления</div>
+                                <a href="{% url 'employee_info' employee.user.id %}" class="text-primary">{{ employee.user.get_full_name }}</a>
+                                <div class="small text-muted">{{ employee.position }}</div>
                             </div>
                         </div>
                         <div class="small text-muted mb-3">
-                            +7 (812) 123-45-67
-                            <br>+7 (901) 123-45-67
-                            <br>angelina@sushishop.ru
+                            {{ employee.phone_number }}
+                            <br>Whatsapp {{ employee.whatsapp }}
+                            <br>{{ employee.user.email }}
                         </div>
                         <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card hoverable">
-                    <div class="card-body">
-                        <h4>Бухгалтерия</h4>
-                        <div class="media align-items-center mb-3">
-                            <img src="{% static "img/avatars/2.png" %}" alt="" class="ui-w-60 rounded-circle">
-                            <div class="small ml-3">
-                                <div class="text-primary">Мария Петрова-Водкина</div>
-                                <div class="small text-muted">Главный бухгалтер</div>
-                            </div>
-                        </div>
-                        <div class="small text-muted mb-3">
-                            +7 (812) 123-45-67
-                            <br>+7 (901) 123-45-67
-                            <br>angelina@sushishop.ru
-                        </div>
-                        <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card hoverable">
-                    <div class="card-body">
-                        <h4>Общие вопросы</h4>
-                        <div class="media align-items-center mb-3">
-                            <img src="{% static "img/avatars/2.png" %}" alt="" class="ui-w-60 rounded-circle">
-                            <div class="small ml-3">
-                                <div class="text-primary">Ангелина Сидоренко</div>
-                                <div class="small text-muted">Стажер по работе с клиентами</div>
-                            </div>
-                        </div>
-                        <div class="small text-muted mb-3">
-                            +7 (812) 123-45-67
-                            <br>+7 (901) 123-45-67
-                            <br>angelina@sushishop.ru
-                        </div>
-                        <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

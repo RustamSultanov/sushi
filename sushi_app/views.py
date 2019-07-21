@@ -24,7 +24,9 @@ def partner_check(user):
 
 @login_required
 def base(request):
-    return render(request, 'index.html')
+    employee_list = UserProfile.objects.prefetch_related('user', 'department') \
+        .filter(head=request.user.user_profile)
+    return render(request, 'index.html', {'employee_list': employee_list})
 
 
 @login_required
