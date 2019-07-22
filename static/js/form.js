@@ -32,4 +32,3 @@ $(function() {
         minDate : new Date(),
     });
 });
-

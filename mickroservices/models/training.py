@@ -4,7 +4,6 @@ from django.db import models
 from django.urls import reverse_lazy
 
 
-
 class TypeCourseModel(models.Model):
     title = models.CharField(max_length=255, blank=False, null=False,
                              verbose_name='Название')
@@ -63,8 +62,8 @@ class PlanDayModel(models.Model):
 
 class ScheduleModel(models.Model):
     date_schedule = models.DateTimeField(verbose_name='Дата проведения')
-    url_lesson = models.CharField(max_length=255, blank=False, null=False,
-                                  verbose_name='Ссылка на расписание')
+    url_lesson = models.URLField(max_length=255, blank=False, null=False,
+                                 verbose_name='Ссылка на расписание')
 
     class Meta:
         verbose_name = 'Расписание'

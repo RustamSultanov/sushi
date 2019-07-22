@@ -1,5 +1,5 @@
 from django.db import models
-
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class QuestionModel(models.Model):
@@ -14,7 +14,7 @@ class QuestionModel(models.Model):
 
     name = models.CharField(max_length=255, blank=False, null=False,
                             verbose_name='Имя отправителя')
-    phone_number = models.CharField(max_length=12, null=False,blank=False,
+    phone_number = PhoneNumberField(null=False, blank=False,
                                     verbose_name='Номер телефона')
     email = models.EmailField(blank=False, null=False, verbose_name='Email')
     theme = models.CharField(max_length=100, blank=False, null=False,
@@ -23,7 +23,7 @@ class QuestionModel(models.Model):
                             verbose_name='Сообщение')
     status = models.IntegerField(choices=STATUS_CHOICE, default=ST_CONSIDERATION)
     answer = models.CharField(max_length=1000, blank=False, null=False,
-                            verbose_name='Ответ')
+                              verbose_name='Ответ')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
 
     class Meta:

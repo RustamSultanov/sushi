@@ -73,6 +73,7 @@ WAGTAILSEARCH_BACKENDS = {
     },
 }
 
+
 # AUTH_USER_MODEL = 'User'
 
 MIDDLEWARE = [

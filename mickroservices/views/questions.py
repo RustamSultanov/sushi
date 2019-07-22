@@ -30,7 +30,7 @@ class QuestionView(FormView):
                        'Обращение в техподдержку',
                        settings.DEFAULT_SUPORT_EMAIL,
                        self.get_context_data(**kwargs)))
-            ctx['status'] = 'Ваше вопрос принят на рассмотрение!'
+            ctx['status'] = 'Ваш вопрос принят на рассмотрение!'
             ctx.pop('errors')
         else:
             ctx['errors'] = f'Ошибка заполнения полей: {form.errors}'
@@ -39,7 +39,7 @@ class QuestionView(FormView):
 
     def form_valid(self, form):
         form = form.save(commit=False)
-        form.name = self.request.user
+        form.name = self.request.user.get_full_name()
         form.save()
 
     def form_valid_send_message(self, form, subject, to_email, ctx):
