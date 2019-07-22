@@ -1,4 +1,5 @@
 $(function() {
+
     if (!window.Quill) {
         return $('#quill-editor,#quill-toolbar').remove();
     }
@@ -16,11 +17,9 @@ $(function() {
     form.onsubmit = function() {
         // Populate hidden form on submit
         var body = document.querySelector('input[name=body]');
-        body.value = JSON.stringify(editor.getContents());
-        $("input[name='body']").value = body.value
-        $(form).append('<input type="text" name="body" value="'+body.value+'" />');
-        console.log("Submitted", $(form).serialize(), $(form).serializeArray());
-        
+        var content = document.querySelector('input[name=content]');
+        body.value = $('div.ql-editor').html();
+        content.value = $('div.ql-editor').html();
     };
 
 

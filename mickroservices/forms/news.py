@@ -5,10 +5,12 @@ from mickroservices.models import NewsPage
 from quill.fields import RichTextField
 
 
-class NewsForm(forms.Form):
+class NewsForm(forms.ModelForm):
     title = forms.CharField()
-    body = RichTextField(blank=True)
+    body = forms.CharField(widget=forms.HiddenInput())
+    content = forms.CharField(widget=forms.HiddenInput())
     first_published_at = forms.DateField(
+        input_formats=["%d %b %Y %H:%M:%S %Z"],
         localize=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control datetimepicker-input',
@@ -20,4 +22,5 @@ class NewsForm(forms.Form):
     )
 
     class Meta:
-        fields = ('title', 'first_published_at', 'body')
+        model = NewsPage
+        fields = ('title', 'first_published_at', 'body', 'content')
