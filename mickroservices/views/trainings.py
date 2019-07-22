@@ -59,6 +59,13 @@ class ScheduleView(UpdateView):
         ]
         return context
 
+    def form_invalid(self, form, ms='Ошибка заполнения формы'):
+        print(form.errors)
+        return TemplateResponse(self.request, self.template_name,
+                                {'form': form,
+                                 'status_ms': True,
+                                 'message': ms})
+
 
 class ScheduleCreateView(CreateView):
     template_name = 'schedule_form.html'

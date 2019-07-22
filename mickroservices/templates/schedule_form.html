@@ -32,3 +32,19 @@
         {{message}}
     {% endif %}
 {% endblock %}
+
+{% block extrascripts %}
+    <script src='{% static "libs/moment/moment.js" %}'></script>
+    <script src='{% static "libs/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js" %}'></script>
+    <script src='{% static "js/form.js" %}'></script>
+    <script>
+        // Quill does not support IE 10 and below so don't load it to prevent console errors
+        if (typeof document.documentMode !== 'number' || document.documentMode > 10) {
+            document.write("\x3Cscript src='{% static "libs/quill/quill.js" %}'>\x3C/script>");
+        }
+    </script>
+
+    <!--  Datetime picker  -->
+    <link rel="stylesheet" href='{% static "libs/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css" %}'>
+    <script src='{% static "js/form.js" %}'></script>
+{% endblock %}
