@@ -1,7 +1,7 @@
 from django import forms
 
-
 from mickroservices.models import NewsPage
+
 
 
 class NewsForm(forms.ModelForm):

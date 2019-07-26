@@ -3,48 +3,44 @@ from django.template.response import TemplateResponse
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 
-from mickroservices.models import QuestionModel
-from mickroservices.forms import QuestionForm
+from mickroservices.models import IdeaModel
+from mickroservices.forms import IdeaForm
 from mickroservices.utils import send_message
 
 
-class QuestionView(FormView):
+class IdeaView(FormView):
     """ """    
-    template_name = 'faq.html'
-    success_url = reverse_lazy('faq')
-    form_class = QuestionForm
+    template_name = 'idea.html'
+    success_url = reverse_lazy('idea')
+    form_class = IdeaForm
 
     def get_context_data(self, **kwargs):
-        ctx = super(QuestionView, self).get_context_data(**kwargs)
-        ctx['questions_ok'] = QuestionModel.objects.filter(status=QuestionModel.ST_OK)[:5]
-        ctx['breadcrumb'] = [{'title': 'FAQ'}]
+        ctx = super(IdeaView, self).get_context_data(**kwargs)
+        ctx['ideas_ok'] = IdeaModel.objects.filter(status=IdeaModel.ST_OK)[:5]
+        ctx['breadcrumb'] = [{'title': 'Идеи'}]
         return ctx
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         ctx = self.get_context_data(**kwargs)
         if form.is_valid():
-            self.form_valid(form)
+            form.save()
             ctx.update(self.form_valid_send_message(
                        form,
-                       'Обращение в техподдержку',
+                       'Ваша идея принята на рассмотрение!',
                        settings.DEFAULT_SUPORT_EMAIL,
                        self.get_context_data(**kwargs)))
-            ctx['status'] = 'Ваш вопрос принят на рассмотрение!'
+            ctx['status'] = 'Ваша идея принята на рассмотрение!'
             ctx.pop('errors')
         else:
             ctx['errors'] = f'Ошибка заполнения полей: {form.errors}'
 
         return TemplateResponse(request, self.template_name, ctx)
 
-    def form_valid(self, form):
-        form = form.save(commit=False)
-        form.name = self.request.user
-        form.save()
 
     def form_valid_send_message(self, form, subject, to_email, ctx):
         if form.is_valid():
-            error = send_message(template='emails/email_question.html',
+            error = send_message(template='emails/email_idea.html',
                                  subject=subject,
                                  ctx={},
                                  to_email=to_email,

@@ -10,6 +10,10 @@ urlpatterns = [
          login_required(views.QuestionView.as_view()),
          name='faq'),
 
+    path('ideas/',
+         login_required(views.IdeaView.as_view()),
+         name='idea'),
+
     path('lessons/',
          login_required(views.CoursesView.as_view()),
          name='lessons'),
