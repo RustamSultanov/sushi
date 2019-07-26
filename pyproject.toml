@@ -16,7 +16,6 @@ django-registration = "^3.0"
 phonenumbers = "^8.10"
 django-widget-tweaks = "^1.4"
 wagtail = "^2.5"
-django-quill = "^0.1.0"
 
 [tool.poetry.dev-dependencies]
 

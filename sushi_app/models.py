@@ -26,12 +26,13 @@ class UserProfile(models.Model):
     facebook = models.URLField(null=True, max_length=200, blank=True)
     instagram = models.URLField(null=True, max_length=200, blank=True)
     key_responsibilities = RichTextField(blank=True)
-    is_partner = models.BooleanField(blank=True, default=False)
-    is_manager = models.BooleanField(blank=True, default=False)
-    manager = models.ForeignKey(on_delete=models.SET_NULL, to=wagtail.users.models.UserProfile, related_name='manager',
-                                null=True, blank=True)
+    is_partner = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False)
+    is_head = models.BooleanField(blank=True, default=False)
+    manager = models.ForeignKey(on_delete=models.SET_NULL, to='self', related_name='partner',
+                                null=True, blank=True, limit_choices_to={'is_manager': True})
     head = models.ForeignKey(on_delete=models.SET_NULL, to='self', related_name='employee',
-                             null=True, blank=True)
+                             null=True, blank=True, limit_choices_to={'is_head': True})
     department = models.ForeignKey(on_delete=models.SET_NULL, to=Department, related_name='member',
                                    null=True, blank=True)
 

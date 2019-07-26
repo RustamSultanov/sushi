@@ -2,7 +2,6 @@ from django import forms
 
 
 from mickroservices.models import NewsPage
-from quill.fields import RichTextField
 
 
 class NewsForm(forms.ModelForm):

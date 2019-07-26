@@ -40,7 +40,7 @@ def employee_info(request, user_id):
 @user_passes_test(manager_check)
 def manager_lk_view(request):
     partner_list = UserProfile.objects.prefetch_related('user')\
-        .filter(manager=request.user.wagtail_userprofile)
+        .filter(manager=request.user.user_profile)
     return render(request, 'dashboard_manager.html', {'partner_list': partner_list,
                                                       'breadcrumb': [{'title': 'Личный кабинет'}]})
 

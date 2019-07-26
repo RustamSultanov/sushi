@@ -98,14 +98,6 @@ babel = "*"
 
 [[package]]
 category = "main"
-description = "Easily use Quill.js in your django admin."
-name = "django-quill"
-optional = false
-python-versions = "*"
-version = "0.1.0"
-
-[[package]]
-category = "main"
 description = "An extensible user-registration application for Django"
 name = "django-registration"
 optional = false
@@ -314,7 +306,7 @@ python-versions = "*"
 version = "1.1"
 
 [metadata]
-content-hash = "5a79317826c4ddfdf23e584ea024d6c5eb74e610095ec7c4ca15b264ba7a6228"
+content-hash = "ae3a0b17317c846b2f1f72274ffff502dd3da816d52053b11d29724be35ba244"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -328,7 +320,6 @@ django-debug-toolbar = ["17c53cd6bf4e7d69902aedf9a1d26c5d3b7369b54c5718744704f27
 django-environ = ["6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde", "c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4"]
 django-modelcluster = ["59672386191d38c69d6f994c3f9aaab3ff93910ec71e78a0bb6aa9abd4d1b90a", "eea507f2dd8bd283600c1cfa4de6776501a28f199089bb00613c1621505e80cc"]
 django-phonenumber-field = ["1ab19f723928582fed412bd9844221fa4ff466276d8526b8b4a9913ee1487c5e", "794ebbc3068a7af75aa72a80cb0cec67e714ff8409a965968040f1fd210b2d97"]
-django-quill = ["6b8f848373f7383e3fb1494dffa54c8477adbbb1d606ef3f988a4050e456ec52", "70394258824d9d12c9fdf83a85e279f0d180baaa9b24b390c98d665d072b625e"]
 django-registration = ["5193f8a8f8b5ee9f3cc6ae3b561739d17f69759b9abe72f33aec07467a99eeff", "88673ceecb09413493f78a2847cb78da8df47d4d6629aee6a17d9e3c6c66c444"]
 django-taggit = ["710b4d15ec1996550cc68a0abbc41903ca7d832540e52b1336e6858737e410d8", "bb8f27684814cd1414b2af75b857b5e26a40912631904038a7ecacd2bfafc3ac"]
 django-treebeard = ["c21db06a8d4943bf2a28d9d7a119058698fb76116df2679ecbf15a46a501de42"]

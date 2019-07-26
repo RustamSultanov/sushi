@@ -48,6 +48,16 @@
                                                             <div class="small ml-3">
                                                                 <a href="{% url 'employee_info' partner.id %}" class="text-primary">{{ partner.user.first_name }} {{ partner.user.last_name }}</a>
                                                                 <div class="small text-muted">{{ partner.position }}</div>
+                                                                <div class="btn-group">
+                                                                    <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                        <i class="ion ion-ios-more"></i>
+                                                                    </button>
+                                                                    <div class="dropdown-menu dropdown-menu-left">
+                                                                        <a class="dropdown-item" href="javascript:void(0)">Добавить задачу</a>
+                                                                        <a class="dropdown-item" href="javascript:void(0)">Добавить запрос</a>
+                                                                        <a class="dropdown-item" href="javascript:void(0)">Добавить отзыв</a>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="small text-muted mb-3">
