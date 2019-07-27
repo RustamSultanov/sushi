@@ -4,3 +4,4 @@ from .trainings import (CoursesView, CourseView,
 from .news import (NewsView, NewsCreateView, NewsEditView)
 from .marketing_material import MarketingView
 from .idea import IdeaView
+from .tech_cards import TechCardsListView

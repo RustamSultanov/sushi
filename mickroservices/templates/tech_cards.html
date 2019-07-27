@@ -1,0 +1,91 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load wagtailcore_tags %}
+
+
+{% block title %}Техкарты{% endblock %}
+
+{% block page_title %}
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Техкарты</h2>
+{% endblock %}
+
+{% block  breadcrumb%}
+        {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+
+{% block content %} 
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <div class="my-4">
+                        <form action="{% url 'mickroservices:tech_cards' %}" class="dropzone needsclick" id="dropzone-files" method='post'>
+                            {% csrf_token %}
+                            <div class="dz-message needsclick">
+                                Перетащите файлы сюда или нажмите, чтобы загрузить
+                            </div>
+                            <div class="fallback">
+                                <input name="file" type="file" multiple>
+                            </div>                            
+                        </form>
+                    </div>
+                    <div class="my-4">
+                        <button type="submit" class="btn btn-primary btn-round">Сохранить</button>
+                    </div>                    
+                    <div class="my-5">
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <i class="input-group-text ion-ios-search"></i>
+                                    </div>
+                                    <input type="search" class="form-control" placeholder="Поиск...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-5">
+                        <div class="my-4 small text-right">
+                            <span class="text-muted">Сортировать: </span>
+                            <a href="#" class="text-muted active">По порядку</a>
+                            <a href="#" class="text-muted">По дате</a>
+                            <a href="#" class="text-muted">По размеру</a>
+                        </div>
+                        <div class="row">
+                            {% for document in documents %}
+                                <div class="col-md-6 col-lg-4 p-1">
+                                    <div class="project-attachment ui-bordered p-2">
+                                        <div class="project-attachment-img" style="background-image: url(img/5.jpg)"></div>
+                                        <div class="media-body ml-3">
+                                            <strong class="project-attachment-filename">{{document.title}}</strong>
+                                            <div class="text-muted small"  >{{document.file_size|filesizeformat}}</div>
+                                            <div>
+                                                <a href="javascript:void(0)">Просмотреть</a> &nbsp;
+                                                <a href="javascript:void(0)">Загрузить</a>
+                                            </div>
+                                        </div>
+                                        <div class="btn-group project-actions align-self-start">
+                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                <i class="ion ion-ios-more"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if is_paginated %}
+                            {% include 'partials/pagination.html' with posts=page_obj %}
+                        {% endif %}
+                    </div>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href='{% static "libs/dropzone/dropzone.css" %}'>
+{% endblock %}
+
+{% block extrascripts %}
+    <script src='{% static "libs/dropzone/dropzone.js" %}'></script>
+    <script src='{% static "js/dashboard.js" %}'></script>
+{% endblock %}
