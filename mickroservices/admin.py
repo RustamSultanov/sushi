@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import (QuestionModel,TypeCourseModel, CourseModel, PlanDayModel,
-                     ScheduleModel,IdeaModel, )
+from .models import (QuestionModel, TypeCourseModel, CourseModel, PlanDayModel,
+                     ScheduleModel, IdeaModel, )
 
 admin.site.register(QuestionModel)
 admin.site.register(TypeCourseModel)
