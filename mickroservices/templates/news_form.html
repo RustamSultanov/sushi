@@ -109,13 +109,14 @@
       $(document).ready(function(){
            console.log($('input[name=body]').val());
            $('div.ql-editor').html($('input[name=body]').val());
-    $('input[wtype="date"]').bootstrapMaterialDatePicker({
-        time: false,
-        format : 'DD.MM.YYYY',
-        nowButton : true,
-        lang: 'ru',
-        minDate : new Date(),
-    });           
+          $('input[wtype="date"]').bootstrapMaterialDatePicker({
+              weekStart: 1,
+              shortTime: true,
+              format : 'DD.MM.YYYY HH:MM',
+              nowButton : true,
+              lang: 'ru',
+              minDate : new Date(),
+          });           
       });      
     </script>      
 {% endblock %}

@@ -23,11 +23,12 @@ $(function() {
     };
 
 
-    $('input[wtype="date"]').bootstrapMaterialDatePicker({
-        time: false,
-        format : 'DD.MM.YYYY',
-        nowButton : true,
-        lang: 'ru',
-        minDate : new Date(),
-    });
+  $('input[wtype="date"]').bootstrapMaterialDatePicker({
+      weekStart: 1,
+      shortTime: true,
+      format : 'DD.MM.YYYY HH:MM',
+      nowButton : true,
+      lang: 'ru',
+      minDate : new Date(),
+  });
 });
