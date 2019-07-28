@@ -1,12 +1,12 @@
 $(function() {
-    var file_div = $('.file_div');
     $('#dropzone-files').dropzone({
         parallelUploads: 2,
         maxFilesize:     50000,
         filesizeBase:    3000,
         addRemoveLinks:  true,
         success : function(file, response){
-            console.log(file_div)
+            console.log(this.emit);
+            console.log(response);
         }        
     });
 

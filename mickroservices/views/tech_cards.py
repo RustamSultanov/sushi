@@ -3,6 +3,7 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.template.response import TemplateResponse
 from django.template.loader import render_to_string
 from django.views.generic.base import TemplateView
+from django.views.generic import ListView
 from django.views.decorators.http import require_POST
 from django.views.decorators.vary import vary_on_headers
 
@@ -18,7 +19,10 @@ from wagtail.documents.permissions import permission_policy
 
 permission_checker = PermissionPolicyChecker(permission_policy)
 
-class TechCardsListView(TemplateView):
+class TechCardsListView(ListView):
+    model = get_document_model()
+    paginate_by = 9
+    context_object_name = 'documents'    
     template_name = 'tech_cards.html'
 
 
@@ -27,46 +31,32 @@ class TechCardsListView(TemplateView):
         context['breadcrumb'] = [{'title': 'Техкарты'}]
         return context
 
-
-    def get(self, request, *args, **kwargs):
-        Document = get_document_model()
+    def get_queryset(self):
 
         # Get documents (filtered by user permission)
         documents = permission_policy.instances_user_has_any_permission_for(
-            request.user, ['change', 'delete']
+            self.request.user, ['change', 'delete']
         )
-
         # Ordering
-        if 'ordering' in request.GET and request.GET['ordering'] in ['title', '-created_at']:
-            ordering = request.GET['ordering']
+        if 'ordering' in self.request.GET and self.kwargs['ordering'] in ['title', '-created_at']:
+            ordering = self.request.GET['ordering']
         else:
             ordering = '-created_at'
         documents = documents.order_by(ordering)
 
-        # Filter by collection
-        current_collection = None
-        collection_id = request.GET.get('collection_id')
-        if collection_id:
-            try:
-                current_collection = Collection.objects.get(id=collection_id)
-                documents = documents.filter(collection=current_collection)
-            except (ValueError, Collection.DoesNotExist):
-                pass
-
         # Search
         query_string = None
-        if 'q' in request.GET:
-            form = SearchForm(request.GET, placeholder="Search documents")
+        if 'q' in self.request.GET:
+            form = SearchForm(self.request.GET, placeholder="Search documents")
             if form.is_valid():
                 query_string = form.cleaned_data['q']
                 documents = documents.search(query_string)
         else:
             form = SearchForm(placeholder="Search documents")
+        return documents
 
-        # Pagination
-        paginator = Paginator(documents, per_page=20)
-        page_obj = paginator.get_page(request.GET.get('p'))
-        print(page_obj)
+    def get(self, request, *args, **kwargs):
+
         collections = permission_policy.collections_user_has_any_permission_for(
             request.user, ['add', 'change']
         )
@@ -84,24 +74,12 @@ class TechCardsListView(TemplateView):
                 'is_searching': bool(query_string),
             })
         else:
-            return TemplateResponse(request, 'tech_cards.html', {
-                'ordering': ordering,
-                'documents': documents,
-                'query_string': query_string,
-                'is_searching': bool(query_string),
-
-                'search_form': form,
-                'popular_tags': popular_tags_for_model(Document),
-                'user_can_add': permission_policy.user_has_permission(request.user, 'add'),
-                'collections': collections,
-                'current_collection': current_collection,
-            })
+            return super().get(request, *args, **kwargs)
 
     @vary_on_headers('X-Requested-With')
     def post(self, request, *args, **kwargs):
-        Document = get_document_model()
-        DocumentForm = get_document_form(Document)
-        DocumentMultiForm = get_document_multi_form(Document)        
+        DocumentForm = get_document_form(self.model)
+        DocumentMultiForm = get_document_multi_form(self.model)        
 
         print('========= add_tech_card =================')
         print(request.FILES)        
