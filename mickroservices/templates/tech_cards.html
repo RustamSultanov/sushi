@@ -32,21 +32,23 @@
                     <div class="my-5">
                         <div class="row mt-3">
                             <div class="col-12">
-                                <div class="input-group">
+                                <form class="input-group search-form" action="{% url 'mickroservices:tech_cards' %}" method="get" novalidate="">
                                     <div class="input-group-prepend">
                                         <i class="input-group-text ion-ios-search"></i>
                                     </div>
-                                    <input type="search" class="form-control" placeholder="Поиск...">
-                                </div>
+                                    
+                                        <input type="search" name="q" class="form-control" placeholder="Поиск...">
+                                        <input type="submit" value="Search" class="button" style="display:none">
+                                </form>
                             </div>
                         </div>
                     </div>
                     <div class="my-5">
                         <div class="my-4 small text-right">
                             <span class="text-muted">Сортировать: </span>
-                            <a href="#" class="text-muted active">По порядку</a>
-                            <a href="#" class="text-muted">По дате</a>
-                            <a href="#" class="text-muted">По размеру</a>
+                            <a href="?ordering=title" class="text-muted active">По порядку</a>
+                            <a href="?ordering=-created_at" class="text-muted">По дате</a>
+                            <a href="?ordering=file_size" class="text-muted">По размеру</a>
                         </div>
                         <div class="row" id="documents_wraper">
                             {% for document in documents %}
@@ -58,7 +60,7 @@
                                             <div class="text-muted small"  >{{document.file_size|filesizeformat}}</div>
                                             <div>
                                                 <a href="javascript:void(0)">Просмотреть</a> &nbsp;
-                                                <a href="javascript:void(0)">Загрузить</a>
+                                                <a href="{{ document.url }}">Загрузить</a>
                                             </div>
                                         </div>
                                         <div class="btn-group project-actions align-self-start">
@@ -95,33 +97,35 @@
                 filesizeBase:    3000,
                 addRemoveLinks:  true,
                 success : function(file, response){
-                    console.log(response.documents)
-                    response.documents.forEach(function(item, i, arr) {
-                      $('#documents_wraper').append(
-                            '<div class="col-md-6 col-lg-4 p-1">\
-                                <div class="project-attachment ui-bordered p-2">\
-                                    <div class="project-attachment-img" style="background-image: url({% static "img/5.jpg" %})"></div>\
-                                    <div class="media-body ml-3">\
-                                        <strong class="project-attachment-filename">'+item.title+'</strong>\
-                                        <div class="text-muted small"  >{{'+item.file_size+'|filesizeformat}}</div>\
-                                        <div>\
-                                            <a href="javascript:void(0)">Просмотреть</a> &nbsp;\
-                                            <a href="javascript:void(0)">Загрузить</a>\
+                    console.log(response.documents.length)
+                    if (response.documents.length < 9){
+                        response.documents.forEach(function(item, i, arr) {
+                          $('#documents_wraper').append(
+                                '<div class="col-md-6 col-lg-4 p-1">\
+                                    <div class="project-attachment ui-bordered p-2">\
+                                        <div class="project-attachment-img" style="background-image: url({% static "img/5.jpg" %})"></div>\
+                                        <div class="media-body ml-3">\
+                                            <strong class="project-attachment-filename">'+item.title+'</strong>\
+                                            <div class="text-muted small"  >{{'+item.file_size+'|filesizeformat}}</div>\
+                                            <div>\
+                                                <a href="javascript:void(0)">Просмотреть</a> &nbsp;\
+                                                <a href="javascript:void(0)">Загрузить</a>\
+                                            </div>\
+                                        </div>\
+                                        <div class="btn-group project-actions align-self-start">\
+                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">\
+                                                <i class="ion ion-ios-more"></i>\
+                                            </button>\
+                                            <div class="dropdown-menu dropdown-menu-right">\
+                                                <a class="dropdown-item" href="javascript:void(0)">View</a>\
+                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>\
+                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>\
+                                            </div>\
                                         </div>\
                                     </div>\
-                                    <div class="btn-group project-actions align-self-start">\
-                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">\
-                                            <i class="ion ion-ios-more"></i>\
-                                        </button>\
-                                        <div class="dropdown-menu dropdown-menu-right">\
-                                            <a class="dropdown-item" href="javascript:void(0)">View</a>\
-                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>\
-                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>\
-                                        </div>\
-                                    </div>\
-                                </div>\
-                            </div>');
-                    });
+                                </div>');
+                        });
+                    }
                 }        
             });
 
@@ -132,7 +136,6 @@
             addRemoveLinks: true,
             dictResponseError: 'Server not Configured',
           };
-
         });
     </script>
 {% endblock %}

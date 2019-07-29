@@ -19,12 +19,12 @@ from wagtail.documents.permissions import permission_policy
 
 permission_checker = PermissionPolicyChecker(permission_policy)
 
+
 class TechCardsListView(ListView):
     model = get_document_model()
     paginate_by = 9
-    context_object_name = 'documents'    
+    context_object_name = 'documents'
     template_name = 'tech_cards.html'
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -37,22 +37,24 @@ class TechCardsListView(ListView):
         documents = permission_policy.instances_user_has_any_permission_for(
             self.request.user, ['change', 'delete']
         )
+
         # Ordering
-        if 'ordering' in self.request.GET and self.kwargs['ordering'] in ['title', '-created_at']:
+        if 'ordering' in self.request.GET\
+            and self.request.GET['ordering'] in ['title',
+                                                 '-created_at',
+                                                 'file_size']:
             ordering = self.request.GET['ordering']
         else:
-            ordering = '-created_at'
+            ordering = 'title'
         documents = documents.order_by(ordering)
 
         # Search
-        query_string = None
         if 'q' in self.request.GET:
             form = SearchForm(self.request.GET, placeholder="Search documents")
             if form.is_valid():
                 query_string = form.cleaned_data['q']
                 documents = documents.search(query_string)
-        else:
-            form = SearchForm(placeholder="Search documents")
+
         return documents
 
     def get(self, request, *args, **kwargs):
