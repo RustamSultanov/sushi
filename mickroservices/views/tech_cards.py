@@ -1,44 +1,42 @@
-from django.core.paginator import Paginator
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.template.response import TemplateResponse
-from django.template.loader import render_to_string
-from django.views.generic.base import TemplateView
 from django.views.generic import ListView
-from django.views.decorators.http import require_POST
 from django.views.decorators.vary import vary_on_headers
+from django.utils.encoding import force_text
 
-from wagtail.admin import messages
 from wagtail.admin.forms.search import SearchForm
-from wagtail.admin.utils import PermissionPolicyChecker, permission_denied, popular_tags_for_model
+from wagtail.admin.utils import PermissionPolicyChecker
 from wagtail.core.models import Collection
-from wagtail.search.backends import get_search_backends
 
-from wagtail.documents.forms import get_document_form, get_document_multi_form
-from wagtail.documents.models import get_document_model
+from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
+
+from mickroservices.models import DocumentSushi
 
 permission_checker = PermissionPolicyChecker(permission_policy)
 
 
-class TechCardsListView(ListView):
-    model = get_document_model()
+class SushiDocListView(ListView):
+    model = DocumentSushi
     paginate_by = 9
     context_object_name = 'documents'
     template_name = 'tech_cards.html'
+    
+    def __init__(self, *args, **kwargs):
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['breadcrumb'] = [{'title': 'Техкарты'}]
-        return context
+        return super().__init__(*args, **kwargs)
+
+    def get_documents(self):
+        documents = permission_policy.instances_user_has_any_permission_for(
+            self.request.user, ['change', 'delete']
+        )
+        return documents.filter(documentsushi__doc_type=self.doc_type)
 
     def get_queryset(self):
 
         # Get documents (filtered by user permission)
-        documents = permission_policy.instances_user_has_any_permission_for(
-            self.request.user, ['change', 'delete']
-        )
-
+        documents = self.get_documents()
         # Ordering
+        ordering = None
         if 'ordering' in self.request.GET\
             and self.request.GET['ordering'] in ['title',
                                                  '-created_at',
@@ -49,6 +47,7 @@ class TechCardsListView(ListView):
         documents = documents.order_by(ordering)
 
         # Search
+        query_string = None
         if 'q' in self.request.GET:
             form = SearchForm(self.request.GET, placeholder="Search documents")
             if form.is_valid():
@@ -68,23 +67,11 @@ class TechCardsListView(ListView):
             collections = Collection.order_for_display(collections)
 
         # Create response
-        if request.is_ajax():
-            return TemplateResponse(request, 'wagtaildocs/documents/results.html', {
-                'ordering': ordering,
-                'documents': documents,
-                'query_string': query_string,
-                'is_searching': bool(query_string),
-            })
-        else:
-            return super().get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)
 
     @vary_on_headers('X-Requested-With')
     def post(self, request, *args, **kwargs):
         DocumentForm = get_document_form(self.model)
-        DocumentMultiForm = get_document_multi_form(self.model)        
-
-        print('========= add_tech_card =================')
-        print(request.FILES)        
         if not request.is_ajax():
             return HttpResponseBadRequest("Cannot POST to this view without AJAX")
 
@@ -102,6 +89,7 @@ class TechCardsListView(ListView):
         if form.is_valid():
             # Save it
             doc = form.save(commit=False)
+            doc.doc_type = self.doc_type
             doc.uploaded_by_user = request.user
             doc.file_size = doc.file.size
 
@@ -119,15 +107,9 @@ class TechCardsListView(ListView):
             else:
                 collections = Collection.order_for_display(collections)
 
-            # Get documents (filtered by user permission)
-            documents = permission_policy.instances_user_has_any_permission_for(
-                request.user, ['change', 'delete']
-            )
-            print(documents)
-            # Success! Send back an edit form for this document to the user
             return JsonResponse({
                 'success': True,
-                'documents': [{'title':doc.title, 'file_size':doc.file_size} for doc in documents],
+                'documents': [{'title':doc.title, 'file_size':doc.file_size} for doc in self.get_documents()],
                 'collections': collections,                
                 'doc_id': int(doc.id),
             })
@@ -138,3 +120,23 @@ class TechCardsListView(ListView):
                 # https://github.com/django/django/blob/stable/1.6.x/django/forms/util.py#L45
                 'error_message': '\n'.join(['\n'.join([force_text(i) for i in v]) for k, v in form.errors.items()]),
             })
+
+
+class TechCardsListView(SushiDocListView):
+    doc_type = DocumentSushi.T_TEH_CARD
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Техкарты'
+        context['breadcrumb'] = [{'title': context['title']}]
+        return context
+
+
+class RegulationsListView(SushiDocListView):
+    doc_type = DocumentSushi.T_REGULATIONS
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Регламенты'
+        context['breadcrumb'] = [{'title': context['title']}]
+        return context    

@@ -47,4 +47,7 @@ urlpatterns = [
     path('tech_cards/',
          login_required(views.TechCardsListView.as_view()),
          name='tech_cards'),
+    path('regulations/',
+         login_required(views.RegulationsListView.as_view()),
+         name='regulations'),    
 ]

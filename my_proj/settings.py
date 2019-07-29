@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'my_proj',
     'sushi_app',
     'tz_detect',
-    'mickroservices.apps.MickroservicesConfig',
+    'mickroservices',
 ]
 
 WAGTAILSEARCH_BACKENDS = {
