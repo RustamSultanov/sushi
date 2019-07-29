@@ -27,7 +27,10 @@
             <label class="form-label">Дата и время публикации</label>
             {% render_field form.first_published_at placeholder="Дата и время публикации" class+="form-control" %}
         </div>
-
+        <div class="form-group">
+            <label class="form-label">Изображение</label>
+            {% render_field form.image placeholder="Изображение публикации" class+="form-control" %}
+        </div>
         <label class="form-label">Текст новости</label>
         <div id="quill-toolbar">
             <span class="ql-formats">
