@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html lang="en" class="material-style">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <title>TITLE</title>
+
+    <!-- Main font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
+
+    <!-- Icons. Uncomment required icon fonts -->
+     <link rel="stylesheet" href="fonts/fontawesome.css">
+    <link rel="stylesheet" href="fonts/ionicons.css">
+    <link rel="stylesheet" href="fonts/sympletts-icons.css">
+    <!-- <link rel="stylesheet" href="fonts/linearicons.css"> -->
+    <!-- <link rel="stylesheet" href="fonts/open-iconic.css"> -->
+    <!-- <link rel="stylesheet" href="fonts/pe-icon-7-stroke.css"> -->
+
+    <!-- Core stylesheets -->
+    <!--<link rel="stylesheet" href="css/bootstrap-material.css">-->
+    <!--<link rel="stylesheet" href="css/appwork-material.css">-->
+    <!--<link rel="stylesheet" href="css/rtl/theme-vendors-material.css">-->
+    <!--<link rel="stylesheet" href="css/colors-material.css">-->
+    <!--<link rel="stylesheet" href="css/uikit.css">-->
+    <link rel="stylesheet" href="css/app.css">
+
+    <!-- Layout helpers -->
+    <script src="js/layout-helpers.js"></script>
+
+    <!-- Libs -->
+    <!--  Lib for files upload  -->
+    <link rel="stylesheet" href="libs/dropzone/dropzone.css">
+
+    <!-- `perfect-scrollbar` library required by SideNav plugin -->
+    <link rel="stylesheet" href="libs/perfect-scrollbar/perfect-scrollbar.css">
+
+</head>
+<body>
+
+<!-- Layout wrapper -->
+<div class="layout-wrapper layout-1 layout-without-sidenav">
+    <!-- Layout inner -->
+    <div class="layout-inner">
+
+        <!-- Layout navbar -->
+        <nav class="layout-navbar navbar navbar-expand-xl align-items-xl-center bg-navbar-theme container-p-x" id="layout-navbar">
+
+            <!-- Brand demo (see assets/css/demo/demo.css) -->
+            <a href="#" class="navbar-brand app-brand py-0 mr-xl-4">
+              <span class="app-brand-logo demo">
+                <img src="img/logo.png" alt="">
+              </span>
+            </a>
+
+            <button class="navbar-toggler ml-auto mr-3" type="button" data-toggle="collapse" data-target="#layout-navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="order-xl-last navbar-nav">
+                <div class="demo-navbar-user nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                            <span class="d-inline-flex align-items-center align-middle">
+                              <img src="img/avatars/1.png" alt class="d-block ui-w-30 rounded-circle">
+                              <div class="ml-3 text-right">
+                                <div class="navbar-name">Владислав</div>
+                                  <div class="text-primary small">Партнер 3 уровня</div>
+                              </div>
+                            </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="javascript:void(0)" class="dropdown-item">Оповещения</a>
+                        <a href="javascript:void(0)" class="dropdown-item">Сообщения</a>
+                        <a href="javascript:void(0)" class="dropdown-item">Настройки</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="javascript:void(0)" class="dropdown-item">
+                            <i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navbar-collapse collapse" id="layout-navbar-collapse">
+                <!-- Divider -->
+                <hr class="d-lg-none w-100 my-2">
+
+                <div class="navbar-nav align-items-lg-center mr-auto ml-xl-4">
+                    <div class="nav-item">
+                        <a href="#" class="nav-link nav-link__icon">
+                            <i class="icon-user"></i>
+                            <span>Сотрудники</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link nav-link__icon">
+                            <i class="icon-folder"></i>
+                            <span>Регламенты</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link nav-link__icon">
+                            <i class="icon-send"></i>
+                            <span>Новости</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link nav-link__icon">
+                            <i class="icon-star"></i>
+                            <span>Маркетинг</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link nav-link__icon">
+                            <i class="icon-help-question"></i>
+                            <span>Обучение</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link nav-link__icon">
+                            <i class="icon-settings"></i>
+                            <span>Техкарты</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="navbar-nav align-items-center ml-auto">
+                    <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div>
+                    <div class="btn btn-primary btn-round mr-xl-2">Предложить идею</div>
+                </div>
+            </div>
+        </nav>
+        <!-- / Layout navbar -->
+
+        <div class="layout-container">
+
+            <div class="layout-content">
+
+                <!-- Page content -->
+                <div class="container flex-grow-1 container-p-y">
+                    <h2 class="text-light  font-weight-normal mt-4 mb-1">Задача #15</h2>
+                    <ol class="breadcrumb small mb-4">
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">Главная</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="javascript:void(0)">Личный кабинет</a>
+                        </li>
+                        <li class="breadcrumb-item active">Задача #15</li>
+                    </ol>
+                    <div class="row my-4">
+                        <div class="col">
+
+                            <div class="media align-items-center mb-3">
+                                <img src="img/avatars/2.png" alt="" class="ui-w-60 rounded-circle">
+                                <div class="small ml-3">
+                                    <div class="text-dark">Мария Петрова-Водкина</div>
+                                    <div class="text-muted">25.06.2019 12:00
+                                    </div>
+                                    <!--   Вариант для партнера   -->
+                                    <span class="badge badge-pill badge-warning">Не решена</span>
+                                    <!--   Вариант для менеджера   -->
+                                    <div class="btn-group">
+                                        <button class="btn btn-warning btn-xs btn-round dropdown-toggle" type="button" data-toggle="dropdown">Не решена</button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="javascript:void(0)">Решена</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">Провалена</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5>Название задачи</h5>
+
+                            <p>Описание задачи. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <div class="nav-tabs-top mb-4">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link active show" data-toggle="tab" href="#coments">Комментарии</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#files">Файлы</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-content no-shadow">
+                                <div class="tab-pane fade active show" id="coments">
+                                    <div class="media mb-3">
+                                        <div>
+                                            <img src="img/avatars/1.png" class="ui-w-40 rounded-circle" alt="">
+                                            <div class="text-muted small text-nowrap mt-2">
+                                                28.06.19
+                                                <br>12:05
+                                            </div>
+                                        </div>
+                                        <div class="media-body bg-lighter rounded py-2 px-3 ml-3">
+                                            <div class="font-weight-semibold mb-1">Владислав</div>
+                                            Pellentesque faucibus, nisl vel luctus porttitor, leo felis pellentesque augue, dignissim tempus risus odio sed lorem. Nunc nec malesuada nunc, ut mollis dui.
+                                        </div>
+                                    </div>
+                                    <div class="media mb-3">
+                                        <div>
+                                            <img src="img/avatars/1.png" class="ui-w-40 rounded-circle" alt="">
+                                            <div class="text-muted small text-nowrap mt-2">
+                                                28.06.19
+                                                <br>12:05
+                                            </div>
+                                        </div>
+                                        <div class="media-body bg-lighter rounded py-2 px-3 ml-3">
+                                            <div class="font-weight-semibold mb-1">Владислав</div>
+                                            Pellentesque faucibus, nisl vel luctus porttitor, leo felis pellentesque augue, dignissim tempus risus odio sed lorem. Nunc nec malesuada nunc, ut mollis dui.
+                                        </div>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Введите сообщение">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-primary">Отправить</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="files">
+                                    <div class="my-4">
+                                        <form action="/upload" class="dropzone needsclick" id="dropzone-files">
+                                            <div class="dz-message needsclick">
+                                                Перетащите файлы сюда или нажмите, чтобы загрузить
+                                                <span class="note needsclick">(Это демонстрационная версия. Файлы не будут загружены на сервер.)</span>
+                                            </div>
+                                            <div class="fallback">
+                                                <input name="file" type="file" multiple>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="my-4 small text-right">
+                                        <span class="text-muted">Сортировать: </span>
+                                        <a href="#" class="text-muted active">По порядку</a>
+                                        <a href="#" class="text-muted">По дате</a>
+                                        <a href="#" class="text-muted">По размеру</a>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-4 p-1">
+                                            <div class="project-attachment ui-bordered p-2">
+                                                <div class="project-attachment-img" style="background-image: url(img/5.jpg)"></div>
+                                                <div class="media-body ml-3">
+                                                    <strong class="project-attachment-filename">image_1.jpg</strong>
+                                                    <div class="text-muted small">527KB</div>
+                                                    <div>
+                                                        <a href="javascript:void(0)">Просмотреть</a> &nbsp;
+                                                        <a href="javascript:void(0)">Загрузить</a>
+                                                    </div>
+                                                </div>
+                                                <div class="btn-group project-actions align-self-start">
+                                                    <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                        <i class="ion ion-ios-more"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-lg-4 p-1">
+                                            <div class="project-attachment ui-bordered p-2">
+                                                <div class="project-attachment-file display-4">
+                                                    <i class="far fa-file-pdf"></i>
+                                                </div>
+                                                <div class="media-body ml-3">
+                                                    <strong class="project-attachment-filename">assignment_letter.pdf</strong>
+                                                    <div class="text-muted small">156KB</div>
+                                                    <div>
+                                                        <a href="javascript:void(0)">Просмотреть</a> &nbsp;
+                                                        <a href="javascript:void(0)">Загрузить</a>
+                                                    </div>
+                                                </div>
+                                                <div class="btn-group project-actions align-self-start">
+                                                    <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                        <i class="ion ion-ios-more"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-4 p-1">
+                                            <div class="project-attachment ui-bordered p-2">
+                                                <div class="project-attachment-file display-4">
+                                                    <i class="far fa-file-archive"></i>
+                                                </div>
+                                                <div class="media-body ml-3">
+                                                    <strong class="project-attachment-filename">app_update.zip</strong>
+                                                    <div class="text-muted small">1.35MB</div>
+                                                    <div>
+                                                        <a href="javascript:void(0)">Загрузить</a>
+                                                    </div>
+                                                </div>
+                                                <div class="btn-group project-actions align-self-start">
+                                                    <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                        <i class="ion ion-ios-more"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0)">View</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)">Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- / Page content -->
+
+                <!-- Layout footer -->
+                <nav class="footer bg-footer-theme pt-4">
+                    <div class="container text-center py-4">
+                        <div class="pb-3">
+                            <a href="javascript:void(0)" class="footer-text text-large font-weight-normal">Sushi Shop</a>
+                            <span class="align-top">©</span>
+                        </div>
+                        <hr class="mb-4">
+                        <div class="row">
+                            <div class="col-sm pb-4">
+                                <div class="footer-text small font-weight-bold mb-3">ABOUT US</div>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">About</a>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Our Story</a>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Shipping</a>
+                            </div>
+                            <div class="col-sm pb-4">
+                                <div class="footer-text small font-weight-bold mb-3">CATEGORY</div>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Woman</a>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Man</a>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Kids</a>
+                            </div>
+                            <div class="col-sm pb-4">
+                                <div class="footer-text small font-weight-bold mb-3">SUPPORT</div>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">FAQ</a>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Support</a>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Consultant</a>
+                            </div>
+                            <div class="col-sm pb-4">
+                                <div class="footer-text small font-weight-bold mb-3">PARTNERS</div>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Wholesale</a>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Office solutions</a>
+                                <a href="javascript:void(0)" class="footer-link d-block pb-2">Press Resource</a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <!-- / Layout footer -->
+            </div>
+        </div>
+    </div>
+    <!-- Layout inner -->
+</div>
+<!-- / Layout wrapper -->
+
+<!-- Core scripts -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="libs/popper/popper.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/sidenav.js"></script>
+
+<!-- Libs -->
+
+<!-- `perfect-scrollbar` library required by SideNav plugin -->
+<script src="libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+<!-- lib for files upload -->
+<script src="libs/dropzone/dropzone.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

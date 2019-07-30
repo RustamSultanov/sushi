@@ -1,13 +1,14 @@
-from .models import Messeges, Feedback
+from .models import Messeges, Feedback, Requests, Task
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import models
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-#from django_registration.forms import RegistrationForm
+# from django_registration.forms import RegistrationForm
 from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
 
 User = get_user_model()
+
 
 # class RegistrationCustomForm(RegistrationForm):
 #     class Meta(RegistrationForm.Meta):
@@ -15,7 +16,7 @@ User = get_user_model()
 #         fields = [
 #             User.USERNAME_FIELD,
 #             'first_name',
-        
+
 #         ]
 #         widgets = {
 #             User.USERNAME_FIELD : PhoneNumberInternationalFallbackWidget(attrs={'id':"email", 'class':"validate"}),
@@ -27,35 +28,55 @@ User = get_user_model()
 
 #     def save(self,commit=False):
 #         user = super(R
-    # password_check = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Повторите пароль', 'name' : 'password_check'}))
+# password_check = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder' : 'Повторите пароль', 'name' : 'password_check'}))
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(
         attrs={
-               'class': "form-control"}))
+            'class': "form-control"}))
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': "form-control"}))
 
 
-
 class MessegesForm(forms.ModelForm):
-
     class Meta:
         model = Messeges
         fields = ['text']
         widgets = {
-                'text': forms.TextInput(attrs={'id' : 'message', 'class' : 'mdc-text-field__input'})
-                }
+            'text': forms.TextInput(attrs={'id': 'message', 'class': 'mdc-text-field__input'})
+        }
 
-class FeedbackForm(forms.ModelForm):
+
+class RequestsForm(forms.ModelForm):
     class Meta:
-            model = Feedback
-            fields = ['text', 'rating', 'files', 'adv', 'disadv', ]
-            widgets = {
-                'text': forms.Textarea(attrs={'id':"textarea-3",'class':"mdc-text-field__input", 'rows' : '4','cols':"40"}),
-                'adv': forms.Textarea(attrs={'id':"textarea-1",'class':"mdc-text-field__input", 'rows' : '4','cols':"40"}),
-                'disadv': forms.Textarea(attrs={'id':"textarea-2",'class':"mdc-text-field__input",' name':"rating", 'rows' : '4','cols':"40"}),
-                'rating': forms.RadioSelect(attrs={'class':"input-hidden",' name':"rating"}),
-                'files': forms.ClearableFileInput(attrs={'id':"file",'class':"input-hidden",}),
-            }
+        model = Requests
+        fields = ['title', 'description']
+        widgets = {
+            'title': forms.TextInput(
+                attrs={'name': 'title', 'class': 'form-control', 'placeholder': "Название запроса"}),
+            'description': forms.Textarea(
+                attrs={'placeholder': "Описание запроса", 'class': "form-control"}),
+        }
 
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['title', 'description']
+        widgets = {
+            'title': forms.TextInput(
+                attrs={'name': 'title', 'class': 'form-control', 'placeholder': "Название задачи"}),
+            'description': forms.Textarea(
+                attrs={'placeholder': "Описание задачи", 'class': "form-control"}),
+        }
+# class FeedbackForm(forms.ModelForm):
+#     class Meta:
+#             model = Feedback
+#             fields = ['text', 'rating', 'files', 'adv', 'disadv', ]
+#             widgets = {
+#                 'text': forms.Textarea(attrs={'id':"textarea-3",'class':"mdc-text-field__input", 'rows' : '4','cols':"40"}),
+#                 'adv': forms.Textarea(attrs={'id':"textarea-1",'class':"mdc-text-field__input", 'rows' : '4','cols':"40"}),
+#                 'disadv': forms.Textarea(attrs={'id':"textarea-2",'class':"mdc-text-field__input",' name':"rating", 'rows' : '4','cols':"40"}),
+#                 'rating': forms.RadioSelect(attrs={'class':"input-hidden",' name':"rating"}),
+#                 'files': forms.ClearableFileInput(attrs={'id':"file",'class':"input-hidden",}),
+#             }

@@ -161,8 +161,8 @@
                         {% else %}
                         {% endif %}
                         <div class="media align-items-center mb-3">
-                            {% if employee.user.wagtail_userprofile.avatar %}
-                          <img src="{{ employee.user.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                            {% if employee.wagtail_profile.avatar %}
+                          <img src="{{ employee.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
                         {% else %}
                         {% endif %}
                             <div class="small ml-3">

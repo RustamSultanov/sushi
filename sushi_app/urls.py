@@ -19,11 +19,11 @@ urlpatterns = [
     path('manager-lk', views.manager_lk_view, name='manager_lk'),
     path('partner-lk', views.partner_lk_view, name='partner_lk'),
     path(
-        'prod/<int:product_id>', views.product_view, name='product'),
+        'request/new', views.form_request_view, name='form_request'),
     path(
-        'product-chat-2/<int:product_id>-<int:user_id>', views.chat_view, name='chat'),
+        'task/new/<int:partner_id>', views.form_task_view, name='form_task'),
     path(
         'product-detail/<int:product_id>', views.product_detail_view, name='product_detail'),
-    path(
-        'product-feedback/<int:product_id>', views.feedback_view, name='feedback'),
+    # path(
+    #     'product-feedback/<int:product_id>', views.feedback_view, name='feedback'),
 ]

@@ -4,8 +4,15 @@ from wagtail.documents.models import Document, AbstractDocument
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from wagtail.core.fields import RichTextField
-import wagtail.users.models
 from wagtail.documents.models import get_document_model
+import wagtail.users.models
+
+ST_SOLVED, ST_IN_PROGRESS, ST_NOT_SOLVED = range(3)
+STATUS_CHOICE = (
+    (ST_SOLVED, "Решен"),
+    (ST_IN_PROGRESS, "Обрабатывается"),
+    (ST_NOT_SOLVED, "Не решен"),
+)
 
 
 class Department(models.Model):
@@ -18,6 +25,10 @@ class Department(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_profile'
+    )
+    wagtail_profile = models.OneToOneField(
+        wagtail.users.models.UserProfile, on_delete=models.CASCADE, related_name='user_profile',
+        null=True, blank=True
     )
     position = models.CharField(max_length=100)
     phone_number = PhoneNumberField(null=True, blank=True)
@@ -38,6 +49,34 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.get_username()
+
+
+class Task(models.Model):
+    responsible = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL,
+                                              related_name='task_responsible')
+    manager = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile, related_name='task_manager',
+                                limit_choices_to={'is_manager': True})
+    title = models.CharField(max_length=256)
+    description = models.TextField()
+    date_create = models.DateTimeField(auto_now_add=True)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
+
+    def __str__(self):
+        return f"{self.date_create}, {self.status}"
+
+
+class Requests(models.Model):
+    responsible = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL,
+                                              related_name='requests_responsible')
+    manager = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile, related_name='requests_manager',
+                                limit_choices_to={'is_manager': True})
+    title = models.CharField(max_length=256)
+    description = models.TextField()
+    date_create = models.DateTimeField(auto_now_add=True)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
+
+    def __str__(self):
+        return f"{self.date_create}, {self.status}"
 
 
 class Shop(models.Model):
@@ -92,25 +131,17 @@ class Product(models.Model):
 
 
 class Feedback(models.Model):
-    user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='user_feed',
-                             blank=True, null=True)
-    product = models.ForeignKey(on_delete=models.CASCADE, to=Product)
-    text = models.TextField()
-    adv = models.TextField()
-    disadv = models.TextField()
-    files = models.FileField(blank=True, null=True)
+    responsible = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile,
+                                              related_name='feed_responsible')
+    manager = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile, related_name='feed_manager',
+                                limit_choices_to={'is_manager': True})
+    shop = models.ForeignKey(on_delete=models.CASCADE, to=Shop)
     date_create = models.DateTimeField(auto_now_add=True)
-    RATING_CHOICE = (
-        (1, "Ужасно"),
-        (2, "Плохо"),
-        (3, "Нормально"),
-        (4, "Хорошо"),
-        (5, "Отлично"),
-    )
-    rating = models.IntegerField(choices=RATING_CHOICE, default=5)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
+    description = models.TextField()
 
     def __str__(self):
-        return f"{self.date_create}"
+        return f"{self.date_create}, {self.status}"
 
 
 class Messeges(models.Model):
