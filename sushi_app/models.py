@@ -46,6 +46,8 @@ class UserProfile(models.Model):
                              null=True, blank=True, limit_choices_to={'is_head': True})
     department = models.ForeignKey(on_delete=models.SET_NULL, to=Department, related_name='member',
                                    null=True, blank=True)
+    scan = models.FileField(blank=True)
+    middle_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.user.get_username()
@@ -137,8 +139,10 @@ class Feedback(models.Model):
                                 limit_choices_to={'is_manager': True})
     shop = models.ForeignKey(on_delete=models.CASCADE, to=Shop)
     date_create = models.DateTimeField(auto_now_add=True)
+    date_pub = models.DateField()
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
     description = models.TextField()
+    source = models.CharField(max_length=256)
 
     def __str__(self):
         return f"{self.date_create}, {self.status}"

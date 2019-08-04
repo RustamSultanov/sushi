@@ -53,9 +53,9 @@
                                                                         <i class="ion ion-ios-more"></i>
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-left">
-                                                                        <a class="dropdown-item" href="{% url 'form_task' partner.user.id %}">Добавить задачу</a>
+                                                                        <a class="dropdown-item" href="{% url 'form_task' partner.id %}">Добавить задачу</a>
 {#                                                                        <a class="dropdown-item" href="javascript:void(0)">Добавить запрос</a>#}
-                                                                        <a class="dropdown-item" href="javascript:void(0)">Добавить отзыв</a>
+                                                                        <a class="dropdown-item" href="{% url 'form_review' %}">Добавить отзыв</a>
                                                                     </div>
                                                                 </div>
                                                             </div>

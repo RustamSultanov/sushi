@@ -20,7 +20,7 @@ class SushiDocListView(ListView):
     paginate_by = 9
     context_object_name = 'documents'
     template_name = 'tech_cards.html'
-    
+
     def __init__(self, *args, **kwargs):
 
         return super().__init__(*args, **kwargs)
@@ -37,10 +37,10 @@ class SushiDocListView(ListView):
         documents = self.get_documents()
         # Ordering
         ordering = None
-        if 'ordering' in self.request.GET\
-            and self.request.GET['ordering'] in ['title',
-                                                 '-created_at',
-                                                 'file_size']:
+        if 'ordering' in self.request.GET \
+                and self.request.GET['ordering'] in ['title',
+                                                     '-created_at',
+                                                     'file_size']:
             ordering = self.request.GET['ordering']
         else:
             ordering = 'title'
@@ -109,8 +109,8 @@ class SushiDocListView(ListView):
 
             return JsonResponse({
                 'success': True,
-                'documents': [{'title':doc.title, 'file_size':doc.file_size} for doc in self.get_documents()],
-                'collections': collections,                
+                'documents': [{'title': doc.title, 'file_size': doc.file_size} for doc in self.get_documents()],
+                'collections': collections,
                 'doc_id': int(doc.id),
             })
         else:
@@ -139,4 +139,4 @@ class RegulationsListView(SushiDocListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регламенты'
         context['breadcrumb'] = [{'title': context['title']}]
-        return context    
+        return context

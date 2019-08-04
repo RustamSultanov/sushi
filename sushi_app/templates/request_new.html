@@ -18,8 +18,8 @@
                         <div class="form-group">
                             <label class="form-label">Ваш менеджер</label>
                             <div class="media align-items-center mb-3">
-                                {% if manager.avatar %}
-                                <img src="{{ manager.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                                {% if manager.wagtail_profile.avatar %}
+                                <img src="{{ manager.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
                                   {% else %}
                                     {% endif %}
                                 <div class="small ml-3">

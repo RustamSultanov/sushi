@@ -5,7 +5,7 @@
 
 {% block title %}Личный кабинет{% endblock %}
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Добавить запрос </h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Добавить задачу </h2>
 {% endblock %}
 
 {% block  breadcrumb%}
@@ -17,8 +17,8 @@
                         <div class="form-group">
                             <label class="form-label">Ответственный за задачу</label>
                             <div class="media align-items-center mb-3">
-                                {% if partner.avatar %}
-                                <img src="{{ partner.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                                {% if partner.wagtail_profile.avatar %}
+                                <img src="{{ partner.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
                                 {% else %}
                                 {% endif %}
                                 <div class="small ml-3">

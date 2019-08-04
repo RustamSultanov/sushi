@@ -18002,6 +18002,9 @@ a.text-dark[href]:hover, a.text-dark[href]:focus {
 a.text-muted.active {
   color: #212121 !important; }
 
+a.project-attachment {
+  cursor: pointer; }
+
 .ql-content img {
   max-width: 100%; }
 

@@ -21,6 +21,8 @@ urlpatterns = [
     path(
         'request/new', views.form_request_view, name='form_request'),
     path(
+        'review/new', views.feedback_form_view, name='form_review'),
+    path(
         'task/new/<int:partner_id>', views.form_task_view, name='form_task'),
     path(
         'product-detail/<int:product_id>', views.product_detail_view, name='product_detail'),

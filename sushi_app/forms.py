@@ -1,4 +1,4 @@
-from .models import Messeges, Feedback, Requests, Task
+from .models import Messeges, Feedback, Requests, Task, UserProfile
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
@@ -69,14 +69,62 @@ class TaskForm(forms.ModelForm):
             'description': forms.Textarea(
                 attrs={'placeholder': "Описание задачи", 'class': "form-control"}),
         }
-# class FeedbackForm(forms.ModelForm):
-#     class Meta:
-#             model = Feedback
-#             fields = ['text', 'rating', 'files', 'adv', 'disadv', ]
-#             widgets = {
-#                 'text': forms.Textarea(attrs={'id':"textarea-3",'class':"mdc-text-field__input", 'rows' : '4','cols':"40"}),
-#                 'adv': forms.Textarea(attrs={'id':"textarea-1",'class':"mdc-text-field__input", 'rows' : '4','cols':"40"}),
-#                 'disadv': forms.Textarea(attrs={'id':"textarea-2",'class':"mdc-text-field__input",' name':"rating", 'rows' : '4','cols':"40"}),
-#                 'rating': forms.RadioSelect(attrs={'class':"input-hidden",' name':"rating"}),
-#                 'files': forms.ClearableFileInput(attrs={'id':"file",'class':"input-hidden",}),
-#             }
+
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['source', 'description', 'date_pub', 'shop']
+        widgets = {
+            'source': forms.TextInput(
+                attrs={'placeholder': "Источник отзыва", 'class': "form-control"}),
+            'description': forms.Textarea(
+                attrs={'placeholder': "Текст отзыва", 'class': "form-control", 'rows': '2'}),
+            'date_pub': forms.DateInput(
+                attrs={'id': "b-m-dtp-date", 'class': "form-control", 'placeholder': "Выберите дату"}),
+            'shop': forms.Select(attrs={'class': "select2 form-control"}),
+        }
+
+
+class RegistrationEmployeeMainForm(forms.ModelForm):
+    password_check = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = [
+            'username', 'first_name', 'last_name', 'email', 'password'
+        ]
+
+        widgets = {
+            'email': forms.EmailInput(attrs={'class': 'form-control', }),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', }),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', })
+        }
+
+    def clean(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError('Пользователь с такой почтой уже зарегистрирован')
+        password_check = self.cleaned_data['password_check']
+        password = self.cleaned_data['password']
+        if password_check != password:
+            raise forms.ValidationError('Пароль не совпадает!')
+
+
+class RegistrationEmployeeAdditionForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        exclude = [
+            'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile', 'user'
+        ]
+        widgets = {
+            'phone_number': PhoneNumberInternationalFallbackWidget(attrs={'class': 'form-control', }),
+            'whatsapp': PhoneNumberInternationalFallbackWidget(attrs={'class': 'form-control', }),
+            'twitter': forms.URLInput(attrs={'class': 'form-control', }),
+            'facebook': forms.URLInput(attrs={'class': 'form-control', }),
+            'instagram': forms.URLInput(attrs={'class': 'form-control', }),
+            'middle_name': forms.TextInput(attrs={'class': 'form-control', }),
+            'position': forms.TextInput(attrs={'class': 'form-control', }),
+
+        }
