@@ -26,10 +26,8 @@ class SushiDocListView(ListView):
         return super().__init__(*args, **kwargs)
 
     def get_documents(self):
-        documents = permission_policy.instances_user_has_any_permission_for(
-            self.request.user, ['change', 'delete']
-        )
-        return documents.filter(documentsushi__doc_type=self.doc_type)
+        documents = DocumentSushi.objects.all()
+        return documents.filter(doc_type=self.doc_type)
 
     def get_queryset(self):
 
