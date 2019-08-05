@@ -3,9 +3,9 @@
 
 {% block css %}<link rel="stylesheet" href="{% static "libs/dropzone/dropzone.css" %}">{% endblock %}
 
-{% block title %}Задача #{{ task.id }}{% endblock %}
+{% block title %}Запрос #{{ requests.id }}{% endblock %}
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Задача #{{ task.id }}</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Запрос #{{ requests.id }}</h2>
 {% endblock %}
 
 {% block  breadcrumb%}
@@ -16,17 +16,17 @@
                         <div class="col">
 
                             <div class="media align-items-center mb-3">
-                                {% if task.responsible.wagtail_userprofile.avatar %}
-                                <img src="{{ task.responsible.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                                {% if requests.responsible.wagtail_userprofile.avatar %}
+                                <img src="{{ requests.responsible.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
                                   {% else %}
                                     {% endif %}
                                 <div class="small ml-3">
-                                    <div class="text-dark">{{ task.responsible.get_full_name }}</div>
-                                    <div class="text-muted">{{ task.date_create }}
+                                    <div class="text-dark">{{ requests.responsible.get_full_name }}</div>
+                                    <div class="text-muted">{{ requests.date_create }}
                                     </div>
                                     <!--   Вариант для партнера   -->
-                                    {% if user == task.responsible %}
-                                    <span class="badge badge-pill badge-warning">{{ task.get_status_display }}</span>
+                                    {% if user == requests.responsible %}
+                                    <span class="badge badge-pill badge-warning">{{ requests.get_status_display }}</span>
                                         {% else %}
                                     <!--   Вариант для менеджера   -->
                                     <div class="btn-group">
@@ -44,9 +44,9 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <h5>{{ task.title }}</h5>
+                            <h5>{{ requests.title }}</h5>
 
-                            <p>{{ task.description }}</p>
+                            <p>{{ requests.description }}</p>
                             <div class="nav-tabs-top mb-4">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item">
@@ -186,5 +186,3 @@
                 <script src="{% static "js/dashboard.js" %}"></script>
                 {% endblock %}
 {% endblock %}
-</body>
-</html>

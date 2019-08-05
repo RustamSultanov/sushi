@@ -50,12 +50,12 @@ class UserProfile(models.Model):
     middle_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return self.user.get_username()
+        return self.user.get_full_name()
 
 
 class Task(models.Model):
     responsible = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL,
-                                              related_name='task_responsible')
+                                    related_name='task_responsible')
     manager = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile, related_name='task_manager',
                                 limit_choices_to={'is_manager': True})
     title = models.CharField(max_length=256)
@@ -69,7 +69,7 @@ class Task(models.Model):
 
 class Requests(models.Model):
     responsible = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL,
-                                              related_name='requests_responsible')
+                                    related_name='requests_responsible')
     manager = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile, related_name='requests_manager',
                                 limit_choices_to={'is_manager': True})
     title = models.CharField(max_length=256)
@@ -84,6 +84,8 @@ class Requests(models.Model):
 class Shop(models.Model):
     address = models.CharField(max_length=255, blank=False, null=False,
                                verbose_name='Адрес магазина')
+    city = models.CharField(max_length=255)
+    entity_name = models.CharField(max_length=255)
     docs = models.ManyToManyField(
         get_document_model(),
         blank=True,
@@ -94,11 +96,14 @@ class Shop(models.Model):
         blank=True,
         related_name='+'
     )
-    partner = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL)
+    partner = models.ForeignKey(on_delete=models.DO_NOTHING, to=UserProfile,
+                                limit_choices_to={'is_partner': True})
+    responsibles = models.ManyToManyField(to=UserProfile,
+                                          limit_choices_to={'is_manager': True}, related_name='shop_responsible')
     date_create = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.address}"
+        return f"{self.city} {self.address}"
 
     class Meta:
         verbose_name = 'Магазин'
@@ -134,7 +139,7 @@ class Product(models.Model):
 
 class Feedback(models.Model):
     responsible = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile,
-                                              related_name='feed_responsible')
+                                    related_name='feed_responsible')
     manager = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile, related_name='feed_manager',
                                 limit_choices_to={'is_manager': True})
     shop = models.ForeignKey(on_delete=models.CASCADE, to=Shop)
@@ -149,14 +154,16 @@ class Feedback(models.Model):
 
 
 class Messeges(models.Model):
-    user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='user_messeges')
-    accepter = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='accepter')
-    product = models.ForeignKey(on_delete=models.CASCADE, to=Product, blank=True, null=True)
+    from_user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='user_messeges')
+    to_user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='to_user')
+    task = models.ForeignKey(on_delete=models.CASCADE, to=Task, blank=True, null=True)
+    requests = models.ForeignKey(on_delete=models.CASCADE, to=Requests, blank=True, null=True)
+    feedback = models.ForeignKey(on_delete=models.CASCADE, to=Feedback, blank=True, null=True)
     text = models.TextField()
     date_create = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.product} {self.date_create}"
+        return f"{self.date_create}"
 
     class Meta:
         verbose_name = 'Сообщение'

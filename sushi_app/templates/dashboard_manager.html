@@ -5,7 +5,10 @@
 
 {% block title %}Личный кабинет{% endblock %}
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Личный кабинет</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Личный кабинет
+    <a href="{% url 'create_partner' %}" class="btn btn-round btn-outline-primary btn-sm">Добавить франчайзи</a>
+    <a href="{% url 'shop_form' %}" class="btn btn-round btn-outline-primary btn-sm">Добавить магазин</a>
+    </h2>
 {% endblock %}
 
 {% block  breadcrumb%}
@@ -54,7 +57,7 @@
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-left">
                                                                         <a class="dropdown-item" href="{% url 'form_task' partner.id %}">Добавить задачу</a>
-{#                                                                        <a class="dropdown-item" href="javascript:void(0)">Добавить запрос</a>#}
+                                                                        <a class="dropdown-item" href="{% url 'edit_partner' partner.user.id %}">Редактировать франчайзи</a>
                                                                         <a class="dropdown-item" href="{% url 'form_review' %}">Добавить отзыв</a>
                                                                     </div>
                                                                 </div>
@@ -81,7 +84,7 @@
                                             <a href="#" class="text-muted">Обрабатывается</a>
                                             <a href="#" class="text-muted">Отклонен</a>
                                         </div>
-                                        <div class="my-4 row">
+                                         <div class="my-4 row">
                                             {% for requests in request_list %}
                                             <div class="col-md-6 mb-4">
                                                 <div class="card hoverable h-100">
@@ -108,8 +111,8 @@
                                                                 <i class="ion ion-ios-more"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item" href="javascript:void(0)">Просмотр</a>
-                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>
+                                                                <a class="dropdown-item" href="{% url 'request' requests.id user.id %}">Просмотр</a>
+{#                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>#}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -157,8 +160,8 @@
                                                                 <i class="ion ion-ios-more"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item" href="javascript:void(0)">Просмотр</a>
-                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>
+                                                                <a class="dropdown-item" href="{% url 'task' task.id user.id %}">Просмотр</a>
+{#                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>#}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -211,8 +214,8 @@
                                                                 <i class="ion ion-ios-more"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item" href="javascript:void(0)">Просмотр</a>
-                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>
+                                                                <a class="dropdown-item" href="{% url 'feedback' review.id user.id %}">Просмотр</a>
+{#                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>#}
                                                             </div>
                                                         </div>
                                                     </div>

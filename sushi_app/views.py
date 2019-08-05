@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .forms import RequestsForm, MessegesForm, TaskForm, FeedbackForm, RegistrationEmployeeMainForm, RegistrationEmployeeAdditionForm
+from .forms import *
 from .models import *
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -8,8 +8,10 @@ from django.forms.models import model_to_dict
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
-from wagtail.admin.utils import user_passes_test
+from wagtail.admin.utils import user_passes_test, permission_denied
 from wagtail.users.forms import AvatarPreferencesForm
+import wagtail.users.models
+
 User = get_user_model()
 
 
@@ -30,7 +32,6 @@ def base(request):
 
 
 @login_required
-@user_passes_test(manager_check)
 def employee_info(request, user_id):
     user = get_object_or_404(User, id=user_id)
     return render(request, 'employee.html', {'employee': user})
@@ -58,7 +59,7 @@ def manager_lk_view(request):
 @user_passes_test(partner_check)
 def partner_lk_view(request):
     shop_list = Shop.objects.prefetch_related('checks', 'docs') \
-        .filter(partner=request.user)
+        .filter(partner=request.user.user_profile)
     request_list = Requests.objects.prefetch_related('responsible') \
         .filter(responsible=request.user)
     task_list = Task.objects.prefetch_related('responsible') \
@@ -128,56 +129,192 @@ def feedback_form_view(request):
 
 @login_required
 @user_passes_test(manager_check)
-def create_employee_view(request):
+def create_partner_view(request):
     form_user = RegistrationEmployeeMainForm(request.POST or None, request.FILES or None, prefix='user')
-    form_useraccept = RegistrationEmployeeAdditionForm(request.POST or None, request.FILES or None, prefix='useraccept')
-    if form_user.is_valid() and form_useraccept.is_valid():
-        new_user = form_user.save(commit=False)
-        username = form_user.cleaned_data['username']
-        first_name = form_user.cleaned_data['first_name']
-        last_name = form_user.cleaned_data['last_name']
-        email=form_user.cleaned_data['username']
-        new_user.email = email
-        new_user.username = username
-        new_user.first_name = first_name
-        new_user.last_name = last_name
-        new_user.set_password(form_user.cleaned_data['password'])
-        new_user.save()
-        user_company = form_useraccept.save(commit=False)
-        user_company.user = new_user
-        user_company.company = request.user.useraccept.company
-        user_company.gov = form_useraccept.cleaned_data['gov']
-        user_company.phone_number = form_useraccept.cleaned_data['phone_number']
-        user_company.date_birth = form_useraccept.cleaned_data['date_birth']
-        user_company.social_net = form_useraccept.cleaned_data['social_net']
-        user_company.position = form_useraccept.cleaned_data['position']
-        user_company.avatar = form_useraccept.cleaned_data['avatar']
-        user_company.save()
-        return HttpResponseRedirect(reverse('employee_list'))
+    form_user_profile = RegistrationEmployeeAdditionForm(request.POST or None, request.FILES or None,
+                                                         prefix='user_profile')
+    if form_user.is_valid() and form_user_profile.is_valid():
+        form_user = form_user.save(commit=False)
+        form_user.save()
+        wagtail_user = wagtail.users.models.UserProfile.get_for_user(form_user)
+        wagtail_user.avatar = form_user_profile.cleaned_data['avatar']
+        wagtail_user.preferred_language = settings.LANGUAGE_CODE
+        wagtail_user.current_time_zone = settings.TIME_ZONE
+        wagtail_user.save()
+        form_user_profile = form_user_profile.save(commit=False)
+        form_user_profile.user = form_user
+        form_user_profile.wagtail_profile = wagtail_user
+        form_user_profile.manager = request.user.user_profile
+        form_user_profile.is_partner = True
+        form_user_profile.save()
+        return HttpResponseRedirect(reverse('manager_lk'))
     context = {
-        'form_user': form_user, 'form_useraccept': form_useraccept
+        'form_user': form_user, 'form_user_profile': form_user_profile,
+        'breadcrumb': [{'title': 'Личный кабинет',
+                        'url': reverse_lazy('manager_lk')},
+                       {'title': 'Добавить франчайзи'}]
     }
     return render(request, 'user_new.html', context)
 
-def task_view(request, product_id, user_id):
-    product = Product.objects.get(id=product_id)
-    qs1 = Messeges.objects.prefetch_related('user', 'accepter').filter(product=product, user=request.user.id)
-    qs2 = Messeges.objects.prefetch_related('user', 'accepter').filter(product=product, accepter=request.user.id)
+
+@login_required
+@user_passes_test(manager_check)
+def edit_partner_view(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    form_user = EditEmployeeMainForm(request.POST or None, request.FILES or None, initial=model_to_dict(user),
+                                     instance=user, prefix='user')
+    form_user_profile = EditEmployeeAdditionForm(request.POST or None, request.FILES or None,
+                                                 initial=model_to_dict(user.user_profile), instance=user.user_profile,
+                                                 prefix='user_profile')
+    form_wagtail = AvatarPreferencesForm(request.POST or None, request.FILES or None,
+                                         initial=model_to_dict(user.wagtail_userprofile),
+                                         instance=user.wagtail_userprofile,
+                                         prefix='user_profile')
+    if form_user.is_valid() and form_user_profile.is_valid() and form_wagtail.is_valid():
+        form_user.save()
+        form_user_profile.save()
+        form_wagtail.save()
+        return HttpResponseRedirect(reverse('employee_info', args=[user_id]))
+    context = {
+        'form_user': form_user, 'form_user_profile': form_user_profile, 'form_wagtail': form_wagtail,
+        'breadcrumb': [{'title': 'Личный кабинет',
+                        'url': reverse_lazy('manager_lk')},
+                       {'title': 'Редактировать франчайзи'}]
+    }
+    return render(request, 'user_edit.html', context)
+
+
+@login_required
+@user_passes_test(manager_check)
+def shop_form_view(request):
+    form = ShopForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse_lazy('manager_lk'))
+    context = {
+        'form': form,
+        'breadcrumb': [{'title': 'Личный кабинет',
+                        'url': reverse_lazy('manager_lk')},
+                       {'title': 'Добавить магазин'}]
+    }
+    return render(request, 'store_new.html', context)
+
+
+@login_required
+def shop_view(request, shop_id):
+    shop = get_object_or_404(Shop, id=shop_id)
+    return render(request, 'store.html', {'shop': shop,
+                                          'breadcrumb': [{'title': 'Личный кабинет',
+                                                          'url': reverse_lazy('partner_lk')},
+                                                         {'title': f"Магазин #{shop.id}"}]})
+
+
+@login_required
+def task_view(request, task_id, user_id):
+    task = get_object_or_404(Task, id=task_id)
+    if task.responsible != request.user:
+        if task.manager != request.user.user_profile:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    form_status = StatusTaskForm(request.POST or None, initial=model_to_dict(task),
+                                 instance=task)
+    if request.user.user_profile.is_manager:
+        if form_status.is_valid():
+            form_status.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    qs1 = Messeges.objects.prefetch_related('from_user', 'to_user').filter(task=task, from_user=request.user.id)
+    qs2 = Messeges.objects.prefetch_related('from_user', 'to_user').filter(task=task, to_user=request.user.id)
     messeges = qs1.union(qs2).order_by('date_create')
     form = MessegesForm(request.POST or None)
     if form.is_valid():
-        new_disput = form.save(commit=False)
-        text = form.cleaned_data['text']
-        new_disput.text = text
-        new_disput.user = request.user
-        if request.user == product.user:
-            new_disput.accepter = messeges.first().user
+        form = form.save(commit=False)
+        form.task = task
+        form.from_user = request.user
+        if request.user == task.responsible:
+            form.to_user = task.manager.user
         else:
-            new_disput.accepter = product.user
-        new_disput.product = product
-        new_disput.save()
+            form.to_user = task.responsible
+        form.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    return render(request, 'chat-2.html', {'product': product, 'messeges': messeges, 'form': form})
+    return render(request, 'task.html', {'task': task, 'messeges': messeges,
+                                         'form': form, 'form_status': form_status,
+                                         'breadcrumb': [{'title': 'Личный кабинет',
+                                                         'url': reverse_lazy('partner_lk')
+                                                         if request.user.user_profile.is_partner
+                                                         else reverse_lazy('manager_lk')},
+                                                        {'title': f"Задача #{task.id}"}]
+                                         })
+
+
+@login_required
+def requests_view(request, requests_id, user_id):
+    requests = get_object_or_404(Requests, id=requests_id)
+    if requests.responsible != request.user:
+        if requests.manager != request.user.user_profile:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    form_status = StatusRequestsForm(request.POST or None, initial=model_to_dict(requests),
+                                     instance=requests)
+    if request.user.user_profile.is_manager:
+        if form_status.is_valid():
+            form_status.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    qs1 = Messeges.objects.prefetch_related('from_user', 'to_user').filter(requests=requests, from_user=request.user.id)
+    qs2 = Messeges.objects.prefetch_related('from_user', 'to_user').filter(requests=requests, to_user=request.user.id)
+    messeges = qs1.union(qs2).order_by('date_create')
+    form = MessegesForm(request.POST or None)
+    if form.is_valid():
+        form = form.save(commit=False)
+        form.requests = requests
+        form.from_user = request.user
+        if request.user == requests.responsible:
+            form.to_user = requests.manager.user
+        else:
+            form.to_user = requests.responsible
+        form.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, 'request.html', {'requests': requests, 'messeges': messeges,
+                                            'form': form, 'form_status': form_status,
+                                            'breadcrumb': [{'title': 'Личный кабинет',
+                                                            'url': reverse_lazy('partner_lk')
+                                                            if request.user.user_profile.is_partner
+                                                            else reverse_lazy('manager_lk')},
+                                                           {'title': f"Запрос #{requests.id}"}]
+                                            })
+
+
+@login_required
+def feedback_view(request, feedback_id, user_id):
+    feedback = get_object_or_404(Feedback, id=feedback_id)
+    if feedback.responsible != request.user:
+        if feedback.manager != request.user.user_profile:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    form_status = StatusFeedbackForm(request.POST or None, initial=model_to_dict(feedback),
+                                     instance=feedback)
+    if request.user.user_profile.is_manager:
+        if form_status.is_valid():
+            form_status.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    qs1 = Messeges.objects.prefetch_related('from_user', 'to_user').filter(feedback=feedback, from_user=request.user.id)
+    qs2 = Messeges.objects.prefetch_related('from_user', 'to_user').filter(feedback=feedback, to_user=request.user.id)
+    messeges = qs1.union(qs2).order_by('date_create')
+    form = MessegesForm(request.POST or None)
+    if form.is_valid():
+        form = form.save(commit=False)
+        form.feedback = feedback
+        form.from_user = request.user
+        if request.user == feedback.responsible.user:
+            form.to_user = feedback.manager.user
+        else:
+            form.to_user = feedback.responsible.user
+        form.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return render(request, 'review.html', {'feedback': feedback, 'messeges': messeges,
+                                           'form': form, 'form_status': form_status,
+                                           'breadcrumb': [{'title': 'Личный кабинет',
+                                                           'url': reverse_lazy('partner_lk')
+                                                           if request.user.user_profile.is_partner
+                                                           else reverse_lazy('manager_lk')},
+                                                          {'title': f"Отзыв #{feedback.id}"}]
+                                           })
 
 
 def product_view(request, product_id):
@@ -188,4 +325,3 @@ def product_view(request, product_id):
 def product_detail_view(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     return render(request, 'details.html', {'product': product})
-

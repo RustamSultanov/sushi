@@ -1,4 +1,4 @@
-from .models import Messeges, Feedback, Requests, Task, UserProfile
+from .models import Messeges, Feedback, Requests, Task, UserProfile, Shop
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
@@ -43,7 +43,34 @@ class MessegesForm(forms.ModelForm):
         model = Messeges
         fields = ['text']
         widgets = {
-            'text': forms.TextInput(attrs={'id': 'message', 'class': 'mdc-text-field__input'})
+            'text': forms.TextInput(attrs={'placeholder': "Введите сообщение", 'class': 'form-control'})
+        }
+
+
+class StatusTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['status']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'btn btn-warning btn-xs btn-round dropdown-toggle'})
+        }
+
+
+class StatusRequestsForm(forms.ModelForm):
+    class Meta:
+        model = Requests
+        fields = ['status']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'btn btn-warning btn-xs btn-round dropdown-toggle'})
+        }
+
+
+class StatusFeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['status']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'btn btn-warning btn-xs btn-round dropdown-toggle'})
         }
 
 
@@ -87,7 +114,8 @@ class FeedbackForm(forms.ModelForm):
 
 
 class RegistrationEmployeeMainForm(forms.ModelForm):
-    password_check = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password_check = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': "Повторите пароль", 'class': 'form-control'}))
 
     class Meta:
         model = User
@@ -96,10 +124,11 @@ class RegistrationEmployeeMainForm(forms.ModelForm):
         ]
 
         widgets = {
-            'email': forms.EmailInput(attrs={'class': 'form-control', }),
-            'first_name': forms.TextInput(attrs={'class': 'form-control', }),
-            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control', })
+            'email': forms.EmailInput(attrs={'placeholder': "Почта", 'class': 'form-control', }),
+            'first_name': forms.TextInput(attrs={'placeholder': "Имя", 'class': 'form-control', }),
+            'username': forms.TextInput(attrs={'placeholder': "Логин", 'class': 'form-control', }),
+            'password': forms.PasswordInput(attrs={'placeholder': "Пароль", 'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'placeholder': "Фамилия", 'class': 'form-control', })
         }
 
     def clean(self):
@@ -113,18 +142,78 @@ class RegistrationEmployeeMainForm(forms.ModelForm):
 
 
 class RegistrationEmployeeAdditionForm(forms.ModelForm):
+    avatar = forms.ImageField(
+        required=True
+    )
+
     class Meta:
         model = UserProfile
         exclude = [
             'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile', 'user'
         ]
         widgets = {
-            'phone_number': PhoneNumberInternationalFallbackWidget(attrs={'class': 'form-control', }),
-            'whatsapp': PhoneNumberInternationalFallbackWidget(attrs={'class': 'form-control', }),
-            'twitter': forms.URLInput(attrs={'class': 'form-control', }),
-            'facebook': forms.URLInput(attrs={'class': 'form-control', }),
-            'instagram': forms.URLInput(attrs={'class': 'form-control', }),
-            'middle_name': forms.TextInput(attrs={'class': 'form-control', }),
-            'position': forms.TextInput(attrs={'class': 'form-control', }),
+            'key_responsibilities': forms.Textarea(
+                attrs={'placeholder': "Перечень должностных обязанностей", 'class': "form-control", 'rows': '2'}),
+            'phone_number': PhoneNumberInternationalFallbackWidget(
+                attrs={'placeholder': "Телефон", 'class': 'form-control', }),
+            'whatsapp': PhoneNumberInternationalFallbackWidget(
+                attrs={'placeholder': "Whatsapp", 'class': 'form-control', }),
+            'twitter': forms.URLInput(attrs={'placeholder': "Twitter", 'class': 'form-control', }),
+            'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
+            'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
+            'middle_name': forms.TextInput(attrs={'placeholder': "Отчество", 'class': 'form-control', }),
+            'position': forms.TextInput(attrs={'placeholder': "Должность", 'class': 'form-control', }),
+
+        }
+
+
+class EditEmployeeMainForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            'first_name', 'last_name', 'email'
+        ]
+
+        widgets = {
+            'email': forms.EmailInput(attrs={'placeholder': "Почта", 'class': 'form-control', }),
+            'first_name': forms.TextInput(attrs={'placeholder': "Имя", 'class': 'form-control', }),
+            'last_name': forms.TextInput(attrs={'placeholder': "Фамилия", 'class': 'form-control', })
+        }
+
+
+class EditEmployeeAdditionForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        exclude = [
+            'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile', 'user'
+        ]
+        widgets = {
+            'key_responsibilities': forms.Textarea(
+                attrs={'placeholder': "Перечень должностных обязанностей", 'class': "form-control", 'rows': '2'}),
+            'phone_number': PhoneNumberInternationalFallbackWidget(
+                attrs={'placeholder': "Телефон", 'class': 'form-control', }),
+            'whatsapp': PhoneNumberInternationalFallbackWidget(
+                attrs={'placeholder': "Whatsapp", 'class': 'form-control', }),
+            'twitter': forms.URLInput(attrs={'placeholder': "Twitter", 'class': 'form-control', }),
+            'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
+            'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
+            'middle_name': forms.TextInput(attrs={'placeholder': "Отчество", 'class': 'form-control', }),
+            'position': forms.TextInput(attrs={'placeholder': "Должность", 'class': 'form-control', }),
+
+        }
+
+
+class ShopForm(forms.ModelForm):
+    class Meta:
+        model = Shop
+        exclude = [
+            'docs', 'checks'
+        ]
+        widgets = {
+            'address': forms.TextInput(attrs={'placeholder': "Адрес", 'class': 'form-control', }),
+            'city': forms.TextInput(attrs={'placeholder': "Город", 'class': 'form-control', }),
+            'entity_name': forms.TextInput(attrs={'placeholder': "Юридическое лицо", 'class': 'form-control', }),
+            'partner': forms.Select(attrs={'class': "select2 form-control"}),
+            'responsibles': forms.SelectMultiple(attrs={'class': 'select2 form-control'}),
 
         }

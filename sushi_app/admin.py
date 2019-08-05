@@ -29,6 +29,7 @@ class UserAdmin(BaseUserAdmin):
 
 # Re-register UserAdmin
 admin.site.register(Shop)
+admin.site.register(Task)
 admin.site.register(Department)
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
