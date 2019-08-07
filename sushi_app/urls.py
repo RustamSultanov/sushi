@@ -1,6 +1,8 @@
-from django.urls import path
-from . import views
 from django.contrib.auth import views as auth_view
+from django.contrib.auth.decorators import login_required
+from django.urls import path
+
+from . import views
 from .forms import LoginForm
 
 urlpatterns = [
@@ -26,8 +28,8 @@ urlpatterns = [
         'review/new', views.feedback_form_view, name='form_review'),
     path('shop/new', views.shop_form_view, name='shop_form'),
     path(
-        'shop/<int:shop_id>', 
-        login_required(views.ShopListView.as_view()), 
+        'shop/<int:shop_id>',
+        login_required(views.ShopListView.as_view()),
         name='shop'),
     path(
         'task/new/<int:partner_id>', views.form_task_view, name='form_task'),
