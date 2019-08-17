@@ -203,15 +203,20 @@ def employee_info(request, user_id):
 @login_required
 @user_passes_test(manager_check)
 def manager_lk_view(request):
+
     partner_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile"
     ).filter(manager=request.user.user_profile)
     request_list = Requests.objects.prefetch_related("responsible").filter(
         manager=request.user.user_profile
     )
-    task_list = Task.objects.prefetch_related("responsible").filter(
-        manager=request.user.user_profile
-    )
+    task_list = Task.objects\
+       .prefetch_related("responsible")\
+       .filter(manager=request.user.user_profile)\
+
+    if "filter_task" in request.GET:
+        task_list = task_list.filter(status=request.GET['filter_task'])
+    
     feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
         manager=request.user.user_profile
     )

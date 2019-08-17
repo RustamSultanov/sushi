@@ -127,11 +127,11 @@
                                     </div>
                                     <div class="tab-pane fade" id="tasks">
                                         <div class="my-4 small text-right">
-                                            <span class="text-muted">Сортировать: </span>
-                                            <a href="#" class="text-muted active">Все</a>
-                                            <a href="#" class="text-muted">Решен</a>
-                                            <a href="#" class="text-muted">Обрабатывается</a>
-                                            <a href="#" class="text-muted">Отклонен</a>
+                                            <span class="text-muted">Фильтровать:</span>
+                                            <a href="{%url 'manager_lk' %}" class="text-muted active">Все</a>
+                                            <a href="?filter_task=0" class="text-muted">Решен</a>
+                                            <a href="?filter_task=1" class="text-muted">Обрабатывается</a>
+                                            <a href="?filter_task=2" class="text-muted">Отклонен</a>
                                         </div>
                                         <div class="my-4 row">
                                              {% for task in task_list %}
