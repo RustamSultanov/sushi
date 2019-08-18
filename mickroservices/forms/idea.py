@@ -6,7 +6,7 @@ from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from mickroservices.models import IdeaModel
 
 class IdeaForm(forms.ModelForm):
-    email = forms.CharField(validators=[EmailValidator])
+    #email = forms.CharField(validators=[EmailValidator])
     class Meta:
         model = IdeaModel
         exclude = ['status','answer','date_answer', 'date_created', ]

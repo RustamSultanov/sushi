@@ -12,8 +12,8 @@ class IdeaModel(models.Model):
         (ST_REJECTED, "Отклонено"),
     )
 
-    email = models.EmailField(blank=False, null=False, verbose_name='Email')
-    phone_number = PhoneNumberField(null=False, blank=False,
+    email = models.EmailField(blank=True, null=True, verbose_name='Email')
+    phone_number = PhoneNumberField(null=True, blank=True,
                                     verbose_name='Номер телефона')    
     body = models.CharField(max_length=1000, blank=False, null=False,
                             verbose_name='Сообщение')
