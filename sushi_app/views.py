@@ -6,18 +6,21 @@ from django.views.decorators.vary import vary_on_headers
 from django.urls import reverse, reverse_lazy
 from django.forms.models import model_to_dict
 from django.contrib.auth import get_user_model
-from wagtail.admin.utils import user_passes_test, permission_denied, PermissionPolicyChecker
+from wagtail.admin.utils import user_passes_test
 from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
-from django.http import HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
+from django.http import (
+    HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
 from django.views.generic import ListView
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.utils.encoding import force_text
 from wagtail.admin.forms.search import SearchForm
 from wagtail.core.models import Collection
 from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 from mickroservices.models import DocumentSushi
-from wagtail.documents.models import get_document_model
+
 
 User = get_user_model()
 
@@ -200,6 +203,18 @@ def employee_info(request, user_id):
     return render(request, "employee.html", {"employee": user})
 
 
+def get_filtered_tasks(request):
+    ''' Возвращает список задачи сотрудника
+        Если присутсвует GET параметр 'filter_task', то
+        применяется фильтрация
+    '''
+    tasks = Task.objects.prefetch_related("responsible")\
+                        .filter(manager=request.user.user_profile)
+    if "filter_task" in request.GET:
+        return tasks.filter(status=request.GET['filter_task'])
+    return tasks
+
+
 @login_required
 @user_passes_test(manager_check)
 def manager_lk_view(request):
@@ -210,12 +225,8 @@ def manager_lk_view(request):
     request_list = Requests.objects.prefetch_related("responsible").filter(
         manager=request.user.user_profile
     )
-    task_list = Task.objects\
-       .prefetch_related("responsible")\
-       .filter(manager=request.user.user_profile)\
 
-    if "filter_task" in request.GET:
-        task_list = task_list.filter(status=request.GET['filter_task'])
+    task_list = get_filtered_tasks(request)
     
     feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
         manager=request.user.user_profile
@@ -230,6 +241,16 @@ def manager_lk_view(request):
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
         },
+    )
+
+
+@csrf_exempt
+def load_filtered_tasks(request):
+    task_list = get_filtered_tasks(request)
+    return render(
+        request,
+        'partials/tasks_manager.html',
+        {'task_list': task_list}
     )
 
 

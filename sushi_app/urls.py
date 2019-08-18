@@ -41,4 +41,5 @@ urlpatterns = [
         'request/<int:requests_id>-<int:user_id>', views.requests_view, name='request'),
     path(
         'review/<int:feedback_id>-<int:user_id>', views.feedback_view, name='feedback'),
+    path('manager-lk/load/tasks', views.load_filtered_tasks, name='load_filtered_tasks')
 ]
