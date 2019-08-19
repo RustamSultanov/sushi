@@ -796,8 +796,8 @@ li.ui-timepicker-selected,
           box-shadow: 0 -1px 0 rgba(24, 28, 33, 0.04) inset; }
 
 .hoverable:hover {
-  -webkit-box-shadow: 0 2px 12px 0px rgba(0, 0, 0, 0.04), 0 1px 16px 0 rgba(0, 0, 0, 0.06), 0 3px 4px -2px rgba(0, 0, 0, 0.06);
-          box-shadow: 0 2px 12px 0px rgba(0, 0, 0, 0.04), 0 1px 16px 0 rgba(0, 0, 0, 0.06), 0 3px 4px -2px rgba(0, 0, 0, 0.06); }
+  -webkit-box-shadow: 0 2px 12px 0px rgba(0, 0, 0, 0.08), 0 5px 16px 0 rgba(0, 0, 0, 0.1), 0 3px 4px -2px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 2px 12px 0px rgba(0, 0, 0, 0.08), 0 5px 16px 0 rgba(0, 0, 0, 0.1), 0 3px 4px -2px rgba(0, 0, 0, 0.1); }
 
 .bg-light {
   background-color: #E5E5E5; }

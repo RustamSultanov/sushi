@@ -597,12 +597,5 @@ def feedback_view(request, feedback_id, user_id):
     )
 
 
-def product_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    return render(request, "product.html", {"product": product})
 
-
-def product_detail_view(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
-    return render(request, "details.html", {"product": product})
 

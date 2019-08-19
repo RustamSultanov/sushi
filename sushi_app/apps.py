@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class SmartContractConfig(AppConfig):
-    name = 'smart_contract'
+class SushiAppConfig(AppConfig):
+    name = 'sushi_app'

@@ -34,8 +34,6 @@ urlpatterns = [
     path(
         'task/new/<int:partner_id>', views.form_task_view, name='form_task'),
     path(
-        'product-detail/<int:product_id>', views.product_detail_view, name='product_detail'),
-    path(
         'task/<int:task_id>-<int:user_id>', views.task_view, name='task'),
     path(
         'request/<int:requests_id>-<int:user_id>', views.requests_view, name='request'),

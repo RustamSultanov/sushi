@@ -6,7 +6,11 @@
 {% block title %}Новости{% endblock %}
 
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Новости</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Новости
+        {% if user.user_profile.is_manager %}
+    <a href="{% url 'mickroservices:news_new' %}" class="btn btn-round btn-outline-primary btn-sm">Добавить новость</a>
+    {% endif %}
+    </h2>
 {% endblock %}
 
 {% block  breadcrumb%}
