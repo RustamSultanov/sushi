@@ -20,6 +20,7 @@
             <form action="{% url 'mickroservices:idea' %}" method="post">
                 {% csrf_token %}
                 <h4>Предложить идею</h4>
+                {% comment %}
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label class="form-label">Email</label>
@@ -30,6 +31,7 @@
                         {% render_field form.phone_number placeholder="Телефон" class+="form-control" %}
                     </div>
                 </div>
+                {% endcomment %}
                 <div class="form-group">
                     <label class="form-label">Идея</label>
                     {% render_field form.body placeholder="Идея" class+="form-control" %}

@@ -14,9 +14,9 @@ class QuestionModel(models.Model):
 
     name = models.CharField(max_length=255, blank=False, null=False,
                             verbose_name='Имя отправителя')
-    phone_number = PhoneNumberField(null=False, blank=False,
+    phone_number = PhoneNumberField(null=True, blank=True,
                                     verbose_name='Номер телефона')
-    email = models.EmailField(blank=False, null=False, verbose_name='Email')
+    email = models.EmailField(blank=True, null=True, verbose_name='Email')
     theme = models.CharField(max_length=100, blank=False, null=False,
                              verbose_name='Тема')
     body = models.CharField(max_length=1000, blank=False, null=False,
