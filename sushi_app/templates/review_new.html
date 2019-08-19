@@ -51,10 +51,23 @@
 
                     </form>
 
-             {% block extrascripts %}
-                 <script src="{% static "libs/moment/moment.js" %}"></script>
-                <script src="{% static "libs/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js" %}"></script>
-                <script src="{% static "libs/select2/select2.js" %}"></script>
-                 <script src="{% static "js/form.js" %}"></script>
-                {% endblock %}
+{% endblock %}
+{% block extrascripts %}
+    <script src="{% static "libs/moment/moment.js" %}"></script>
+    <script src="{% static "libs/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js" %}"></script>
+    <script src="{% static "libs/select2/select2.js" %}"></script>
+     <script src="{% static "js/form.js" %}"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+          $('input[wtype="date"]').bootstrapMaterialDatePicker({
+              weekStart: 0,
+              time: false,
+              shortTime: false,
+              format : 'DD.MM.YYYY',
+              nowButton : true,
+              lang: 'ru',
+              minDate : new Date(),
+          });           
+      });      
+    </script>
 {% endblock %}

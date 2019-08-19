@@ -108,7 +108,10 @@ class FeedbackForm(forms.ModelForm):
             'description': forms.Textarea(
                 attrs={'placeholder': "Текст отзыва", 'class': "form-control", 'rows': '2'}),
             'date_pub': forms.DateInput(
-                attrs={'id': "b-m-dtp-date", 'class': "form-control", 'placeholder': "Выберите дату"}),
+                attrs={'id': "b-m-dtp-date",
+                       'class': "form-control",
+                       'wtype': 'date',
+                       'placeholder': "Выберите дату"}),
             'shop': forms.Select(attrs={'class': "select2 form-control"}),
         }
 
