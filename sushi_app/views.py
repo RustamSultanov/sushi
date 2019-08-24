@@ -236,6 +236,7 @@ def manager_lk_view(request):
     documents = DocumentSushi.objects.all()
     page_object = Paginator(documents, 9)
     is_paginated = False
+    page_obj = documents = []
     if page_object.num_pages > 1:
         is_paginated = True
         page = request.GET['page'] if 'page' in request.GET else 1
@@ -311,10 +312,12 @@ def partner_lk_view(request):
     documents = DocumentSushi.objects.all()
     page_object = Paginator(documents, 9)
     is_paginated = False
+    page_obj = documents = []
     if page_object.num_pages > 1:
         is_paginated = True
         page = request.GET['page'] if 'page' in request.GET else 1
-        page_obj = documents = page_object.get_page(page)    
+        page_obj = documents = page_object.get_page(page)
+
     return render(
         request,
         "dashboard_partner.html",
