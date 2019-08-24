@@ -127,6 +127,7 @@ class TechCardsListView(SushiDocListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Техкарты'
         context['breadcrumb'] = [{'title': context['title']}]
+        context['doc_type'] = 0
         return context
 
 
@@ -137,4 +138,5 @@ class RegulationsListView(SushiDocListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регламенты'
         context['breadcrumb'] = [{'title': context['title']}]
+        context['doc_type'] = 1
         return context

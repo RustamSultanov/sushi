@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import *
-from .models import *
+from django.core.paginator import Paginator
 from django.views.decorators.vary import vary_on_headers
 from django.urls import reverse, reverse_lazy
 from django.forms.models import model_to_dict
@@ -19,8 +18,10 @@ from wagtail.admin.forms.search import SearchForm
 from wagtail.core.models import Collection
 from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
-from mickroservices.models import DocumentSushi
 
+from mickroservices.models import DocumentSushi
+from .forms import *
+from .models import *
 
 User = get_user_model()
 
@@ -231,6 +232,14 @@ def manager_lk_view(request):
     feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
         manager=request.user.user_profile
     )
+
+    documents = DocumentSushi.objects.all()
+    page_object = Paginator(documents, 9)
+    is_paginated = False
+    if page_object.num_pages > 1:
+        is_paginated = True
+        page = request.GET['page'] if 'page' in request.GET else 1
+        page_obj = documents = page_object.get_page(page)
     return render(
         request,
         "dashboard_manager.html",
@@ -240,6 +249,10 @@ def manager_lk_view(request):
             "task_list": task_list,
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
+            "documents": page_object.get_page(1),
+            "page_obj": page_obj,
+            "is_paginated":is_paginated
+
         },
     )
 
@@ -251,6 +264,32 @@ def load_filtered_tasks(request):
         request,
         'partials/tasks_manager.html',
         {'task_list': task_list}
+    )
+
+@csrf_exempt
+def load_docs(request):
+    if 'doc_type' in request.GET:
+       docs =  DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
+    else:
+       docs = []
+    return render(
+        request,
+        'partials/documents.html',
+        {'documents': docs}
+    )
+
+
+@csrf_exempt
+def load_paginations_docs(request):
+    if 'doc_type' in request.GET:
+       docs =  DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
+    else:
+       docs = []
+    page_object = Paginator(docs, 9)
+    return render(
+        request,
+        'partials/pagination.html',
+        {'posts': page_object.get_page(1)}
     )
 
 
@@ -269,6 +308,13 @@ def partner_lk_view(request):
     feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
         responsible=request.user.user_profile
     )
+    documents = DocumentSushi.objects.all()
+    page_object = Paginator(documents, 9)
+    is_paginated = False
+    if page_object.num_pages > 1:
+        is_paginated = True
+        page = request.GET['page'] if 'page' in request.GET else 1
+        page_obj = documents = page_object.get_page(page)    
     return render(
         request,
         "dashboard_partner.html",
@@ -279,6 +325,9 @@ def partner_lk_view(request):
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
             "manager": request.user.user_profile.manager,
+            "documents": page_object.get_page(1),
+            "page_obj": page_obj,
+            "is_paginated":is_paginated            
         },
     )
 

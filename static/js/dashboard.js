@@ -67,11 +67,11 @@ $(function() {
 });
 
 
-        function load_tasks(element){           
-            event.preventDefault();
-            element.siblings('a').removeClass('active');
-            element.addClass('active');
-            $('#tasks_manager').load(element[0].href)
-            $('a')[0].focus()
-            return false;
-        }
+function load_tasks(element){           
+    event.preventDefault();
+    element.siblings('a').removeClass('active');
+    element.addClass('active');
+    $('#tasks_manager').load(element[0].href)
+    $('a')[0].focus()
+    return false;
+}
