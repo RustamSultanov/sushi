@@ -26,8 +26,8 @@ class SushiDocListView(ListView):
         return super().__init__(*args, **kwargs)
 
     def get_documents(self):
-        documents = DocumentSushi.objects.all()
-        return documents.filter(doc_type=self.doc_type)
+        documents = DocumentSushi.objects.filter(doc_type=self.doc_type)
+        return documents
 
     def get_queryset(self):
 
@@ -127,7 +127,7 @@ class TechCardsListView(SushiDocListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Техкарты'
         context['breadcrumb'] = [{'title': context['title']}]
-        context['doc_type'] = 0
+        context['doc_type'] = DocumentSushi.T_TEH_CARD
         return context
 
 
@@ -138,5 +138,5 @@ class RegulationsListView(SushiDocListView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регламенты'
         context['breadcrumb'] = [{'title': context['title']}]
-        context['doc_type'] = 1
+        context['doc_type'] = DocumentSushi.T_REGULATIONS
         return context

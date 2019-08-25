@@ -7,6 +7,8 @@ from wagtail.core.fields import RichTextField
 from wagtail.documents.models import get_document_model
 import wagtail.users.models
 
+from mickroservices.models import DocumentSushi
+
 ST_SOLVED, ST_IN_PROGRESS, ST_NOT_SOLVED = range(3)
 STATUS_CHOICE = (
     (ST_SOLVED, "Решен"),
@@ -87,12 +89,12 @@ class Shop(models.Model):
     city = models.CharField(max_length=255)
     entity_name = models.CharField(max_length=255)
     docs = models.ManyToManyField(
-        get_document_model(),
+        DocumentSushi,
         blank=True,
         related_name='+'
     )
     checks = models.ManyToManyField(
-        get_document_model(),
+        DocumentSushi,
         blank=True,
         related_name='+'
     )

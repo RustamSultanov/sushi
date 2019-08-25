@@ -127,37 +127,12 @@
                                             <a href="#" class="text-muted">По размеру</a>
                                         </div>
                                         <div class="row" id="documents_wraper">               
-                                            {% for document in documents %}
-                                <div class="col-md-6 col-lg-4 p-1">
-                                    <div class="project-attachment ui-bordered p-2">
-
-                                        <div class="project-attachment-img" style="background-image: url({% static 'img/5.jpg' %})"></div>
-                                        <div class="media-body ml-3">
-                                            <strong class="project-attachment-filename">{{document.title}}</strong>
-                                            <div class="text-muted small"  >{{document.file_size|filesizeformat}}</div>
-                                            <div>
-{#                                                <a href="javascript:void(0)">Просмотреть</a> &nbsp;#}
-                                                <a href="{{ document.url }}">Загрузить</a>
-                                            </div>
+                                            {% include 'partials/documents.html' with documents=documents %}
                                         </div>
-                                        <div class="btn-group project-actions align-self-start">
-                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
-                                                <i class="ion ion-ios-more"></i>
-                                            </button>
-{#                                            <div class="dropdown-menu dropdown-menu-right">#}
-{#                                               #}
-{#                                                <a class="dropdown-item" href="javascript:void(0)">Удалить</a>#}
-{#                                            </div>#}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                                            
-                                            
-                                        </div>
-                                        {% if is_paginated %}
+                                        <div id="documents_pagination">
                                             {% include 'partials/pagination.html' with posts=page_obj %}
-                                        {% endif %}
+                                            }
+                                        </div>                                        
                                     </div>
                                     <!-- Счета -->
                                     <div class="tab-pane fade" id="invoices">
@@ -181,36 +156,11 @@
                                             <a href="#" class="text-muted">По размеру</a>
                                         </div>
                                         <div class="row" id="invoices_wraper"> 
-                                            
-                                            {% for invoice in invoices %}
-                                                <div class="col-md-6 col-lg-4 p-1">
-                                                    <div class="project-attachment ui-bordered p-2">
-                                                        <div class="project-attachment-img" style="background-image: url({% static 'img/5.jpg' %})"></div>
-                                                        <div class="media-body ml-3">
-                                                            <strong class="project-attachment-filename">{{invoice.title}}</strong>
-                                                            <div class="text-muted small"  >{{invoice.file_size|filesizeformat}}</div>
-                                                            <div>
-{#                                                                <a href="javascript:void(0)">Просмотреть</a> &nbsp;#}
-                                                                <a href="{{ invoice.url }}">Загрузить</a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="btn-group project-actions align-self-start">
-                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
-                                                                <i class="ion ion-ios-more"></i>
-                                                            </button>
-{#                                                            <div class="dropdown-menu dropdown-menu-right">#}
-{#                                                                <a class="dropdown-item" href="javascript:void(0)">View</a>#}
-{#                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
-{#                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
-{#                                                            </div>#}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
+                                            {% include 'partials/documents.html' with documents=invoices %}
                                         </div>
-                                        {% if is_paginated %}
+                                        <div id="documents_invoices">
                                             {% include 'partials/pagination.html' with posts=page_obj %}
-                                        {% endif %}
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="reviews">
                                         <div class="my-4 small text-right">
@@ -264,143 +214,8 @@
                                                 </div>
                                             </div>
                                             {% endfor %}
-
-
                                         </div>
                                     </div>
-{#                                    <div class="tab-pane fade" id="files">#}
-{#                                        <div class="my-4">#}
-{#                                            <form action="{{request.path}}" class="dropzone needsclick" id="dropzone-files" method="POST">#}
-{#                                                {% csrf_token %}#}
-{#                                                <div class="dz-message needsclick">#}
-{#                                                        Перетащите файлы сюда или нажмите, чтобы загрузить#}
-{#                                                        <span class="note needsclick">(Это демонстрационная версия. Файлы не будут загружены на сервер.)</span>#}
-{#                                                </div>#}
-{#                                                <div class="fallback">#}
-{#                                                    <input name="file" type="file" multiple>#}
-{#                                                </div>#}
-{#                                                <input type="hidden" name="type" value="invoice">#}
-{#                                            </form>#}
-{#                                        </div>#}
-{#                                        <div class="my-4 small text-right">#}
-{#                                            <span class="text-muted">Сортировать: </span>#}
-{#                                            <a href="#" class="text-muted active">По порядку</a>#}
-{#                                            <a href="#" class="text-muted">По дате</a>#}
-{#                                            <a href="#" class="text-muted">По размеру</a>#}
-{#                                        </div>#}
-{#                                        <div class="row">#}
-{##}
-{#                                            <div class="col-md-6 col-lg-4 p-1">#}
-{#                                                <a class="project-attachment ui-bordered p-2" data-toggle="modal" data-target="#modal-new-folder">#}
-{#                                                    <div class="project-attachment-file display-4">#}
-{#                                                        <i class="fas fa-folder-plus"></i>#}
-{#                                                    </div>#}
-{#                                                    <div class="media-body ml-3">#}
-{#                                                        <div>Добавить папку#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                </a>#}
-{#                                            </div>#}
-{#                                            <div class="col-md-6 col-lg-4 p-1">#}
-{#                                                <div class="project-attachment ui-bordered p-2">#}
-{#                                                    <div class="project-attachment-file display-4">#}
-{#                                                        <i class="fas fa-folder"></i>#}
-{#                                                    </div>#}
-{#                                                    <div class="media-body ml-3">#}
-{#                                                        <strong class="project-attachment-filename">Промоутинг лето 2019</strong>#}
-{#                                                        <div class="text-muted small">11 файлов</div>#}
-{#                                                        <div>#}
-{#                                                            <a href="javascript:void(0)">Просмотреть</a> &nbsp;#}
-{#                                                            <a href="javascript:void(0)">Загрузить</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                    <div class="btn-group project-actions align-self-start">#}
-{#                                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">#}
-{#                                                            <i class="ion ion-ios-more"></i>#}
-{#                                                        </button>#}
-{#                                                        <div class="dropdown-menu dropdown-menu-right">#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">View</a>#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                            <div class="col-md-6 col-lg-4 p-1">#}
-{#                                                <div class="project-attachment ui-bordered p-2">#}
-{#                                                    <div class="project-attachment-img" style="background-image: url(img/5.jpg)"></div>#}
-{#                                                    <div class="media-body ml-3">#}
-{#                                                        <strong class="project-attachment-filename">image_1.jpg</strong>#}
-{#                                                        <div class="text-muted small">527KB</div>#}
-{#                                                        <div>#}
-{#                                                            <a href="javascript:void(0)">Просмотреть</a> &nbsp;#}
-{#                                                            <a href="javascript:void(0)">Загрузить</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                    <div class="btn-group project-actions align-self-start">#}
-{#                                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">#}
-{#                                                            <i class="ion ion-ios-more"></i>#}
-{#                                                        </button>#}
-{#                                                        <div class="dropdown-menu dropdown-menu-right">#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">View</a>#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{##}
-{#                                            <div class="col-md-6 col-lg-4 p-1">#}
-{#                                                <div class="project-attachment ui-bordered p-2">#}
-{#                                                    <div class="project-attachment-file display-4">#}
-{#                                                        <i class="far fa-file-pdf"></i>#}
-{#                                                    </div>#}
-{#                                                    <div class="media-body ml-3">#}
-{#                                                        <strong class="project-attachment-filename">assignment_letter.pdf</strong>#}
-{#                                                        <div class="text-muted small">156KB</div>#}
-{#                                                        <div>#}
-{#                                                            <a href="javascript:void(0)">Просмотреть</a> &nbsp;#}
-{#                                                            <a href="javascript:void(0)">Загрузить</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                    <div class="btn-group project-actions align-self-start">#}
-{#                                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">#}
-{#                                                            <i class="ion ion-ios-more"></i>#}
-{#                                                        </button>#}
-{#                                                        <div class="dropdown-menu dropdown-menu-right">#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">View</a>#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                            <div class="col-md-6 col-lg-4 p-1">#}
-{#                                                <div class="project-attachment ui-bordered p-2">#}
-{#                                                    <div class="project-attachment-file display-4">#}
-{#                                                        <i class="far fa-file-archive"></i>#}
-{#                                                    </div>#}
-{#                                                    <div class="media-body ml-3">#}
-{#                                                        <strong class="project-attachment-filename">app_update.zip</strong>#}
-{#                                                        <div class="text-muted small">1.35MB</div>#}
-{#                                                        <div>#}
-{#                                                            <a href="javascript:void(0)">Загрузить</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                    <div class="btn-group project-actions align-self-start">#}
-{#                                                        <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">#}
-{#                                                            <i class="ion ion-ios-more"></i>#}
-{#                                                        </button>#}
-{#                                                        <div class="dropdown-menu dropdown-menu-right">#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">View</a>#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
-{#                                                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
-{#                                                        </div>#}
-{#                                                    </div>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                    </div>#}
                                 </div>
                             </div>
                         </div>
@@ -433,30 +248,22 @@
             filesizeBase:    3000,
             addRemoveLinks:  true,
             success : function(file, response){
-                console.log(response.documents.length)
-                if (response.documents.length < 9){
-                    $('#documents_wraper').html('')
-                    response.documents.forEach(function(item, i, arr) {
-                      $('#documents_wraper').append(
-                            '<div class="col-md-6 col-lg-4 p-1">\
-                                    <div class="project-attachment ui-bordered p-2">\
-                                        <div class="project-attachment-img" style="background-image: url({% static "img/5.jpg" %})"></div>\
-                                        <div class="media-body ml-3">\
-                                            <strong class="project-attachment-filename">'+item.title+'</strong>\
-                                            <div class="text-muted small"  >{{'+item.file_size+'|filesizeformat}}</div>\
-                                            <div>\
-                                                <a href="{{ '+item.url+' }}">Загрузить</a>\
-                                            </div>\
-                                        </div>\
-                                        <div class="btn-group project-actions align-self-start">\
-                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">\
-                                                <i class="ion ion-ios-more"></i>\
-                                            </button>\
-                                        </div>\
-                                    </div>\
-                                </div>');
-                    });
-                }
+                $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}");
+                $('#documents_pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}");
+                this.removeAllFiles();
+            }        
+        });
+
+    $(function() {
+        $('#dropzone-invoices').dropzone({
+            parallelUploads: 2,
+            maxFilesize:     50000,
+            filesizeBase:    3000,
+            addRemoveLinks:  true,
+            success : function(file, response){
+                $('#invoices_wraper').load("{% url 'load_docs' %}?doc_type={{type_invoice}}");
+                $('#invoices_pagination').load("{% url 'load_paginations_docs' %}?doc_type={{type_invoice}}");
+                this.removeAllFiles();
             }        
         });
 
@@ -468,41 +275,6 @@
         dictResponseError: 'Server not Configured',
       };
     });
-</script>
-
-<script type="text/javascript">
-    $(function() {
-        $('#dropzone-invoices').dropzone({
-            parallelUploads: 2,
-            maxFilesize:     50000,
-            filesizeBase:    3000,
-            addRemoveLinks:  true,
-            success : function(file, response){
-                if (response.invoices.length < 9){
-                    $('#invoices_wraper').html('')
-                    response.invoices.forEach(function(item, i, arr) {
-                      $('#invoices_wraper').append(
-                            '<div class="col-md-6 col-lg-4 p-1">\
-                                    <div class="project-attachment ui-bordered p-2">\
-                                        <div class="project-attachment-img" style="background-image: url({% static "img/5.jpg" %})"></div>\
-                                        <div class="media-body ml-3">\
-                                            <strong class="project-attachment-filename">'+item.title+'</strong>\
-                                            <div class="text-muted small"  >{{'+item.file_size+'|filesizeformat}}</div>\
-                                            <div>\
-                                                <a href="{{ '+item.url+' }}">Загрузить</a>\
-                                            </div>\
-                                        </div>\
-                                        <div class="btn-group project-actions align-self-start">\
-                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">\
-                                                <i class="ion ion-ios-more"></i>\
-                                            </button>\
-                                        </div>\
-                                    </div>\
-                                </div>');
-                    });
-                }
-            }        
-        });
 
         // Mock the file upload progress (only for the demo)
         //

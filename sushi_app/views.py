@@ -12,7 +12,6 @@ from django.http import (
     HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
 from django.views.generic import ListView
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
 from django.utils.encoding import force_text
 from wagtail.admin.forms.search import SearchForm
 from wagtail.core.models import Collection
@@ -26,7 +25,7 @@ from .models import *
 User = get_user_model()
 
 
-class SushiShopDocListView(ListView):
+class ShopListView(ListView):
     model = DocumentSushi
     paginate_by = 9
     context_object_name = "documents"
@@ -35,17 +34,27 @@ class SushiShopDocListView(ListView):
     def __init__(self, *args, **kwargs):
         return super().__init__(*args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        shop = get_object_or_404(Shop, id=self.kwargs["shop_id"])
+        context = super().get_context_data(**kwargs)
+        context["invoices"] = self.get_invoices()
+        context["shop"] = shop
+        context["doc_type"] = DocumentSushi.T_PERSONAL
+        context["type_invoice"] = DocumentSushi.T_PERSONAL_INVOICES
+        context["breadcrumb"] = [
+            {"title": "Личный кабинет", "url": reverse_lazy("partner_lk")},
+            {"title": f"Магазин #{shop.id}"},
+        ]
+        return context
+
     def get_documents(self):
         shop = Shop.objects.get(id=self.kwargs["shop_id"])
-        documents = shop.docs
-        documents = documents.order_by("title")
+        documents = shop.docs.all().order_by("title")
         return documents
 
     def get_invoices(self):
         shop = Shop.objects.get(id=self.kwargs["shop_id"])
-        invoices = shop.checks
-        invoices = invoices.order_by("title")
-        return invoices
+        return shop.checks.all().order_by("title")
 
     def get_queryset(self):
         # Get documents (filtered by user permission)
@@ -86,18 +95,18 @@ class SushiShopDocListView(ListView):
         # Create response
         return super().get(request, *args, **kwargs)
 
-    @vary_on_headers("X-Requested-With")
-    def post(self, request, *args, **kwargs):
-
-        DocumentForm = get_document_form(self.model)
+    def verife_http_response(self, request):
         if not request.is_ajax():
             return HttpResponseBadRequest("Cannot POST to this view without AJAX")
 
         if not request.FILES:
             return HttpResponseBadRequest("Must upload a file")
+        return None
 
+    def get_doc_form(self, request):
         # Build a form for validation
-        form = DocumentForm(
+        DocumentForm = get_document_form(self.model)
+        return DocumentForm(
             {
                 "title": request.FILES["file"].name,
                 "collection": request.POST.get("collection"),
@@ -106,55 +115,47 @@ class SushiShopDocListView(ListView):
             user=request.user,
         )
 
+    def save_doc(self,request, doc, doc_type):
+        doc.doc_type = doc_type
+        doc.uploaded_by_user = request.user
+        doc.file_size = doc.file.size
+
+        # Set new document file hash
+        doc.file.seek(0)
+        doc._set_file_hash(doc.file.read())
+        doc.file.seek(0)
+        doc.save()
+
+    @vary_on_headers("X-Requested-With")
+    def post(self, request, *args, **kwargs):
+
+        respone = self.verife_http_response(request)
+        if respone:
+            return respone
+
+        form = self.get_doc_form(request)
+
         if form.is_valid():
             # Save it
             doc = form.save(commit=False)
 
-            doc.doc_type = self.doc_type
-            doc.uploaded_by_user = request.user
-            doc.file_size = doc.file.size
+            doc_type = DocumentSushi.T_PERSONAL_INVOICES\
+                if request.POST.get("type") == "invoice" else DocumentSushi.T_PERSONAL
 
-            # Set new document file hash
-            doc.file.seek(0)
-            doc._set_file_hash(doc.file.read())
-            doc.file.seek(0)
-            doc.save()
+            self.save_doc(request, doc, doc_type)
+
             shop = Shop.objects.get(id=self.kwargs["shop_id"])
 
             if request.POST.get("type") == "doc":
                 shop.docs.add(doc)
             elif request.POST.get("type") == "invoice":
                 shop.checks.add(doc)
-
-            collections = permission_policy.collections_user_has_any_permission_for(
-                request.user, ["add", "change"]
-            )
-            if len(collections) < 2:
-                collections = None
-            else:
-                collections = Collection.order_for_display(collections)
-
-            return JsonResponse(
-                {
-                    "success": True,
-                    "documents": [
-                        {"title": obj.title, "file_size": obj.file_size}
-                        for obj in self.get_documents()
-                    ],
-                    "invoices": [
-                        {"title": obj.title, "file_size": obj.file_size}
-                        for obj in self.get_invoices()
-                    ],
-                    "collections": collections,
-                    "doc_id": int(doc.id),
-                }
-            )
+            return JsonResponse({"success": True})
         else:
             # Validation error
             return JsonResponse(
                 {
                     "success": False,
-                    # https://github.com/django/django/blob/stable/1.6.x/django/forms/util.py#L45
                     "error_message": "\n".join(
                         [
                             "\n".join([force_text(i) for i in v])
@@ -163,22 +164,6 @@ class SushiShopDocListView(ListView):
                     ),
                 }
             )
-
-
-class ShopListView(SushiShopDocListView):
-    doc_type = DocumentSushi.T_TEH_CARD
-
-    def get_context_data(self, **kwargs):
-        shop = get_object_or_404(Shop, id=self.kwargs["shop_id"])
-        context = super().get_context_data(**kwargs)
-        context["invoices"] = self.get_invoices()
-        context["shop"] = shop
-        context["breadcrumb"] = [
-            {"title": "Личный кабинет", "url": reverse_lazy("partner_lk")},
-            {"title": f"Магазин #{shop.id}"},
-        ]
-
-        return context
 
 
 # # Create your views here
@@ -233,14 +218,11 @@ def manager_lk_view(request):
         manager=request.user.user_profile
     )
 
-    documents = DocumentSushi.objects.all()
-    page_object = Paginator(documents, 9)
+    page_object = Paginator( DocumentSushi.objects.all(), 9)
     is_paginated = False
-    page_obj = documents = []
-    if page_object.num_pages > 1:
-        is_paginated = True
-        page = request.GET['page'] if 'page' in request.GET else 1
-        page_obj = documents = page_object.get_page(page)
+    page = request.GET['page'] if 'page' in request.GET else 1    
+    page_obj = documents = page_object.get_page(page)
+    print(page_obj)
     return render(
         request,
         "dashboard_manager.html",
@@ -250,7 +232,7 @@ def manager_lk_view(request):
             "task_list": task_list,
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
-            "documents": page_object.get_page(1),
+            "documents": documents,
             "page_obj": page_obj,
             "is_paginated":is_paginated
 
@@ -313,7 +295,7 @@ def partner_lk_view(request):
     page_object = Paginator(documents, 9)
     is_paginated = False
     page_obj = documents = []
-    if page_object.num_pages > 1:
+    if page_object.num_pages > 0:
         is_paginated = True
         page = request.GET['page'] if 'page' in request.GET else 1
         page_obj = documents = page_object.get_page(page)
@@ -328,7 +310,7 @@ def partner_lk_view(request):
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
             "manager": request.user.user_profile.manager,
-            "documents": page_object.get_page(1),
+            "documents": documents,
             "page_obj": page_obj,
             "is_paginated":is_paginated            
         },

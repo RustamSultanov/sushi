@@ -122,7 +122,6 @@
                                                 </div>
                                             </div>
                                             {% endfor %}
-
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="tasks">
@@ -193,17 +192,6 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="files">
-                                        <div class="my-4">
-                                            <form action="/upload" class="dropzone needsclick" id="dropzone-files">
-                                                <div class="dz-message needsclick">
-                                                    Перетащите файлы сюда или нажмите, чтобы загрузить
-                                                    <span class="note needsclick">(Это демонстрационная версия. Файлы не будут загружены на сервер.)</span>
-                                                </div>
-                                                <div class="fallback">
-                                                    <input name="file" type="file" multiple>
-                                                </div>
-                                            </form>
-                                        </div>
                                         <div class="my-4 small text-right">
                                             <span class="text-muted">Сортировать: </span>
                                             <a href="?ordering=title" class="text-muted active">По порядку</a>
@@ -214,9 +202,7 @@
                                             {% include 'partials/documents.html' with documents=documents %}
                                         </div>
                                         <div id="pagination">
-                                        {% if is_paginated %}
                                             {% include 'partials/pagination.html' with posts=page_obj %}
-                                        {% endif %}
                                         </div>                                        
                                     </div>
                                 </div>

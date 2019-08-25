@@ -21,7 +21,7 @@
         <div class="nav">
             {% for item in types_marketing %}
                 <li class="nav-item">
-                    <a class="nav-link text-dark pl-0" href="javascript:void(0)">{{item}}</a>
+                    <a data-id={{item.0|add:"4" }} class="nav-mm nav-link {% if active_tab == item.0 %}text-dark{% endif %} pl-0" href="javascript:void(0)" onclick="load_marketing_docs($(this))">{{item.1}}</a>
                 </li>
             {% endfor %}
         </div>
@@ -33,25 +33,9 @@
                 </div>
                 <div class="fallback">
                     <input name="file" type="file" multiple>
-                </div>                            
+                </div> 
+                <input type="hidden" name="type" value="{{types_marketing.0.0|add:"4"}}">
             </form>
-        </div>
-        <div class="my-4">
-            <button type="submit" class="btn btn-primary btn-round">Сохранить</button>
-        </div>                    
-        <div class="my-5">
-            <div class="row mt-3">
-                <div class="col-12">
-                    <form class="input-group search-form" action="{{ request.path }}" method="get" novalidate="">
-                        <div class="input-group-prepend">
-                            <i class="input-group-text ion-ios-search"></i>
-                        </div>
-                        
-                            <input type="search" name="q" class="form-control" placeholder="Поиск...">
-                            <input type="submit" value="Search" class="button" style="display:none">
-                    </form>
-                </div>
-            </div>
         </div>
         <div class="my-5">
             <div class="my-4 small text-right">
@@ -108,9 +92,9 @@
                 filesizeBase:    3000,
                 addRemoveLinks:  true,
                 success : function(file, response){
-                    console.log(response.documents.length)
-                    $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}");
-                    $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}");
+                    $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + $('.text-dark').data("id"));
+                    $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type=" + $('.text-dark').data("id"));
+                    this.removeAllFiles();
                 }        
             });
 
@@ -122,5 +106,15 @@
             dictResponseError: 'Server not Configured',
           };
         });
+        function load_marketing_docs(element){           
+            event.preventDefault();
+            $('.nav-mm').removeClass('text-dark');
+            element.addClass('text-dark');
+            $('input[name="type"').val(element.data("id"));
+            $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + element.data("id"))
+            $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type="+ element.data("id"));
+            console.log($('.text-dark'))
+            return false;
+        }
     </script>
 {% endblock %}
