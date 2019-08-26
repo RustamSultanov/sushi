@@ -22,6 +22,8 @@ urlpatterns = [
     path('partner-lk', views.partner_lk_view, name='partner_lk'),
     path('partner/new', views.create_partner_view, name='create_partner'),
     path('partner/edit/<int:user_id>', views.edit_partner_view, name='edit_partner'),
+    path('employee/new', views.create_employee_view, name='create_employee'),
+    path('employee/edit/<int:user_id>', views.edit_employee_view, name='edit_employee'),
     path(
         'request/new', views.form_request_view, name='form_request'),
     path(

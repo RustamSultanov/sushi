@@ -170,6 +170,33 @@ class RegistrationEmployeeAdditionForm(forms.ModelForm):
         }
 
 
+class RegistrationPartnerAdditionForm(forms.ModelForm):
+    avatar = forms.ImageField(
+        required=True
+    )
+
+    class Meta:
+        model = UserProfile
+        exclude = [
+            'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile',
+            'user', 'position', 'key_responsibilities '
+        ]
+        widgets = {
+            # 'key_responsibilities': forms.Textarea(
+            #     attrs={'placeholder': "Перечень должностных обязанностей", 'class': "form-control", 'rows': '2'}),
+            'phone_number': PhoneNumberInternationalFallbackWidget(
+                attrs={'placeholder': "Телефон", 'class': 'form-control', }),
+            'whatsapp': PhoneNumberInternationalFallbackWidget(
+                attrs={'placeholder': "Whatsapp", 'class': 'form-control', }),
+            'twitter': forms.URLInput(attrs={'placeholder': "Twitter", 'class': 'form-control', }),
+            'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
+            'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
+            'middle_name': forms.TextInput(attrs={'placeholder': "Отчество", 'class': 'form-control', }),
+            # 'position': forms.TextInput(attrs={'placeholder': "Должность", 'class': 'form-control', }),
+
+        }
+
+
 class EditEmployeeMainForm(forms.ModelForm):
     class Meta:
         model = User
@@ -181,6 +208,25 @@ class EditEmployeeMainForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'placeholder': "Почта", 'class': 'form-control', }),
             'first_name': forms.TextInput(attrs={'placeholder': "Имя", 'class': 'form-control', }),
             'last_name': forms.TextInput(attrs={'placeholder': "Фамилия", 'class': 'form-control', })
+        }
+
+
+class EditPartnerAdditionForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        exclude = [
+            'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile',
+            'user', 'position', 'key_responsibilities '
+        ]
+        widgets = {
+            'phone_number': PhoneNumberInternationalFallbackWidget(
+                attrs={'placeholder': "Телефон", 'class': 'form-control', }),
+            'whatsapp': PhoneNumberInternationalFallbackWidget(
+                attrs={'placeholder': "Whatsapp", 'class': 'form-control', }),
+            'twitter': forms.URLInput(attrs={'placeholder': "Twitter", 'class': 'form-control', }),
+            'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
+            'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
+            'middle_name': forms.TextInput(attrs={'placeholder': "Отчество", 'class': 'form-control', }),
         }
 
 
@@ -202,7 +248,6 @@ class EditEmployeeAdditionForm(forms.ModelForm):
             'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
             'middle_name': forms.TextInput(attrs={'placeholder': "Отчество", 'class': 'form-control', }),
             'position': forms.TextInput(attrs={'placeholder': "Должность", 'class': 'form-control', }),
-
         }
 
 
@@ -213,6 +258,7 @@ class ShopForm(forms.ModelForm):
             'docs', 'checks'
         ]
         widgets = {
+            'details': forms.Textarea(attrs={'placeholder': "Реквизиты", 'class': 'form-control', }),
             'address': forms.TextInput(attrs={'placeholder': "Адрес", 'class': 'form-control', }),
             'city': forms.TextInput(attrs={'placeholder': "Город", 'class': 'form-control', }),
             'entity_name': forms.TextInput(attrs={'placeholder': "Юридическое лицо", 'class': 'form-control', }),

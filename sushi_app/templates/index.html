@@ -169,6 +169,14 @@
                                 <a href="{% url 'employee_info' employee.user.id %}" class="text-primary">{{ employee.user.get_full_name }}</a>
                                 <div class="small text-muted">{{ employee.position }}</div>
                             </div>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                <i class="ion ion-ios-more"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-left">
+                                <a class="dropdown-item" href="{% url 'edit_employee' employee.user.id %}">Редактировать франчайзи</a>
+                            </div>
+                        </div>
                         </div>
                         <div class="small text-muted mb-3">
                             {{ employee.phone_number }}

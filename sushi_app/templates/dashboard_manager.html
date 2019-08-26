@@ -8,6 +8,10 @@
     <h2 class="text-light font-weight-normal mt-4 mb-1">Личный кабинет
     <a href="{% url 'create_partner' %}" class="btn btn-round btn-outline-primary btn-sm">Добавить франчайзи</a>
     <a href="{% url 'shop_form' %}" class="btn btn-round btn-outline-primary btn-sm">Добавить магазин</a>
+    {% if user.user_profile.is_head %}
+    <a href="{% url 'create_employee' %}" class="btn btn-round btn-outline-primary btn-sm">Добавить сотрудника</a>
+    {% else %}
+    {% endif %}
     </h2>
 {% endblock %}
 
@@ -64,8 +68,14 @@
                                                             </div>
                                                         </div>
                                                         <div class="small text-muted mb-3">
+                                                            {% if partner.phone_number %}
                                                             {{ partner.phone_number }}
-                                                            <br>Whatsapp {{ partner.whatsapp }}
+                                                            {% else %}
+                                                            {% endif %}
+                                                            <br>{% if partner.phone_number %}
+                                                            Whatsapp {{ partner.whatsapp }}
+                                                            {% else %}
+                                                            {% endif %}
                                                             <br>{{ partner.user.email }}
                                                         </div>
                                                         <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>

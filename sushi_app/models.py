@@ -32,7 +32,7 @@ class UserProfile(models.Model):
         wagtail.users.models.UserProfile, on_delete=models.CASCADE, related_name='user_profile',
         null=True, blank=True
     )
-    position = models.CharField(max_length=100)
+    position = models.CharField(max_length=100, blank=True)
     phone_number = PhoneNumberField(null=True, blank=True)
     whatsapp = PhoneNumberField(null=True, blank=True)
     twitter = models.URLField(null=True, max_length=200, blank=True)
@@ -103,6 +103,8 @@ class Shop(models.Model):
     responsibles = models.ManyToManyField(to=UserProfile,
                                           limit_choices_to={'is_manager': True}, related_name='shop_responsible')
     date_create = models.DateTimeField(auto_now_add=True)
+    file = models.FileField(blank=True)
+    details = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.city} {self.address}"

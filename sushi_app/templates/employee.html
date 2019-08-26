@@ -17,7 +17,9 @@
                     </div>
                     <div class="card my-4">
                         <div class="card-body">
+                        {% if employee.user_profile.key_responsibilities %}
                             <h6 class="mb-3">Ключевые обязанности</h6>
+                       {% else %}{% endif %}
                             {{ employee.user_profile.key_responsibilities | richtext }}
                             <h6 class="mt-4 mb-3">Социальные сети</h6>
                             <table class="table user-view-table m-0">

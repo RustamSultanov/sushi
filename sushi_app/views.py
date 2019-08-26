@@ -17,6 +17,7 @@ from wagtail.admin.forms.search import SearchForm
 from wagtail.core.models import Collection
 from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
+from django.contrib.auth.models import Group
 
 from mickroservices.models import DocumentSushi
 from .forms import *
@@ -173,6 +174,10 @@ def manager_check(user):
 
 def partner_check(user):
     return user.user_profile.is_partner
+
+
+def head_check(user):
+    return user.user_profile.is_head
 
 
 @login_required
@@ -395,12 +400,15 @@ def create_partner_view(request):
     form_user = RegistrationEmployeeMainForm(
         request.POST or None, request.FILES or None, prefix="user"
     )
-    form_user_profile = RegistrationEmployeeAdditionForm(
+    form_user_profile = RegistrationPartnerAdditionForm(
         request.POST or None, request.FILES or None, prefix="user_profile"
     )
     if form_user.is_valid() and form_user_profile.is_valid():
         form_user = form_user.save(commit=False)
+        form_user.set_password(form_user.password)
         form_user.save()
+        editor_group = Group.objects.get(name='Editors')
+        form_user.groups.add(editor_group)
         wagtail_user = wagtail.users.models.UserProfile.get_for_user(form_user)
         wagtail_user.avatar = form_user_profile.cleaned_data["avatar"]
         wagtail_user.preferred_language = settings.LANGUAGE_CODE
@@ -427,6 +435,90 @@ def create_partner_view(request):
 @login_required
 @user_passes_test(manager_check)
 def edit_partner_view(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    form_user = EditEmployeeMainForm(
+        request.POST or None,
+        request.FILES or None,
+        initial=model_to_dict(user),
+        instance=user,
+        prefix="user",
+    )
+    form_user_profile = EditPartnerAdditionForm(
+        request.POST or None,
+        request.FILES or None,
+        initial=model_to_dict(user.user_profile),
+        instance=user.user_profile,
+        prefix="user_profile",
+    )
+    form_wagtail = AvatarPreferencesForm(
+        request.POST or None,
+        request.FILES or None,
+        initial=model_to_dict(user.wagtail_userprofile),
+        instance=user.wagtail_userprofile,
+        prefix="user_profile",
+    )
+    if (
+        form_user.is_valid()
+        and form_user_profile.is_valid()
+        and form_wagtail.is_valid()
+    ):
+        form_user.save()
+        form_user_profile.save()
+        form_wagtail.save()
+        return HttpResponseRedirect(reverse("employee_info", args=[user_id]))
+    context = {
+        "form_user": form_user,
+        "form_user_profile": form_user_profile,
+        "form_wagtail": form_wagtail,
+        "breadcrumb": [
+            {"title": "Личный кабинет", "url": reverse_lazy("manager_lk")},
+            {"title": "Редактировать франчайзи"},
+        ],
+    }
+    return render(request, "user_edit.html", context)
+
+
+@login_required
+@user_passes_test(head_check)
+def create_employee_view(request):
+    form_user = RegistrationEmployeeMainForm(
+        request.POST or None, request.FILES or None, prefix="user"
+    )
+    form_user_profile = RegistrationEmployeeAdditionForm(
+        request.POST or None, request.FILES or None, prefix="user_profile"
+    )
+    if form_user.is_valid() and form_user_profile.is_valid():
+        form_user = form_user.save(commit=False)
+        form_user.set_password(form_user.password)
+        form_user.save()
+        editor_group = Group.objects.get(name='Editors')
+        form_user.groups.add(editor_group)
+        wagtail_user = wagtail.users.models.UserProfile.get_for_user(form_user)
+        wagtail_user.avatar = form_user_profile.cleaned_data["avatar"]
+        wagtail_user.preferred_language = settings.LANGUAGE_CODE
+        wagtail_user.current_time_zone = settings.TIME_ZONE
+        wagtail_user.save()
+        form_user_profile = form_user_profile.save(commit=False)
+        form_user_profile.user = form_user
+        form_user_profile.wagtail_profile = wagtail_user
+        form_user_profile.manager = request.user.user_profile
+        form_user_profile.is_manager = True
+        form_user_profile.save()
+        return HttpResponseRedirect(reverse("manager_lk"))
+    context = {
+        "form_user": form_user,
+        "form_user_profile": form_user_profile,
+        "breadcrumb": [
+            {"title": "Личный кабинет", "url": reverse_lazy("manager_lk")},
+            {"title": "Добавить сотрудника"},
+        ],
+    }
+    return render(request, "employee_new.html", context)
+
+
+@login_required
+@user_passes_test(head_check)
+def edit_employee_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
     form_user = EditEmployeeMainForm(
         request.POST or None,
@@ -464,10 +556,10 @@ def edit_partner_view(request, user_id):
         "form_wagtail": form_wagtail,
         "breadcrumb": [
             {"title": "Личный кабинет", "url": reverse_lazy("manager_lk")},
-            {"title": "Редактировать франчайзи"},
+            {"title": "Редактировать сотрудника"},
         ],
     }
-    return render(request, "user_edit.html", context)
+    return render(request, "employee_edit.html", context)
 
 
 @login_required

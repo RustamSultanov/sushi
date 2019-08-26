@@ -27,8 +27,13 @@
                               {{ form_user_profile.middle_name }}
                             </div>
                         </div>
-                        {{ form_user.errors }}
-                                  {{ form_user_profile.errors }}
+                    {% for message in form_user.errors.values %}
+                                    {{ message }}
+                                  {% endfor %}
+                    {% for message in form_user_profile.errors.values %}
+                                    {{ message }}
+                                  {% endfor %}
+
                 {% block img %}
                         <div class="form-group">
                             <label class="form-label w-100">Фото</label>
@@ -39,14 +44,8 @@
                             <label class="form-label w-100">Скан паспорта</label>
                             {{ form_user_profile.scan }}
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">Должность</label>
-                            {{ form_user_profile.position }}
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Перечень должностных обязанностей</label>
-                           {{ form_user_profile.key_responsibilities }}
-                        </div>
+                    {% block employee %}
+                        {% endblock %}
                         <div class="form-group">
                             <label class="form-label">Почта</label>
                           {{ form_user.email }}
