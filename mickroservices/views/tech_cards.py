@@ -10,7 +10,7 @@ from wagtail.core.models import Collection
 from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 
-from mickroservices.models import DocumentSushi
+from mickroservices.models import DocumentSushi, Subjects
 
 permission_checker = PermissionPolicyChecker(permission_policy)
 
@@ -26,7 +26,7 @@ class SushiDocListView(ListView):
         return super().__init__(*args, **kwargs)
 
     def get_documents(self):
-        documents = DocumentSushi.objects.filter(doc_type=self.doc_type)
+        documents = DocumentSushi.objects.filter(doc_type=self.doc_type).filter(sub_type=Subjects.objects.filter(type=self.doc_type)[0])
         return documents
 
     def get_queryset(self):
@@ -88,6 +88,10 @@ class SushiDocListView(ListView):
             # Save it
             doc = form.save(commit=False)
             doc.doc_type = self.doc_type
+            print(request.POST)
+            if 'sub_type' in request.POST:
+                print('sub_type:',request.POST['sub_type'])
+                doc.sub_type = Subjects.objects.get(pk=request.POST['sub_type'])
             doc.uploaded_by_user = request.user
             doc.file_size = doc.file.size
 
@@ -96,6 +100,7 @@ class SushiDocListView(ListView):
             doc._set_file_hash(doc.file.read())
             doc.file.seek(0)
             doc.save()
+            print(doc, doc.sub_type)
 
             collections = permission_policy.collections_user_has_any_permission_for(
                 request.user, ['add', 'change']
@@ -124,10 +129,12 @@ class TechCardsListView(SushiDocListView):
     doc_type = DocumentSushi.T_TEH_CARD
 
     def get_context_data(self, **kwargs):
+        subjects = Subjects.objects.filter(type=self.doc_type)
         context = super().get_context_data(**kwargs)
         context['title'] = 'Техкарты'
         context['breadcrumb'] = [{'title': context['title']}]
         context['doc_type'] = DocumentSushi.T_TEH_CARD
+        context['subjects'] = subjects
         return context
 
 

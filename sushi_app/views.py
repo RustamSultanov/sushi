@@ -260,6 +260,9 @@ def load_docs(request):
        docs =  DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
     else:
        docs = []
+
+    if docs and 'sub_type' in request.GET:
+       docs =  DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])
     return render(
         request,
         'partials/documents.html',
@@ -273,6 +276,12 @@ def load_paginations_docs(request):
        docs =  DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
     else:
        docs = []
+
+    if docs and 'sub_type' in request.GET:
+        docs =  docs.filter(sub_type=request.GET['sub_type'])
+        print("=====================================================")
+        print(docs[0], docs[0].sub_type)
+
     page_object = Paginator(docs, 9)
     return render(
         request,
