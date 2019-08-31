@@ -1,0 +1,21 @@
+{%if messages_for_user %}
+    <div class="container flex-grow-1 container-p-y">
+        {% for message in messages_for_user %}
+            <div class="alert alert-dark-primary alert-dismissible fade show">
+                {% csrf_token %}
+                <button data-id="{{message.pk}}" type="button" class="close" data-dismiss="alert" onclick="close_message($(this))">×</button>
+                {{message.body}}
+            </div>
+        {% endfor %}
+    </div>
+<script type="text/javascript">
+    close_message = function(element){
+        let token = $($("input[name='csrfmiddlewaretoken']")[0]).val();
+        $.post("/close_message_chat/", {
+                "csrfmiddlewaretoken":token,
+                "message_id":element.data("id")
+            }
+        );
+    };
+</script>
+{% endif %}

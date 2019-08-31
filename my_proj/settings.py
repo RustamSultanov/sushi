@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'sushi_app',
     'tz_detect',
     'mickroservices',
+    'chat'
 ]
 
 WAGTAILSEARCH_BACKENDS = {
@@ -101,6 +102,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'chat.context_processors.messages_for_user',
             ],
         },
     },
@@ -215,3 +217,6 @@ if DEBUG:
 DEFAULT_SUPORT_EMAIL = env('DEFAULT_SUPORT_EMAIL')
 DEFAULT_PROTOCOL = env('DEFAULT_PROTOCOL')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
