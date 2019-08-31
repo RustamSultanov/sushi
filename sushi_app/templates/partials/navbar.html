@@ -85,7 +85,11 @@
         </div>
 
         <div class="navbar-nav align-items-center ml-auto">
-           <a href="{% url 'mickroservices:faq' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div></a>
+            {% if user.user_profile.is_manager %} <a href="{% url 'faq_list' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Ответить на вопросы</div></a>
+                {% elif user.user_profile.is_partner %}<a href="{% url 'mickroservices:faq' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div></a>
+                {% else %}
+                {% endif %}
+
             <a href="{% url 'mickroservices:idea' %}"> <div class="btn btn-primary btn-round mr-xl-2">Предложить идею</div></a>
         </div>
     </div>

@@ -9,20 +9,22 @@
         <div class="my-5">
             <h2 class="text-light font-weight-normal mb-5">Новости</h2>
             <div class="row">
+{#                <div class="col-md-4 mb-5">#}
+{#                    <div class="small text-muted mb-4">31 Мая 2019</div>#}
+{#                    <a href="#" class="text-dark">Доступны новинки  меню для всех регионов франшизы</a>#}
+{#                </div>#}
+{#                <div class="col-md-4 mb-5">#}
+{#                    <div class="small text-muted mb-4">31 Мая 2019</div>#}
+{#                    <a href="#" class="text-dark">Доступны новинки  меню для всех регионов франшизы</a>#}
+{#                </div>#}
+                {% for new in news %}
                 <div class="col-md-4 mb-5">
-                    <div class="small text-muted mb-4">31 Мая 2019</div>
-                    <a href="#" class="text-dark">Доступны новинки  меню для всех регионов франшизы</a>
+                    <div class="small text-muted mb-4">{{new.first_published_at}}</div>
+                    <a href="{{new.url}}" class="text-dark">{{ new.title }}</a>
                 </div>
-                <div class="col-md-4 mb-5">
-                    <div class="small text-muted mb-4">31 Мая 2019</div>
-                    <a href="#" class="text-dark">Доступны новинки  меню для всех регионов франшизы</a>
-                </div>
-                <div class="col-md-4 mb-5">
-                    <div class="small text-muted mb-4">31 Мая 2019</div>
-                    <a href="#" class="text-dark">Доступны новинки  меню для всех регионов франшизы</a>
-                </div>
+                {% endfor %}
             </div>
-            <a href="#" class="text-dark small">ВСЕ НОВОСТИ</a>
+            <a href="{% url 'mickroservices:news' %}" class="text-dark small">ВСЕ НОВОСТИ</a>
         </div>
 {% endblock %}
 

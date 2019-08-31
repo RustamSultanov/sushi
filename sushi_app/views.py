@@ -20,6 +20,8 @@ from wagtail.documents.permissions import permission_policy
 from django.contrib.auth.models import Group
 
 from mickroservices.models import DocumentSushi
+from mickroservices.models import NewsPage, QuestionModel
+from mickroservices.forms import AnswerForm
 from .forms import *
 from .models import *
 
@@ -185,7 +187,12 @@ def base(request):
     employee_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile", "department"
     ).filter(head=request.user.user_profile)
-    return render(request, "index.html", {"employee_list": employee_list})
+    news_all = NewsPage.objects.all()
+    if len(news_all) == 0 or len(news_all) == 1 or len(news_all) == 2 or len(news_all) == 3:
+        news = news_all
+    else:
+        news = news_all[len(news_all)-3:]
+    return render(request, "index.html", {"employee_list": employee_list, "news": news})
 
 
 @login_required
@@ -204,6 +211,36 @@ def get_filtered_tasks(request):
     if "filter_task" in request.GET:
         return tasks.filter(status=request.GET['filter_task'])
     return tasks
+
+
+@login_required
+@user_passes_test(manager_check)
+def faq_list(request):
+    faq_all = QuestionModel.objects.all()
+    return render(request, "faq_list.html", {"faq_all": faq_all})
+
+
+@login_required
+@user_passes_test(manager_check)
+def faq_answer(request, faq_id):
+    question = get_object_or_404(QuestionModel, id=faq_id)
+    form = AnswerForm(request.POST or None, instance=question)
+    if form.is_valid():
+        form = form.save(commit=False)
+        form.save()
+        return HttpResponseRedirect(reverse_lazy("faq_list"))
+    return render(
+        request,
+        "faq_answer.html",
+        {
+            "question": question,
+            "form": form,
+            "breadcrumb": [
+                {"title": "Список вопросов", "url": reverse_lazy("faq_list")},
+                {"title": "Добавить ответ"},
+            ],
+        },
+    )
 
 
 @login_required

@@ -11,3 +11,12 @@ class QuestionForm(forms.ModelForm):
         widgets = {
             'body': forms.Textarea(attrs={'rows':5}),
         }
+
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = QuestionModel
+        exclude = ['name','status','body','theme']
+        widgets = {
+            'answer': forms.Textarea(attrs={'rows':5}),
+        }
