@@ -26,7 +26,11 @@ class SushiDocListView(ListView):
         return super().__init__(*args, **kwargs)
 
     def get_documents(self):
-        documents = DocumentSushi.objects.filter(doc_type=self.doc_type).filter(sub_type=Subjects.objects.filter(type=self.doc_type)[0])
+        documents = DocumentSushi.objects.filter(doc_type=self.doc_type)
+        subjects = Subjects.objects.filter(type=self.doc_type)
+        if subjects:
+            documents = documents.filter(sub_type=subjects[0])
+
         return documents
 
     def get_queryset(self):
@@ -142,8 +146,10 @@ class RegulationsListView(SushiDocListView):
     doc_type = DocumentSushi.T_REGULATIONS
 
     def get_context_data(self, **kwargs):
+        subjects = Subjects.objects.filter(type=self.doc_type)
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регламенты'
         context['breadcrumb'] = [{'title': context['title']}]
         context['doc_type'] = DocumentSushi.T_REGULATIONS
+        context['subjects'] = subjects
         return context
