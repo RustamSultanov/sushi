@@ -29,6 +29,25 @@ from .models import *
 User = get_user_model()
 
 
+def get_filtered_shop_feedback(request, shop_id):
+    feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
+        shop=shop_id
+    )
+    if "filter_feedback" in request.GET:
+        return feedback_list.filter(status=request.GET['filter_feedback'])
+    return feedback_list
+
+
+@csrf_exempt
+def load_filtered_shop_feedback(request, shop_id):
+    feedback_list = get_filtered_shop_feedback(request, shop_id)
+    return render(
+        request,
+        'partials/feedback_manager.html',
+        {'feedback_list': feedback_list}
+    )
+
+
 class ShopListView(ListView):
     model = DocumentSushi
     paginate_by = 9
@@ -43,6 +62,7 @@ class ShopListView(ListView):
         context = super().get_context_data(**kwargs)
         context["invoices"] = self.get_invoices()
         context["shop"] = shop
+        context["feedback_list"] = get_filtered_shop_feedback(self.request, self.kwargs["shop_id"])
         context["doc_type"] = DocumentSushi.T_PERSONAL
         context["type_invoice"] = DocumentSushi.T_PERSONAL_INVOICES
         context["breadcrumb"] = [
@@ -119,7 +139,7 @@ class ShopListView(ListView):
             user=request.user,
         )
 
-    def save_doc(self,request, doc, doc_type):
+    def save_doc(self, request, doc, doc_type):
         doc.doc_type = doc_type
         doc.uploaded_by_user = request.user
         doc.file_size = doc.file.size
@@ -143,7 +163,7 @@ class ShopListView(ListView):
             # Save it
             doc = form.save(commit=False)
 
-            doc_type = DocumentSushi.T_PERSONAL_INVOICES\
+            doc_type = DocumentSushi.T_PERSONAL_INVOICES \
                 if request.POST.get("type") == "invoice" else DocumentSushi.T_PERSONAL
 
             self.save_doc(request, doc, doc_type)
@@ -192,7 +212,7 @@ def base(request):
     if len(news_all) == 0 or len(news_all) == 1 or len(news_all) == 2 or len(news_all) == 3:
         news = news_all
     else:
-        news = news_all[len(news_all)-3:]
+        news = news_all[len(news_all) - 3:]
     return render(request, "index.html", {"employee_list": employee_list, "news": news})
 
 
@@ -202,16 +222,55 @@ def employee_info(request, user_id):
     return render(request, "employee.html", {"employee": user})
 
 
+@login_required
+def notification_view(request):
+    notifications = Chat_Message.objects.filter(recipient=request.user, status=Chat_Message.ST_READING)
+    return render(request, "notifications.html", {"notifications": notifications, "breadcrumb": [
+                {"title": "Оповещения"},
+            ]})
+
+
 def get_filtered_tasks(request):
     ''' Возвращает список задачи сотрудника
         Если присутсвует GET параметр 'filter_task', то
         применяется фильтрация
     '''
-    tasks = Task.objects.prefetch_related("responsible")\
-                        .filter(manager=request.user.user_profile)
+    if request.user.user_profile.is_manager:
+        tasks = Task.objects.prefetch_related("responsible") \
+            .filter(manager=request.user.user_profile)
+    else:
+        tasks = Task.objects.prefetch_related("responsible") \
+            .filter(responsible=request.user)
     if "filter_task" in request.GET:
         return tasks.filter(status=request.GET['filter_task'])
     return tasks
+
+
+def get_filtered_request(request):
+    if request.user.user_profile.is_manager:
+        request_list = Requests.objects.prefetch_related("responsible").filter(
+            manager=request.user.user_profile
+        )
+    else:
+        request_list = Requests.objects.prefetch_related("responsible") \
+            .filter(responsible=request.user)
+    if "filter_request" in request.GET:
+        return request_list.filter(status=request.GET['filter_request'])
+    return request_list
+
+
+def get_filtered_feedback(request):
+    if request.user.user_profile.is_manager:
+        feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
+            manager=request.user.user_profile
+        )
+    else:
+        feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
+            responsible=request.user.user_profile
+        )
+    if "filter_feedback" in request.GET:
+        return feedback_list.filter(status=request.GET['filter_feedback'])
+    return feedback_list
 
 
 @login_required
@@ -228,6 +287,7 @@ def faq_answer(request, faq_id):
     form = AnswerForm(request.POST or None, instance=question)
     if form.is_valid():
         form = form.save(commit=False)
+        form.status = QuestionModel.ST_OK
         form.save()
         return HttpResponseRedirect(reverse_lazy("faq_list"))
     return render(
@@ -247,23 +307,16 @@ def faq_answer(request, faq_id):
 @login_required
 @user_passes_test(manager_check)
 def manager_lk_view(request):
-
     partner_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile"
     ).filter(manager=request.user.user_profile)
-    request_list = Requests.objects.prefetch_related("responsible").filter(
-        manager=request.user.user_profile
-    )
-
+    request_list = get_filtered_request(request)
     task_list = get_filtered_tasks(request)
-    
-    feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
-        manager=request.user.user_profile
-    )
+    feedback_list = get_filtered_feedback(request)
 
-    page_object = Paginator( DocumentSushi.objects.all(), 9)
+    page_object = Paginator(DocumentSushi.objects.all(), 9)
     is_paginated = False
-    page = request.GET['page'] if 'page' in request.GET else 1    
+    page = request.GET['page'] if 'page' in request.GET else 1
     page_obj = documents = page_object.get_page(page)
     print(page_obj)
     return render(
@@ -277,7 +330,7 @@ def manager_lk_view(request):
             "breadcrumb": [{"title": "Личный кабинет"}],
             "documents": documents,
             "page_obj": page_obj,
-            "is_paginated":is_paginated
+            "is_paginated": is_paginated
 
         },
     )
@@ -292,15 +345,36 @@ def load_filtered_tasks(request):
         {'task_list': task_list}
     )
 
+
+@csrf_exempt
+def load_filtered_request(request):
+    request_list = get_filtered_request(request)
+    return render(
+        request,
+        'partials/request_manager.html',
+        {'request_list': request_list}
+    )
+
+
+@csrf_exempt
+def load_filtered_feedback(request):
+    feedback_list = get_filtered_feedback(request)
+    return render(
+        request,
+        'partials/feedback_manager.html',
+        {'feedback_list': feedback_list}
+    )
+
+
 @csrf_exempt
 def load_docs(request):
     if 'doc_type' in request.GET:
-       docs =  DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
+        docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
     else:
-       docs = []
+        docs = []
 
     if docs and 'sub_type' in request.GET:
-       docs =  DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])
+        docs = DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])
     return render(
         request,
         'partials/documents.html',
@@ -311,12 +385,12 @@ def load_docs(request):
 @csrf_exempt
 def load_paginations_docs(request):
     if 'doc_type' in request.GET:
-       docs =  DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
+        docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
     else:
-       docs = []
+        docs = []
 
     if docs and 'sub_type' in request.GET:
-        docs =  docs.filter(sub_type=request.GET['sub_type'])
+        docs = docs.filter(sub_type=request.GET['sub_type'])
         print("=====================================================")
         print(docs[0], docs[0].sub_type)
 
@@ -334,15 +408,8 @@ def partner_lk_view(request):
     shop_list = Shop.objects.prefetch_related("checks", "docs").filter(
         partner=request.user.user_profile
     )
-    request_list = Requests.objects.prefetch_related("responsible").filter(
-        responsible=request.user
-    )
-    task_list = Task.objects.prefetch_related("responsible").filter(
-        responsible=request.user
-    )
-    feedback_list = Feedback.objects.prefetch_related("responsible", "shop").filter(
-        responsible=request.user.user_profile
-    )
+    task_list = get_filtered_tasks(request)
+    feedback_list = get_filtered_feedback(request)
     documents = DocumentSushi.objects.all()
     page_object = Paginator(documents, 9)
     is_paginated = False
@@ -357,14 +424,14 @@ def partner_lk_view(request):
         "dashboard_partner.html",
         {
             "shop_list": shop_list,
-            "request_list": request_list,
+            # "request_list": request_list,
             "task_list": task_list,
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
             "manager": request.user.user_profile.manager,
             "documents": documents,
             "page_obj": page_obj,
-            "is_paginated":is_paginated            
+            "is_paginated": is_paginated
         },
     )
 
@@ -427,9 +494,15 @@ def feedback_form_view(request):
     form = FeedbackForm(request.POST or None)
     if form.is_valid():
         form = form.save(commit=False)
-        form.responsible = form.shop.partner.user_profile
+        form.responsible = form.shop.partner
         form.manager = request.user.user_profile
         form.save()
+        Chat_Message.objects.create(
+            sender=request.user,
+            recipient=form.shop.partner.user,
+            body=f"Создан отзыв на магазин {form.shop}",
+            feedback=form
+        )
         return HttpResponseRedirect(reverse_lazy("manager_lk"))
     context = {
         "form": form,
@@ -505,9 +578,9 @@ def edit_partner_view(request, user_id):
         prefix="user_profile",
     )
     if (
-        form_user.is_valid()
-        and form_user_profile.is_valid()
-        and form_wagtail.is_valid()
+            form_user.is_valid()
+            and form_user_profile.is_valid()
+            and form_wagtail.is_valid()
     ):
         form_user.save()
         form_user_profile.save()
@@ -589,9 +662,9 @@ def edit_employee_view(request, user_id):
         prefix="user_profile",
     )
     if (
-        form_user.is_valid()
-        and form_user_profile.is_valid()
-        and form_wagtail.is_valid()
+            form_user.is_valid()
+            and form_user_profile.is_valid()
+            and form_wagtail.is_valid()
     ):
         form_user.save()
         form_user_profile.save()
@@ -614,8 +687,9 @@ def edit_employee_view(request, user_id):
 def shop_form_view(request):
     form = ShopForm(request.POST or None)
     if form.is_valid():
+        form = form.save(commit=False)
         form.save()
-        return HttpResponseRedirect(reverse_lazy("manager_lk"))
+        return HttpResponseRedirect(reverse_lazy("shop", args=[form.id]))
     context = {
         "form": form,
         "breadcrumb": [
@@ -668,9 +742,10 @@ def task_view(request, task_id, user_id):
         Chat_Message.objects.create(
             sender=form.from_user,
             recipient=form.to_user,
-            body=form.text
+            body=form.text,
+            task=task
         )
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER") + "#coments")
     return render(
         request,
         "task.html",
@@ -722,7 +797,13 @@ def requests_view(request, requests_id, user_id):
         else:
             form.to_user = requests.responsible
         form.save()
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        Chat_Message.objects.create(
+            sender=form.from_user,
+            recipient=form.to_user,
+            body=form.text,
+            requests=requests
+        )
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER") + "#coments")
     return render(
         request,
         "request.html",
@@ -747,16 +828,15 @@ def requests_view(request, requests_id, user_id):
 @login_required
 def feedback_view(request, feedback_id, user_id):
     feedback = get_object_or_404(Feedback, id=feedback_id)
-    if feedback.responsible != request.user:
+    if feedback.responsible != request.user.user_profile:
         if feedback.manager != request.user.user_profile:
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     form_status = StatusFeedbackForm(
         request.POST or None, initial=model_to_dict(feedback), instance=feedback
     )
-    if request.user.user_profile.is_manager:
-        if form_status.is_valid():
-            form_status.save()
-            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    if form_status.is_valid():
+        form_status.save()
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     qs1 = Messeges.objects.prefetch_related("from_user", "to_user").filter(
         feedback=feedback, from_user=request.user.id
     )
@@ -774,7 +854,13 @@ def feedback_view(request, feedback_id, user_id):
         else:
             form.to_user = feedback.responsible.user
         form.save()
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        Chat_Message.objects.create(
+            sender=form.from_user,
+            recipient=form.to_user,
+            body=form.text,
+            feedback=feedback
+        )
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER") + "#coments")
     return render(
         request,
         "review.html",
@@ -794,7 +880,3 @@ def feedback_view(request, feedback_id, user_id):
             ],
         },
     )
-
-
-
-

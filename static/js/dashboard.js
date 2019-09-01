@@ -75,3 +75,19 @@ function load_tasks(element){
     $('a')[0].focus()
     return false;
 }
+function load_request(element){
+    event.preventDefault();
+    element.siblings('a').removeClass('active');
+    element.addClass('active');
+    $('#request_manager').load(element[0].href)
+    $('a')[0].focus()
+    return false;
+}
+function load_feedback(element){
+    event.preventDefault();
+    element.siblings('a').removeClass('active');
+    element.addClass('active');
+    $('#feedback_manager').load(element[0].href)
+    $('a')[0].focus()
+    return false;
+}

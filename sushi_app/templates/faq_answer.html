@@ -39,7 +39,10 @@
                 </div>
             </form>
             {{status}}
-            {{form.errors}}
+            {% for message in form.errors.values %}
+                                    {{ message }}
+                                  {% endfor %}
+
         </div>
     </div>
  {% endblock %}

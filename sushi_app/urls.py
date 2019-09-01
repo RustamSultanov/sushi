@@ -31,6 +31,7 @@ urlpatterns = [
     path(
         'review/new', views.feedback_form_view, name='form_review'),
     path('shop/new', views.shop_form_view, name='shop_form'),
+    path('notification', views.notification_view, name='notification'),
     path(
         'shop/<int:shop_id>',
         login_required(views.ShopListView.as_view()),
@@ -43,7 +44,10 @@ urlpatterns = [
         'request/<int:requests_id>-<int:user_id>', views.requests_view, name='request'),
     path(
         'review/<int:feedback_id>-<int:user_id>', views.feedback_view, name='feedback'),
-    path('manager-lk/load/tasks', views.load_filtered_tasks, name='load_filtered_tasks'),
+    path('load/request', views.load_filtered_request, name='load_filtered_request'),
+    path('load/feedback-shop/<int:shop_id>', views.load_filtered_shop_feedback, name='load_filtered_shop_feedback'),
+    path('load/feedback', views.load_filtered_feedback, name='load_filtered_feedback'),
+    path('load/tasks', views.load_filtered_tasks, name='load_filtered_tasks'),
     path('load_paginations_docs', views.load_paginations_docs, name='load_paginations_docs'),
     path('load_docs', views.load_docs, name='load_docs')
 ]

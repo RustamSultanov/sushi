@@ -142,6 +142,11 @@ class Product(models.Model):
 
 
 class Feedback(models.Model):
+    ST_SOLVED, ST_NOT_SOLVED = range(2)
+    STATUS_CHOICE = (
+        (ST_SOLVED, "Отработан"),
+        (ST_NOT_SOLVED, "Не отработан"),
+    )
     responsible = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile,
                                     related_name='feed_responsible')
     manager = models.ForeignKey(on_delete=models.CASCADE, to=UserProfile, related_name='feed_manager',
@@ -149,7 +154,7 @@ class Feedback(models.Model):
     shop = models.ForeignKey(on_delete=models.CASCADE, to=Shop)
     date_create = models.DateTimeField(auto_now_add=True)
     date_pub = models.DateField()
-    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_NOT_SOLVED)
     description = models.TextField()
     source = models.CharField(max_length=256)
 

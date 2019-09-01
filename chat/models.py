@@ -1,5 +1,5 @@
 from django.db import models
-
+import sushi_app.models
 from django.conf import settings
 
 
@@ -24,3 +24,6 @@ class Message(models.Model):
         default=ST_WAITNG
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    task = models.ForeignKey(on_delete=models.CASCADE, to=sushi_app.models.Task, blank=True, null=True)
+    requests = models.ForeignKey(on_delete=models.CASCADE, to=sushi_app.models.Requests, blank=True, null=True)
+    feedback = models.ForeignKey(on_delete=models.CASCADE, to=sushi_app.models.Feedback, blank=True, null=True)

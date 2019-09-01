@@ -21,8 +21,13 @@
                         <span class="collapse-icon"></span>
                     </a>
                     <div id="company-faq-1" class="collapse text-muted">
+                        {% if question.answer %}
+                            <div class="px-4 pb-3">{{question.body}} <a href="{% url 'faq_answer' question.id %}" class="btn btn-round btn-outline-primary btn-sm">Изменить ответ</a></div>
+                             <div class="px-4 pb-3">Ответ: {{question.answer}}</div>
+                        {% else %}
                         <div class="px-4 pb-3">{{question.body}} <a href="{% url 'faq_answer' question.id %}" class="btn btn-round btn-outline-primary btn-sm">Добавить ответ</a></div>
-                        <div class="px-4 pb-3">Ответ: {{question.answer}}</div>
+
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
