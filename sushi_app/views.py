@@ -19,6 +19,7 @@ from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 from django.contrib.auth.models import Group
 
+from chat.models import Message as Chat_Message
 from mickroservices.models import DocumentSushi
 from mickroservices.models import NewsPage, QuestionModel
 from mickroservices.forms import AnswerForm
@@ -664,6 +665,11 @@ def task_view(request, task_id, user_id):
         else:
             form.to_user = task.responsible
         form.save()
+        Chat_Message.objects.create(
+            sender=form.from_user,
+            recipient=form.to_user,
+            body=form.text
+        )
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     return render(
         request,
