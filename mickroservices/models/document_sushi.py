@@ -26,6 +26,11 @@ class Subjects(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Тематика(папка)'
+        verbose_name_plural = 'Тематики(папки)'
+
+
 class DocumentSushi(Document):
     (T_TEH_CARD, T_REGULATIONS, T_PROMOTIONS, T_BEFORE_OPEN,
      T_MENU, T_OTHER_MAKET, T_VIDEO, T_AUDIO,
