@@ -1,7 +1,7 @@
 from django.db import models
 import sushi_app.models
 from django.conf import settings
-
+from mickroservices.models import QuestionModel, IdeaModel
 
 class Message(models.Model):
     ST_WAITNG, ST_READING = range(2)
@@ -27,3 +27,5 @@ class Message(models.Model):
     task = models.ForeignKey(on_delete=models.CASCADE, to=sushi_app.models.Task, blank=True, null=True)
     requests = models.ForeignKey(on_delete=models.CASCADE, to=sushi_app.models.Requests, blank=True, null=True)
     feedback = models.ForeignKey(on_delete=models.CASCADE, to=sushi_app.models.Feedback, blank=True, null=True)
+    idea = models.ForeignKey(on_delete=models.CASCADE, to=IdeaModel, blank=True, null=True)
+    question = models.ForeignKey(on_delete=models.CASCADE, to=QuestionModel, blank=True, null=True)

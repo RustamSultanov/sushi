@@ -8,6 +8,7 @@
                 {% if message.task %}<a href="{% url 'task' message.task.id message.sender.id %}">задаче</a>
                 {% elif message.feedback %}<a href="{% url 'feedback' message.feedback.id message.sender.id %}">отзыву</a>
                 {% elif message.requests %}<a href="{% url 'request' message.request.id message.sender.id %}">запросу</a>
+                    {% elif message.question %}<a href="{% url 'faq_list' %} ">вопросу</a>
                 {% endif %}: {{message.body}}
             </div>
         {% endfor %}

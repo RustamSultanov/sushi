@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from mickroservices.models import IdeaModel
 from mickroservices.forms import IdeaForm
 from mickroservices.utils import send_message
+from chat.models import Message as Chat_Message
 
 
 class IdeaView(FormView):
@@ -25,6 +26,12 @@ class IdeaView(FormView):
         ctx = self.get_context_data(**kwargs)
         if form.is_valid():
             form.save()
+            Chat_Message.objects.create(
+                sender=self.request.user,
+                recipient=self.request.user.user_profile.manager.user,
+                body="Была предложена идея",
+                idea=form
+            )
             ctx.update(self.form_valid_send_message(
                        form,
                        'Ваша идея принята на рассмотрение!',

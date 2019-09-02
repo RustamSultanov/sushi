@@ -2,21 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e6c40c64-9555-4371-ad37-0f63c7916757" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/sushi_app/templates/notifications.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sushi_app/templates/partials/feedback_manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/templates/partials/messages_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/chat/templates/partials/messages_user.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/dashboard_manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/dashboard_manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/dashboard_partner.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/dashboard_partner.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/faq_answer.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/faq_answer.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/faq_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/faq_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/partials/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/partials/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/store.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/store.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mickroservices/views/idea.py" beforeDir="false" afterPath="$PROJECT_DIR$/mickroservices/views/idea.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mickroservices/views/questions.py" beforeDir="false" afterPath="$PROJECT_DIR$/mickroservices/views/questions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sushi_app/templates/notifications.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/notifications.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,54 +36,49 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sushi_app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="225" column="21" selection-start-line="225" selection-start-column="4" selection-end-line="225" selection-end-column="21" />
-              <folding>
-                <element signature="e#0#54#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="340">
+              <caret line="20" selection-start-line="20" selection-end-line="21" selection-end-column="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sushi_app/templates/notifications.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="295">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/sushi_app/templates/notifications.html">
+        <entry file="file://$PROJECT_DIR$/chat/templates/partials/messages_user.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="346">
-              <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
+            <state relative-caret-position="170">
+              <caret line="10" column="79" selection-start-line="10" selection-start-column="79" selection-end-line="10" selection-end-column="79" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sushi_app/templates/faq_list.html">
+        <entry file="file://$PROJECT_DIR$/mickroservices/views/idea.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="221">
-              <caret line="20" column="27" selection-end-line="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/chat/__init__.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sushi_app/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
-              <caret line="33" column="22" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/chat/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="15" column="46" lean-forward="true" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="46" />
+              <caret line="31" column="28" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
               <folding>
-                <element signature="e#0#53#0" expanded="true" />
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mickroservices/views/questions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="173">
+              <caret line="48" column="21" selection-start-line="48" selection-start-column="18" selection-end-line="48" selection-end-column="21" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -102,8 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chat/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="12" column="10" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="10" />
+            <state relative-caret-position="324">
+              <caret line="30" column="12" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="12" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -112,26 +97,45 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sushi_app/templates/partials/navbar.html">
+        <entry file="file://$PROJECT_DIR$/mickroservices/forms/questions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="74">
-              <caret line="30" column="45" selection-start-line="30" selection-start-column="45" selection-end-line="30" selection-end-column="45" />
+            <state relative-caret-position="136">
+              <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sushi_app/templates/layout.html">
+        <entry file="file://$PROJECT_DIR$/mickroservices/models/questions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-102" />
+            <state relative-caret-position="68">
+              <caret line="4" column="19" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="19" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/chat/templates/partials/messages_user.html">
+        <entry file="file://$PROJECT_DIR$/mickroservices/forms/idea.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="25" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="25" />
+            <state>
+              <folding>
+                <element signature="e#0#24#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mickroservices/models/idea.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
             </state>
           </provider>
         </entry>
@@ -173,10 +177,10 @@
       <find>load_filtered_tasks</find>
       <find>#tasks_manager</find>
       <find>tasks_manager</find>
-      <find>Chat_Message</find>
       <find>self.request</find>
       <find>stor</find>
       <find>form.shop.partner.user_profile</find>
+      <find>Chat_Message</find>
     </findStrings>
     <replaceStrings>
       <replace>requests</replace>
@@ -189,8 +193,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mickroservices/models/questions.py" />
-        <option value="$PROJECT_DIR$/sushi_app/templates/authentication_login.html" />
         <option value="$PROJECT_DIR$/mickroservices/forms/news.py" />
         <option value="$PROJECT_DIR$/mickroservices/templates/news_form.html" />
         <option value="$PROJECT_DIR$/mickroservices/admin.py" />
@@ -226,7 +228,6 @@
         <option value="$PROJECT_DIR$/mickroservices/forms/questions.py" />
         <option value="$PROJECT_DIR$/sushi_app/templates/faq_list.html" />
         <option value="$PROJECT_DIR$/sushi_app/templates/faq_answer.html" />
-        <option value="$PROJECT_DIR$/chat/models.py" />
         <option value="$PROJECT_DIR$/static/js/dashboard.js" />
         <option value="$PROJECT_DIR$/sushi_app/templates/partials/request_manager.html" />
         <option value="$PROJECT_DIR$/sushi_app/forms.py" />
@@ -235,15 +236,18 @@
         <option value="$PROJECT_DIR$/sushi_app/templates/partials/feedback_manager.html" />
         <option value="$PROJECT_DIR$/sushi_app/templates/dashboard_partner.html" />
         <option value="$PROJECT_DIR$/sushi_app/templates/store.html" />
-        <option value="$PROJECT_DIR$/chat/templates/partials/messages_user.html" />
-        <option value="$PROJECT_DIR$/sushi_app/views.py" />
         <option value="$PROJECT_DIR$/sushi_app/urls.py" />
         <option value="$PROJECT_DIR$/sushi_app/templates/partials/navbar.html" />
+        <option value="$PROJECT_DIR$/sushi_app/views.py" />
+        <option value="$PROJECT_DIR$/chat/models.py" />
         <option value="$PROJECT_DIR$/sushi_app/templates/notifications.html" />
+        <option value="$PROJECT_DIR$/chat/templates/partials/messages_user.html" />
+        <option value="$PROJECT_DIR$/mickroservices/views/questions.py" />
+        <option value="$PROJECT_DIR$/mickroservices/views/idea.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-10" />
     <option name="y" value="-10" />
     <option name="width" value="1940" />
@@ -439,23 +443,23 @@
       <workItem from="1565080336283" duration="1896000" />
       <workItem from="1566059501592" duration="9509000" />
       <workItem from="1566676364592" duration="12008000" />
-      <workItem from="1566807943211" duration="30165000" />
+      <workItem from="1566807943211" duration="32039000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="182224000" />
+    <option name="totallyTimeSpent" value="184098000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4989858" visible="true" weight="0.25737265" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49898168" visible="true" weight="0.25737265" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info id="Structure" order="2" sideWeight="0.5010142" side_tool="true" visible="true" weight="0.25737265" />
+      <window_info id="Structure" order="2" sideWeight="0.50101835" side_tool="true" visible="true" weight="0.25737265" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956153" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49597856" visible="true" weight="0.3026874" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49597856" weight="0.3026874" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -464,7 +468,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50402147" side_tool="true" weight="0.3026874" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.4953083" weight="0.30551627" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.4953083" visible="true" weight="0.30551627" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32956153" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -500,21 +504,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/sushi_app/migrations/0025_auto_20190804_2013.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-102" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sushi_app/migrations/0026_auto_20190825_0805.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/.virtualenvs/sushi-Wc1-wssM/Lib/site-packages/wagtail/users/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sushi_app/templates/edit-profile.html" />
     <entry file="file://$PROJECT_DIR$/mickroservices/templates/user_edit.html">
       <provider selected="true" editor-type-id="text-editor">
@@ -586,16 +575,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mickroservices/models/news.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="11" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sushi_app/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -634,32 +613,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mickroservices/forms/questions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="48" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mickroservices/views/questions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" selection-start-line="6" selection-end-line="6" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mickroservices/views/idea.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sushi_app/templates/authentication_login.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -685,16 +638,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="347">
           <caret line="254" selection-start-line="254" selection-end-line="254" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mickroservices/models/questions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="4" column="19" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -815,33 +758,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/chat/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="12" column="10" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chat/templates/partials/messages_user.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="25" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sushi_app/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="225" column="21" selection-start-line="225" selection-start-column="4" selection-end-line="225" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/sushi_app/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="143">
@@ -861,10 +777,109 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/models/idea.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/views/trainings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-255">
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/models/news.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="17" column="11" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sushi_app/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="20" selection-start-line="20" selection-end-line="21" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/models/questions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="19" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/forms/idea.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/forms/questions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="30" column="12" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/sushi_app/templates/notifications.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
+        <state relative-caret-position="295">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/views/questions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="48" column="21" selection-start-line="48" selection-start-column="18" selection-end-line="48" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/views/idea.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="31" column="28" selection-start-line="31" selection-start-column="28" selection-end-line="31" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chat/templates/partials/messages_user.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="79" selection-start-line="10" selection-start-column="79" selection-end-line="10" selection-end-column="79" />
         </state>
       </provider>
     </entry>
