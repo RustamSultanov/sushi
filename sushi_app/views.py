@@ -621,7 +621,7 @@ def create_employee_view(request):
         form_user_profile = form_user_profile.save(commit=False)
         form_user_profile.user = form_user
         form_user_profile.wagtail_profile = wagtail_user
-        form_user_profile.manager = request.user.user_profile
+        form_user_profile.head = request.user.user_profile
         form_user_profile.is_manager = True
         form_user_profile.save()
         return HttpResponseRedirect(reverse("manager_lk"))

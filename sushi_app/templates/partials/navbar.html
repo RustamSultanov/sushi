@@ -89,7 +89,7 @@
                 {% elif user.user_profile.is_partner %}<a href="{% url 'mickroservices:faq' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div></a>
                 {% else %}
                 {% endif %}
-{% if user.user_profile.is_manager %} 
+{% if user.user_profile.is_manager %}
                 {% elif user.user_profile.is_partner %}<a href="{% url 'mickroservices:idea' %}"> <div class="btn btn-primary btn-round mr-xl-2">Предложить идею</div></a>
                 {% else %}
                 {% endif %}
