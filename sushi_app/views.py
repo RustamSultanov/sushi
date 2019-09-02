@@ -289,6 +289,12 @@ def faq_answer(request, faq_id):
         form = form.save(commit=False)
         form.status = QuestionModel.ST_OK
         form.save()
+        Chat_Message.objects.create(
+            sender=request.user,
+            recipient=request.user.user_profile.manager.user,
+            body=f"Дан ответ на вопрос {form.theme}",
+            question=form
+        )
         return HttpResponseRedirect(reverse_lazy("faq_list"))
     return render(
         request,
@@ -445,6 +451,12 @@ def form_request_view(request):
         form.responsible = request.user
         form.manager = request.user.user_profile.manager
         form.save()
+        Chat_Message.objects.create(
+            sender=request.user,
+            recipient=request.user.user_profile.manager.user,
+            body=f"Создан запрос от {request.user.get_full_name()}",
+            requests=form
+        )
         return HttpResponseRedirect(reverse_lazy("partner_lk"))
     return render(
         request,
@@ -470,6 +482,12 @@ def form_task_view(request, partner_id):
         form.responsible = partner.user
         form.manager = request.user.user_profile
         form.save()
+        Chat_Message.objects.create(
+            sender=request.user,
+            recipient=partner.user,
+            body=f"Создана задача от {request.user.get_full_name()}",
+            task=form
+        )
         return HttpResponseRedirect(reverse_lazy("manager_lk"))
     return render(
         request,
