@@ -4,7 +4,12 @@
             <div class="alert alert-dark-primary alert-dismissible fade show">
                 {% csrf_token %}
                 <button data-id="{{message.pk}}" type="button" class="close" data-dismiss="alert" onclick="close_message($(this))">×</button>
-                {{message.body}}
+                Сообщение от {{message.sender.get_full_name}} по
+                {% if message.task %}<a href="{% url 'task' message.task.id message.sender.id %}">задаче</a>
+                {% elif message.feedback %}<a href="{% url 'feedback' message.feedback.id message.sender.id %}">отзыву</a>
+                {% elif message.requests %}<a href="{% url 'request' message.request.id message.sender.id %}">запросу</a>
+                    {% elif message.question %}<a href="{% url 'faq_list' %} ">вопросу</a>
+                {% endif %}: {{message.body}}
             </div>
         {% endfor %}
     </div>

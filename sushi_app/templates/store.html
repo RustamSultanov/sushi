@@ -168,56 +168,13 @@
                                     </div>
                                     <div class="tab-pane fade" id="reviews">
                                         <div class="my-4 small text-right">
-                                            <span class="text-muted">Сортировать: </span>
-                                            <a href="#" class="text-muted active">Все</a>
-                                            <a href="#" class="text-muted">Решен</a>
-                                            <a href="#" class="text-muted">Обрабатывается</a>
-                                            <a href="#" class="text-muted">Не решен</a>
+                                            <span class="text-muted">Фильтровать:</span>
+                                            <a href="{% url 'load_filtered_shop_feedback' shop.id %}" class="text-muted active" onclick="load_feedback($(this))">Все</a>
+                                            <a href="{% url 'load_filtered_shop_feedback' shop.id %}?filter_feedback=0" class="text-muted" onclick="load_feedback($(this))">Отработан</a>
+                                            <a href="{% url 'load_filtered_shop_feedback' shop.id %}?filter_feedback=1" class="text-muted" onclick="load_feedback($(this))">Не отработан</a>
                                         </div>
-                                        <div class="my-4 row">
-                                           {% for review in shop.feedback_set.all %}
-                                            <div class="col-md-6 mb-4">
-                                                <div class="card hoverable h-100">
-                                                    <div class="card-header d-flex justify-content-between  align-items-start">
-                                                        <div>
-                                                            <div>
-                                                                <span class="font-weight-semibold">{{ review.responsible.user.get_full_name }}</span>
-
-                                                                {% if review.responsible.phone_number %}
-                                                                <span class="text-muted">{{ review.responsible.phone_number }}</span>
-                                                                {% endif %}
-
-                                                                {% if review.status == 0 %}
-                                                                <span class="badge badge-outline-success badge-pill">решен</span>
-                                                                {% elif review.status == 1 %}
-                                                                <span class="badge badge-outline-warning badge-pill">обрабатывается</span>
-                                                                {% elif review.status == 2 %}
-                                                                <span class="badge badge-outline-danger badge-pill">не решен</span>
-                                                                {% endif %}
-                                                            </div>
-                                                            <div class="small">
-                                                                <span class="text-muted">{{ review.date_create }}</span>
-                                                                <br>
-                                                                <span class="text-muted">Магазин: {{ review.shop.address }}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="btn-group project-actions">
-                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
-                                                                <i class="ion ion-ios-more"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item" href="javascript:void(0)">Просмотр</a>
-                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div>{{ review.description|truncatewords:8 }}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
+                                       <div id="feedback_manager" class="my-4 row">
+                                            {% include 'partials/feedback_manager.html'%}
                                         </div>
                                     </div>
                                 </div>

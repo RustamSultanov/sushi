@@ -7,6 +7,8 @@ from mickroservices.models import QuestionModel
 from mickroservices.forms import QuestionForm
 from mickroservices.utils import send_message
 
+from chat.models import Message as Chat_Message
+
 
 class QuestionView(FormView):
     """ """    
@@ -41,6 +43,12 @@ class QuestionView(FormView):
         form = form.save(commit=False)
         form.name = self.request.user
         form.save()
+        Chat_Message.objects.create(
+            sender=self.request.user,
+            recipient=self.request.user.user_profile.manager.user,
+            body="Был задан вопрос",
+            question=form
+        )
 
     def form_valid_send_message(self, form, subject, to_email, ctx):
         if form.is_valid():

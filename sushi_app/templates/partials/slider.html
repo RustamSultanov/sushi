@@ -1,40 +1,44 @@
 {% load static %}
+{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 <!-- Slider -->
 <div class="swiper-container hero-slider" id="swiper-with-pagination">
     <div class="swiper-wrapper">
+{#        <div class="swiper-slide" style="background-image: url('{% static 'img/slider.png' %}')">#}
+{#            <div class="container">#}
+{#                <div class="row">#}
+{#                    <div class="col-lg-6 col-md-9">#}
+{#                        <div class="hero-slider__title">Доступны новинки  меню для всех регионов франшизы</div>#}
+{#                        <div class="hero-slider__description">С 1 июня 2019 года будут доступны новинки роллов в меню для всех регионов франшизы. Ввести новинки необходимо до 1 июля.</div>#}
+{#                        <a href="#" class="btn btn-round btn-outline-white">Подробнее</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="swiper-slide" style="background-image: url('{% static 'img/slider.png' %}')">#}
+{#            <div class="container">#}
+{#                <div class="row">#}
+{#                    <div class="col-lg-6 col-md-9">#}
+{#                        <div class="hero-slider__title">Доступны новинки  меню для всех регионов франшизы</div>#}
+{#                        <div class="hero-slider__description">С 1 июня 2019 года будут доступны новинки роллов в меню для всех регионов франшизы. Ввести новинки необходимо до 1 июля.</div>#}
+{#                        <a href="#" class="btn btn-round btn-outline-white">Подробнее</a>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+        {% for new in news %}
         <div class="swiper-slide" style="background-image: url('{% static 'img/slider.png' %}')">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-9">
-                        <div class="hero-slider__title">Доступны новинки  меню для всех регионов франшизы</div>
-                        <div class="hero-slider__description">С 1 июня 2019 года будут доступны новинки роллов в меню для всех регионов франшизы. Ввести новинки необходимо до 1 июля.</div>
-                        <a href="#" class="btn btn-round btn-outline-white">Подробнее</a>
+                        <div class="hero-slider__title">{{ new.title }}</div>
+                        <div class="hero-slider__description">{{new.body | richtext |truncatewords_html:5 }}</div>
+                        <a href="{{new.url}}" class="btn btn-round btn-outline-white">Подробнее</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="swiper-slide" style="background-image: url('{% static 'img/slider.png' %}')">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-9">
-                        <div class="hero-slider__title">Доступны новинки  меню для всех регионов франшизы</div>
-                        <div class="hero-slider__description">С 1 июня 2019 года будут доступны новинки роллов в меню для всех регионов франшизы. Ввести новинки необходимо до 1 июля.</div>
-                        <a href="#" class="btn btn-round btn-outline-white">Подробнее</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="swiper-slide" style="background-image: url('{% static 'img/slider.png' %}')">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-9">
-                        <div class="hero-slider__title">Доступны новинки  меню для всех регионов франшизы</div>
-                        <div class="hero-slider__description">С 1 июня 2019 года будут доступны новинки роллов в меню для всех регионов франшизы. Ввести новинки необходимо до 1 июля.</div>
-                        <a href="#" class="btn btn-round btn-outline-white">Подробнее</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
     <div class="swiper-pagination"></div>
 </div>

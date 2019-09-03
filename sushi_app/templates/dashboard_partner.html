@@ -32,15 +32,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="py-1 mb-2">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Введите запрос">
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-primary">
-                                    <i class="ion ion-ios-search"></i>&nbsp; Поиск</button>
-                            </div>
-                        </div>
-                    </div>
+{#                    <div class="py-1 mb-2">#}
+{#                        <div class="input-group">#}
+{#                            <input type="text" class="form-control" placeholder="Введите запрос">#}
+{#                            <div class="input-group-append">#}
+{#                                <button type="button" class="btn btn-primary">#}
+{#                                    <i class="ion ion-ios-search"></i>&nbsp; Поиск</button>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
                     <div class="row">
                         <div class="col">
                             <div class="nav-tabs-top mb-4">
@@ -109,105 +109,25 @@
 
                                     <div class="tab-pane fade" id="tasks">
                                         <div class="my-4 small text-right">
-                                            <span class="text-muted">Сортировать: </span>
-                                            <a href="#" class="text-muted active">Все</a>
-                                            <a href="#" class="text-muted">Решен</a>
-                                            <a href="#" class="text-muted">Обрабатывается</a>
-                                            <a href="#" class="text-muted">Отклонен</a>
+                                            <span class="text-muted">Фильтровать:</span>
+                                            <a href="{%url 'load_filtered_tasks' %}" class="text-muted active" onclick="load_tasks($(this))">Все</a>
+                                            <a href="{%url 'load_filtered_tasks' %}?filter_task=0" class="text-muted" onclick="load_tasks($(this))">Решен</a>
+                                            <a href="{%url 'load_filtered_tasks' %}?filter_task=1" class="text-muted" onclick="load_tasks($(this))">Обрабатывается</a>
+                                            <a href="{%url 'load_filtered_tasks' %}?filter_task=2" class="text-muted" onclick="load_tasks($(this))">Отклонен</a>
                                         </div>
-                                        <div class="my-4 row">
-                                             {% for task in task_list %}
-                                            <div class="col-md-6 mb-4">
-                                                <div class="card hoverable h-100">
-                                                    <div class="card-header d-flex justify-content-between  align-items-start">
-                                                        <div>
-                                                            <div>
-                                                                <span class="font-weight-semibold">{{ task.title }}</span>
-                                                                {% if task.status == 0 %}
-                                                                <span class="badge badge-outline-success badge-pill">решен</span>
-                                                                {% elif task.status == 1 %}
-                                                                <span class="badge badge-outline-warning badge-pill">обрабатывается</span>
-                                                                {% elif task.status == 2 %}
-                                                                <span class="badge badge-outline-danger badge-pill">отклонен</span>
-                                                                {% endif %}
-                                                            </div>
-                                                            <div class="small">
-                                                                <a href="{% url 'employee_info' task.responsible.id %}" class="text-dark">{{ task.responsible.get_full_name }}</a>
-                                                                <span class="text-muted">{{ task.date_create.date }}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="btn-group project-actions">
-                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
-                                                                <i class="ion ion-ios-more"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item" href="{% url 'task' task.id user.id %}">Просмотр</a>
-{#                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>#}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div>{{ task.description|truncatewords:8 }}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
+                                        <div id="tasks_manager" class="my-4 row">
+                                            {% include 'partials/tasks_manager.html'%}
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="reviews">
                                         <div class="my-4 small text-right">
-                                            <span class="text-muted">Сортировать: </span>
-                                            <a href="#" class="text-muted active">Все</a>
-                                            <a href="#" class="text-muted">Решен</a>
-                                            <a href="#" class="text-muted">Обрабатывается</a>
-                                            <a href="#" class="text-muted">Не решен</a>
+                                            <span class="text-muted">Фильтровать:</span>
+                                            <a href="{%url 'load_filtered_feedback' %}" class="text-muted active" onclick="load_feedback($(this))">Все</a>
+                                            <a href="{%url 'load_filtered_feedback' %}?filter_feedback=0" class="text-muted" onclick="load_feedback($(this))">Отработан</a>
+                                            <a href="{%url 'load_filtered_feedback' %}?filter_feedback=1" class="text-muted" onclick="load_feedback($(this))">Не отработан</a>
                                         </div>
-                                        <div class="my-4 row">
-                                                 {% for review in feedback_list %}
-                                            <div class="col-md-6 mb-4">
-                                                <div class="card hoverable h-100">
-                                                    <div class="card-header d-flex justify-content-between  align-items-start">
-                                                        <div>
-                                                            <div>
-                                                                <span class="font-weight-semibold">{{ review.responsible.user.get_full_name }}</span>
-
-                                                                {% if review.responsible.phone_number %}
-                                                                <span class="text-muted">{{ review.responsible.phone_number }}</span>
-                                                                {% endif %}
-
-                                                                {% if review.status == 0 %}
-                                                                <span class="badge badge-outline-success badge-pill">решен</span>
-                                                                {% elif review.status == 1 %}
-                                                                <span class="badge badge-outline-warning badge-pill">обрабатывается</span>
-                                                                {% elif review.status == 2 %}
-                                                                <span class="badge badge-outline-danger badge-pill">не решен</span>
-                                                                {% endif %}
-                                                            </div>
-                                                            <div class="small">
-                                                                <span class="text-muted">{{ review.date_create }}</span>
-                                                                <br>
-                                                                <span class="text-muted">Магазин: {{ review.shop.address }}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="btn-group project-actions">
-                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
-                                                                <i class="ion ion-ios-more"></i>
-                                                            </button>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item" href="{% url 'feedback' review.id user.id %}">Просмотр</a>
-{#                                                                <a class="dropdown-item" href="javascript:void(0)">Удаление</a>#}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <div>{{ review.description|truncatewords:8 }}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-
+                                       <div id="feedback_manager" class="my-4 row">
+                                            {% include 'partials/feedback_manager.html'%}
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="files">

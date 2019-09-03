@@ -28,7 +28,7 @@
                 {% elif user.user_profile.is_partner %}<a href="{% url 'partner_lk' %}" class="dropdown-item">Личный кабинет</a>
                 {% else %}
                 {% endif %}
-                <a href="javascript:void(0)" class="dropdown-item">Оповещения</a>
+                <a href="{% url 'notification' %}" class="dropdown-item">Оповещения</a>
                 <a href="javascript:void(0)" class="dropdown-item">Сообщения</a>
                 <a href="{% url 'edit_employee' user.id %}" class="dropdown-item">Настройки</a>
                 <div class="dropdown-divider"></div>
@@ -85,8 +85,15 @@
         </div>
 
         <div class="navbar-nav align-items-center ml-auto">
-           <a href="{% url 'mickroservices:faq' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div></a>
-            <a href="{% url 'mickroservices:idea' %}"> <div class="btn btn-primary btn-round mr-xl-2">Предложить идею</div></a>
+            {% if user.user_profile.is_manager %} <a href="{% url 'faq_list' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Ответить на вопросы</div></a>
+                {% elif user.user_profile.is_partner %}<a href="{% url 'mickroservices:faq' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div></a>
+                {% else %}
+                {% endif %}
+{% if user.user_profile.is_manager %}
+                {% elif user.user_profile.is_partner %}<a href="{% url 'mickroservices:idea' %}"> <div class="btn btn-primary btn-round mr-xl-2">Предложить идею</div></a>
+                {% else %}
+                {% endif %}
+
         </div>
     </div>
 </nav>
