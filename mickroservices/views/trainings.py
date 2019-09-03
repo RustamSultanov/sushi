@@ -1,24 +1,44 @@
+from django.http import HttpResponseBadRequest, JsonResponse
+from django.views.decorators.vary import vary_on_headers
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.urls import reverse_lazy
+from wagtail.documents.forms import get_document_form
 
+from mickroservices.models import DocumentSushi, Subjects
 from mickroservices.models import CourseModel, ScheduleModel
 from mickroservices.forms import ScheduleForm
+from mickroservices.views.tech_cards import SushiDocListView
 
 
-class CoursesView(ListView):
+def get_documents(doc_type):
+    documents = DocumentSushi.objects.filter(doc_type=doc_type)
+    return documents
+
+class CoursesView(SushiDocListView):
     template_name = 'lessons.html'
     model = CourseModel
+    document_model = DocumentSushi
     paginate_by = 10
+    doc_type = DocumentSushi.T_TRAINING
 
     def get_context_data(self, **kwargs):
         context = super(CoursesView, self).get_context_data(**kwargs)
         context['breadcrumb'] = [{'title': 'Обучение'}]
+        subjects = Subjects.objects.filter(type= DocumentSushi.T_TRAINING)
+        context['subjects'] = subjects
+        context['doc_type'] = DocumentSushi.T_TRAINING
+        context['documents'] = self.documents
         return context
 
+    def get_queryset(self):
+
+        # Get documents (filtered by user permission)
+        self.documents = super().get_queryset()
+        return self.model.objects.all()
 
 class CourseView(DetailView):
     template_name = 'schedule.html'
@@ -33,6 +53,7 @@ class ScheduleListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ScheduleListView, self).get_context_data(**kwargs)
+
         context['breadcrumb'] = [
             {'title': 'Обучение',
              'url': reverse_lazy('mickroservices:lessons')},

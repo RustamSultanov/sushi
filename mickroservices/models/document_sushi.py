@@ -5,7 +5,7 @@ from wagtail.documents.models import Document
 class Subjects(models.Model):
     (T_TEH_CARD, T_REGULATIONS, T_PROMOTIONS, T_BEFORE_OPEN,
      T_MENU, T_OTHER_MAKET, T_VIDEO, T_AUDIO,
-     T_PERSONAL, T_PERSONAL_INVOICES)  = range(10)
+     T_PERSONAL, T_PERSONAL_INVOICES, T_TRAINING)  = range(11)
     STATUS_CHOICE = (
         (T_TEH_CARD, "Техкарты"),
         (T_REGULATIONS, "Регламенты"),
@@ -17,6 +17,7 @@ class Subjects(models.Model):
         (T_AUDIO, "Аудиоролики"),
         (T_PERSONAL, "Личные документы"),
         (T_PERSONAL_INVOICES, "Личные счета"),
+        (T_TRAINING, "Обучение"),
     )
 
     name = models.CharField(max_length=255, blank=False, null=False,
@@ -29,7 +30,7 @@ class Subjects(models.Model):
 class DocumentSushi(Document):
     (T_TEH_CARD, T_REGULATIONS, T_PROMOTIONS, T_BEFORE_OPEN,
      T_MENU, T_OTHER_MAKET, T_VIDEO, T_AUDIO,
-     T_PERSONAL, T_PERSONAL_INVOICES)  = range(10)
+     T_PERSONAL, T_PERSONAL_INVOICES, T_TRAINING)  = range(11)
     STATUS_CHOICE = (
         (T_TEH_CARD, "Техкарты"),
         (T_REGULATIONS, "Регламенты"),
@@ -41,6 +42,7 @@ class DocumentSushi(Document):
         (T_AUDIO, "Аудиоролики"),
         (T_PERSONAL, "Личные документы"),
         (T_PERSONAL_INVOICES, "Личные счета"),
+        (T_TRAINING, "Обучение"),
     )
 
     doc_type = models.IntegerField(choices=STATUS_CHOICE, default=T_TEH_CARD)

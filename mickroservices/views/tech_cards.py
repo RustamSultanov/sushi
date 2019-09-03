@@ -73,7 +73,10 @@ class SushiDocListView(ListView):
 
     @vary_on_headers('X-Requested-With')
     def post(self, request, *args, **kwargs):
-        DocumentForm = get_document_form(self.model)
+        try:
+            DocumentForm = get_document_form(self.model)
+        except AttributeError:
+            DocumentForm = get_document_form(self.document_model)
         if not request.is_ajax():
             return HttpResponseBadRequest("Cannot POST to this view without AJAX")
 
@@ -92,7 +95,6 @@ class SushiDocListView(ListView):
             # Save it
             doc = form.save(commit=False)
             doc.doc_type = self.doc_type
-            print(request.POST)
             if 'sub_type' in request.POST:
                 print('sub_type:',request.POST['sub_type'])
                 doc.sub_type = Subjects.objects.get(pk=request.POST['sub_type'])
