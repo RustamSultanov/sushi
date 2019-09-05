@@ -10,14 +10,14 @@ from chat.models import Message as Chat_Message
 
 
 class IdeaView(FormView):
-    """ """    
+    """ """
     template_name = 'idea.html'
     success_url = reverse_lazy('idea')
     form_class = IdeaForm
 
     def get_context_data(self, **kwargs):
         ctx = super(IdeaView, self).get_context_data(**kwargs)
-        ctx['ideas_ok'] = IdeaModel.objects.filter(status=IdeaModel.ST_OK)[:5]
+        # ctx['ideas_ok'] = IdeaModel.objects.filter(status=IdeaModel.ST_OK)[:5]
         ctx['breadcrumb'] = [{'title': 'Идеи'}]
         return ctx
 
@@ -25,25 +25,27 @@ class IdeaView(FormView):
         form = self.get_form()
         ctx = self.get_context_data(**kwargs)
         if form.is_valid():
-            form.save()
+            idea = form.save(commit=False)
+            idea.sender = self.request.user
+            idea.recipient = self.request.user.user_profile.manager.user
+            idea.save()
             Chat_Message.objects.create(
                 sender=self.request.user,
                 recipient=self.request.user.user_profile.manager.user,
                 body="Была предложена идея",
-                idea=form
+                idea=idea
             )
             ctx.update(self.form_valid_send_message(
-                       form,
-                       'Ваша идея принята на рассмотрение!',
-                       settings.DEFAULT_SUPORT_EMAIL,
-                       self.get_context_data(**kwargs)))
+                form,
+                'Ваша идея принята на рассмотрение!',
+                settings.DEFAULT_SUPORT_EMAIL,
+                self.get_context_data(**kwargs)))
             ctx['status'] = 'Ваша идея принята на рассмотрение!'
             ctx.pop('errors')
         else:
             ctx['errors'] = f'Ошибка заполнения полей: {form.errors}'
 
         return TemplateResponse(request, self.template_name, ctx)
-
 
     def form_valid_send_message(self, form, subject, to_email, ctx):
         if form.is_valid():
@@ -58,5 +60,6 @@ class IdeaView(FormView):
             else:
                 ctx['errors'] = 'Ошибка отправления письма'
         else:
-            ctx['errors'] = 'Что-то пошло не так: одно из полей было заполнено некорректно. Повторите попытку отправки формы.'
+            ctx[
+                'errors'] = 'Что-то пошло не так: одно из полей было заполнено некорректно. Повторите попытку отправки формы.'
         return ctx

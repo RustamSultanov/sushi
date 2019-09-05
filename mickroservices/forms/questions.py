@@ -7,7 +7,7 @@ class QuestionForm(forms.ModelForm):
     #email = forms.CharField(validators=[EmailValidator])
     class Meta:
         model = QuestionModel
-        exclude = ['name','status','answer',]
+        exclude = ['name','status','answer','user']
         widgets = {
             'body': forms.Textarea(attrs={'rows':5}),
         }
@@ -16,7 +16,7 @@ class QuestionForm(forms.ModelForm):
 class AnswerForm(forms.ModelForm):
     class Meta:
         model = QuestionModel
-        exclude = ['name','status','body','theme']
+        exclude = ['name', 'user','status','body','theme']
         widgets = {
             'answer': forms.Textarea(attrs={'rows':5}),
         }

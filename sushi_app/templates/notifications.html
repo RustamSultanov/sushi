@@ -13,12 +13,12 @@
 
  {% block content %}
 
-            {% for notification in notifications %}
+            {% for notification in notifications reversed %}
                 <div class="card my-4">
                 <div class="card-body">
                 {% if notification.task %}<a class="h5 text-dark" href="{% url 'task' notification.task.id notification.sender.id %}">По задаче</a>
                 {% elif notification.feedback %}<a class="h5 text-dark" href="{% url 'feedback' notification.feedback.id notification.sender.id %}">По отзыву</a>
-                {% elif notification.requests %}<a class="h5 text-dark" href="{% url 'request' notification.request.id notification.sender.id %} ">По запросу</a>
+                {% elif notification.requests %}<a class="h5 text-dark" href="{% url 'request' notification.requests.id notification.sender.id %} ">По запросу</a>
                     {% elif notification.question %}<a class="h5 text-dark" href="{% url 'faq_list' %} ">По вопросу</a>
 
 

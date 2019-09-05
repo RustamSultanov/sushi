@@ -291,9 +291,9 @@ def faq_answer(request, faq_id):
         form.save()
         Chat_Message.objects.create(
             sender=request.user,
-            recipient=request.user.user_profile.manager.user,
+            recipient=question.user,
             body=f"Дан ответ на вопрос {form.theme}",
-            question=form
+            question=question
         )
         return HttpResponseRedirect(reverse_lazy("faq_list"))
     return render(
@@ -454,7 +454,7 @@ def form_request_view(request):
         Chat_Message.objects.create(
             sender=request.user,
             recipient=request.user.user_profile.manager.user,
-            body=f"Создан запрос от {request.user.get_full_name()}",
+            body="Создан запрос",
             requests=form
         )
         return HttpResponseRedirect(reverse_lazy("partner_lk"))

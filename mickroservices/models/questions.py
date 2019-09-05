@@ -1,5 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
 
 
 class QuestionModel(models.Model):
@@ -14,6 +15,10 @@ class QuestionModel(models.Model):
 
     name = models.CharField(max_length=255, blank=False, null=False,
                             verbose_name='Имя отправителя')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='user_faq', blank=True, null=True)
     phone_number = PhoneNumberField(null=True, blank=True,
                                     verbose_name='Номер телефона')
     email = models.EmailField(blank=True, null=True, verbose_name='Email')

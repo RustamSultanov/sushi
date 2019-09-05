@@ -41,7 +41,8 @@ class QuestionView(FormView):
 
     def form_valid(self, form):
         form = form.save(commit=False)
-        form.name = self.request.user
+        form.name = self.request.user.get_full_name()
+        form.user = self.request.user
         form.save()
         Chat_Message.objects.create(
             sender=self.request.user,

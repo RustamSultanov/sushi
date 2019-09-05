@@ -1,5 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.conf import settings
 
 
 class IdeaModel(models.Model):
@@ -11,7 +12,14 @@ class IdeaModel(models.Model):
         (ST_OK, "Одобрено"),
         (ST_REJECTED, "Отклонено"),
     )
-
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='sender_idea', blank=True, null=True)
+    recipient = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='recipient_idea', blank=True, null=True)
     email = models.EmailField(blank=True, null=True, verbose_name='Email')
     phone_number = PhoneNumberField(null=True, blank=True,
                                     verbose_name='Номер телефона')    

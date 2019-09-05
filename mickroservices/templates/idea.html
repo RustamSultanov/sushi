@@ -44,22 +44,22 @@
             {{errors}}
         </div>
     </div>
-    {% if ideas_ok %}
-        <div class="my-4">
-            <h4>Последние идеи</h4>
-            {% for idea in ideas_ok %}
-                <div class="bg-white ui-bordered mb-2">
-                    <a href="#company-faq-1" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
-                        {{idea.email}}
-                        <span class="collapse-icon"></span>
-                    </a>
-                    <div id="company-faq-1" class="collapse text-muted">
-                        <div class="px-4 pb-3">{{idea.body}}</div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+{#    {% if ideas_ok %}#}
+{#        <div class="my-4">#}
+{#            <h4>Последние идеи</h4>#}
+{#            {% for idea in ideas_ok %}#}
+{#                <div class="bg-white ui-bordered mb-2">#}
+{#                    <a href="#company-faq-1" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">#}
+{#                        {{idea.email}}#}
+{#                        <span class="collapse-icon"></span>#}
+{#                    </a>#}
+{#                    <div id="company-faq-1" class="collapse text-muted">#}
+{#                        <div class="px-4 pb-3">{{idea.body}}</div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    {% endif %}#}
  {% endblock %}
 
  {% block extrascripts %}
