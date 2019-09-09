@@ -1,15 +1,22 @@
 from django import forms
-from django.core.validators import EmailValidator
-from phonenumber_field.modelfields import PhoneNumberField
-from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 from mickroservices.models import IdeaModel
 
+
 class IdeaForm(forms.ModelForm):
-    #email = forms.CharField(validators=[EmailValidator])
+    # email = forms.CharField(validators=[EmailValidator])
     class Meta:
         model = IdeaModel
-        exclude = ['status','answer','date_answer', 'date_created', ]
+        exclude = ['status', 'answer', 'date_answer', 'date_created', ]
         widgets = {
-            'body': forms.Textarea(attrs={'rows':2}),
+            'body': forms.Textarea(attrs={'rows': 2}),
+        }
+
+
+class IdeaStatusForm(forms.ModelForm):
+    class Meta:
+        model = IdeaModel
+        fields = ['status']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'btn btn-warning btn-xs btn-round dropdown-toggle'})
         }

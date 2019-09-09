@@ -18,11 +18,12 @@ from wagtail.core.models import Collection
 from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 from django.contrib.auth.models import Group
+from django.forms import modelformset_factory
 
 from chat.models import Message as Chat_Message
 from mickroservices.models import DocumentSushi
-from mickroservices.models import NewsPage, QuestionModel
-from mickroservices.forms import AnswerForm
+from mickroservices.models import NewsPage, QuestionModel, IdeaModel
+from mickroservices.forms import AnswerForm, IdeaStatusForm
 from .forms import *
 from .models import *
 
@@ -226,8 +227,8 @@ def employee_info(request, user_id):
 def notification_view(request):
     notifications = Chat_Message.objects.filter(recipient=request.user, status=Chat_Message.ST_READING)
     return render(request, "notifications.html", {"notifications": notifications, "breadcrumb": [
-                {"title": "Оповещения"},
-            ]})
+        {"title": "Оповещения"},
+    ]})
 
 
 def get_filtered_tasks(request):
@@ -319,16 +320,24 @@ def manager_lk_view(request):
     request_list = get_filtered_request(request)
     task_list = get_filtered_tasks(request)
     feedback_list = get_filtered_feedback(request)
-
     page_object = Paginator(DocumentSushi.objects.all(), 9)
     is_paginated = False
     page = request.GET['page'] if 'page' in request.GET else 1
     page_obj = documents = page_object.get_page(page)
     print(page_obj)
+    ideas = IdeaModel.objects.filter(recipient=request.user)
+    StatusFormSet = modelformset_factory(IdeaModel, form=IdeaStatusForm, extra=0)
+    formset = StatusFormSet(request.POST or None, queryset=IdeaModel.objects.filter(recipient=request.user),
+                            prefix='idea')
+    if formset.is_valid():
+        formset.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER') + "#ideas")
     return render(
         request,
         "dashboard_manager.html",
         {
+            'ideas': ideas,
+            'formset': formset,
             "partner_list": partner_list,
             "request_list": request_list,
             "task_list": task_list,

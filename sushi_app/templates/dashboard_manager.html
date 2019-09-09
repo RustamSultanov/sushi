@@ -31,6 +31,9 @@
                                         <a class="nav-link" data-toggle="tab" href="#requests">Запросы<span class="badge badge-pill badge-primary indicator">{{ messages_requests.count }}</span></a>
                                     </li>
                                     <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#ideas">Идеи<span class="badge badge-pill badge-primary indicator">{{ messages_idea.count }}</span></a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#tasks">Задачи<span class="badge badge-pill badge-primary indicator">{{ messages_task.count }}</span></a>
                                     </li>
                                     <li class="nav-item">
@@ -96,6 +99,53 @@
                                         </div>
                                           <div id="request_manager" class="my-4 row">
                                             {% include 'partials/request_manager.html'%}
+                                        </div>
+                                    </div>
+                                <div class="tab-pane fade" id="ideas">
+                                        <div class="my-4 small text-right">
+                                            <span class="text-muted">Сортировать: </span>
+                                            <a href="#" class="text-muted active">Все</a>
+                                            <a href="#" class="text-muted">Выполнена</a>
+                                            <a href="#" class="text-muted">В работе</a>
+                                            <a href="#" class="text-muted">Отклонена</a>
+                                        </div>
+                                        <div class="my-4 row">
+                                            <form method="post">
+													{% csrf_token %}
+												{{ formset.management_form }}
+												{% for forms in formset %}
+                                                    {% for idea in ideas %}
+                                                        {% if forloop.counter == forloop.parentloop.counter %}
+                                        {{ forms.id }}
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div class="small">
+                                                                <a href="{% url 'employee_info' idea.sender.id %}" class="text-dark">{{ idea.sender.get_full_name }}</a>
+                                                                <span class="text-muted">{{ idea.date_created }}</span>
+                                                            </div>
+                                                            <div class="btn-group">
+                                                                {{ forms.status }}
+                                                                <button class="btn btn-warning btn-xs btn-round" type="submit">Сохранить</button>
+                                                            </div>
+{#                                                            <div class="small mt-2">#}
+{#                                                                <a href="#" class="text-primary">Подробнее</a>#}
+{#                                                            </div>#}
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div>Описание идеи: {{ idea.body }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                        {% endif %}
+                                            	{% endfor %}{% endfor %}
+
+												</form>
+
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="tasks">

@@ -15,8 +15,12 @@ def messages_for_user(request):
         messages_requests = Message.objects. \
             filter(recipient=request.user). \
             filter(status=Message.ST_WAITNG, requests=not None)
+        messages_idea = Message.objects. \
+            filter(recipient=request.user). \
+            filter(status=Message.ST_WAITNG, idea=not None)
         return {'messages_for_user': messages,
                 'messages_task': messages_task,
                 'messages_feedback': messages_feedback,
-                'messages_requests': messages_requests}
+                'messages_requests': messages_requests,
+                'messages_idea': messages_idea}
     return {}
