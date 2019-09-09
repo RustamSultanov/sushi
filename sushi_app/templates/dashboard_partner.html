@@ -50,10 +50,10 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#tasks">Задачи<span class="badge badge-pill badge-primary indicator">{{ messages_task.count }}</span></a>
+                                        <a class="nav-link" data-toggle="tab" href="#tasks">Задачи<span class="badge badge-pill badge-primary indicator">{{ messages_task }}</span></a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#reviews">Отзывы<span class="badge badge-pill badge-primary indicator">{{ messages_feedback.count }}</span></a>
+                                        <a class="nav-link" data-toggle="tab" href="#reviews">Отзывы<span class="badge badge-pill badge-primary indicator">{{ messages_feedback }}</span></a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#files">Файлы</a>
@@ -131,17 +131,7 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="files">
-                                        <div class="my-4">
-                                            <form action="/upload" class="dropzone needsclick" id="dropzone-files">
-                                                <div class="dz-message needsclick">
-                                                    Перетащите файлы сюда или нажмите, чтобы загрузить
-                                                    <span class="note needsclick">(Это демонстрационная версия. Файлы не будут загружены на сервер.)</span>
-                                                </div>
-                                                <div class="fallback">
-                                                    <input name="file" type="file" multiple>
-                                                </div>
-                                            </form>
-                                        </div>
+
                                         <div class="my-4 small text-right">
                                             <span class="text-muted">Сортировать: </span>
                                             <a href="#" class="text-muted active">По порядку</a>

@@ -325,7 +325,7 @@ def manager_lk_view(request):
     page = request.GET['page'] if 'page' in request.GET else 1
     page_obj = documents = page_object.get_page(page)
     print(page_obj)
-    ideas = IdeaModel.objects.filter(recipient=request.user)
+    ideas = IdeaModel.objects.select_related("sender").filter(recipient=request.user)
     StatusFormSet = modelformset_factory(IdeaModel, form=IdeaStatusForm, extra=0)
     formset = StatusFormSet(request.POST or None, queryset=IdeaModel.objects.filter(recipient=request.user),
                             prefix='idea')
