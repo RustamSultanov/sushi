@@ -22,6 +22,7 @@
                             </li>
                         {% endfor %}
                     </div>
+ {% if user.user_profile.is_manager %}
                     <div class="my-4">
                         <form action="{{ request.path }}" class="dropzone needsclick" id="dropzone-files" method='post'>
                             {% csrf_token %}
@@ -35,7 +36,10 @@
                             <input type="hidden" name="type" value="{{doc_type}}">   
                             <input type="hidden" name="sub_type" value="{{subjects.all.0.pk}}">
                         </form>
-                    </div>                  
+                    </div>
+        {% elif user.user_profile.is_partner %}
+                {% else %}
+                {% endif %}
                     <div class="my-5">
                         <div class="row mt-3">
                             <div class="col-12">

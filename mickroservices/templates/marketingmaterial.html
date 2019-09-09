@@ -25,6 +25,8 @@
                 </li>
             {% endfor %}
         </div>
+        {% if user.user_profile.is_manager %}
+
         <div class="my-4">
             <form action="{{ request.path }}" class="dropzone needsclick" id="dropzone-files" method='post'>
                 {% csrf_token %}
@@ -37,6 +39,9 @@
                 <input type="hidden" name="type" value="{{types_marketing.0.0|add:"4"}}">
             </form>
         </div>
+    {% elif user.user_profile.is_partner %}
+                {% else %}
+                {% endif %}
         <div class="my-5">
             <div class="my-4 small text-right">
                 <span class="text-muted">Сортировать: </span>

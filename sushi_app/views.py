@@ -655,9 +655,11 @@ def create_employee_view(request):
 
 
 @login_required
-@user_passes_test(head_check)
 def edit_employee_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
+    if user != request.user:
+        if request.user.user_profile.is_partner:
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     form_user = EditEmployeeMainForm(
         request.POST or None,
         request.FILES or None,

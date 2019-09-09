@@ -17902,7 +17902,7 @@ a.bg-linux-darker:hover, a.bg-linux-darker:focus {
   overflow: hidden;
   padding: 0; }
 
-@media (min-width: 992px) {
+@media (min-width: 576px) {
   .demo-navbar-messages .dropdown-menu,
   .demo-navbar-notifications .dropdown-menu {
     margin-top: .5rem;
@@ -17910,12 +17910,22 @@ a.bg-linux-darker:hover, a.bg-linux-darker:focus {
   .demo-navbar-user .dropdown-menu {
     margin-top: .25rem; } }
 
-.demo-navbar-user .dropdown-menu {
+.demo-navbar-messages .dropdown-menu,
+.demo-navbar-notifications .dropdown-menu {
+  min-width: 245px; }
+
+.demo-navbar-user .dropdown-menu,
+.demo-navbar-messages .dropdown-menu,
+.demo-navbar-notifications .dropdown-menu {
   position: absolute !important; }
 
 .navbar-name {
   font-weight: 300;
   font-size: 14px; }
+
+.nav-tabs .nav-link .badge, .nav-pills .nav-link .badge {
+  position: absolute;
+  top: auto; }
 
 .btn {
   text-transform: none; }

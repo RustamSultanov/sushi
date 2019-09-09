@@ -17,6 +17,9 @@
                         <a href="{% url 'employee_info' task.responsible.id %}" class="text-dark">{{ task.responsible.get_full_name }}</a>
                         <span class="text-muted">{{ task.date_create.date }}</span>
                     </div>
+                <div class="small">
+                    <a href="{% url 'request' task.id user.id %}" class="text-primary">Подробнее</a>
+                </div>
                 </div>
                 <div class="btn-group project-actions">
                     <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">

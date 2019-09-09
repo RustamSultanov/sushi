@@ -70,10 +70,18 @@
 
                                             </div>
                                         </div>
+                                        {% if messege.from_user == user %}
                                         <div class="media-body bg-lighter rounded py-2 px-3 ml-3">
                                             <div class="font-weight-semibold mb-1">{{ messege.from_user.get_full_name }}</div>
                                             {{ messege.text }}
                                         </div>
+                                    {% else %}
+
+                                    <div class="media-body alert-primary rounded py-2 px-3 ml-md-3">
+                                            <div class="font-weight-semibold mb-1">{{ messege.from_user.get_full_name }}</div>
+                                            {{ messege.text }}
+                                        </div>
+                                    {% endif %}
                                     </div>
                                 {% endfor %} <form action="" method="post">    {% csrf_token %}
                                     <div class="input-group">

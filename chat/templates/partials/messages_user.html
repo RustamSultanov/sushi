@@ -1,16 +1,35 @@
 {%if messages_for_user %}
     <div class="container flex-grow-1 container-p-y">
         {% for message in messages_for_user %}
-            <div class="alert alert-dark-primary alert-dismissible fade show">
+            <div class="list-group-item list-group-item-action media d-flex align-items-center">
+                                    <div class="ui-icon ui-icon-sm ion ion-md-home bg-secondary border-0 text-white"></div>
                 {% csrf_token %}
-                <button data-id="{{message.pk}}" type="button" class="close" data-dismiss="alert" onclick="close_message($(this))">×</button>
-                Оповещение от {{message.sender.get_full_name}} по
+                                    <div class="media-body line-height-condenced ml-3">
+                                        <div class="text-dark"> Оповещение от {{message.sender.get_full_name}} по
                 {% if message.task %}<a href="{% url 'task' message.task.id message.sender.id %}">задаче</a>
                 {% elif message.feedback %}<a href="{% url 'feedback' message.feedback.id message.sender.id %}">отзыву</a>
                 {% elif message.requests %}<a href="{% url 'request' message.requests.id message.sender.id %}">запросу</a>
                     {% elif message.question %}<a href="{% url 'faq_list' %} ">вопросу</a>
-                {% endif %}: {{message.body}}
-            </div>
+                {% endif %}:</div>
+                                        <div class="text-light small mt-1">
+                                           {{message.body}}
+                                        </div>
+                                        <div class="text-light small mt-1">12h ago</div>
+                                    </div>
+                                    <button data-id="{{message.pk}}" type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat align-self-start" data-toggle="dropdown" onclick="close_message($(this))">
+                                        <span class="ion ion-md-close"></span>
+                                    </button>
+                                </div>
+{#            <div class="alert alert-dark-primary alert-dismissible fade show">#}
+{#                {% csrf_token %}#}
+{#                <button data-id="{{message.pk}}" type="button" class="close" data-dismiss="alert" onclick="close_message($(this))">×</button>#}
+{#                Оповещение от {{message.sender.get_full_name}} по#}
+{#                {% if message.task %}<a href="{% url 'task' message.task.id message.sender.id %}">задаче</a>#}
+{#                {% elif message.feedback %}<a href="{% url 'feedback' message.feedback.id message.sender.id %}">отзыву</a>#}
+{#                {% elif message.requests %}<a href="{% url 'request' message.requests.id message.sender.id %}">запросу</a>#}
+{#                    {% elif message.question %}<a href="{% url 'faq_list' %} ">вопросу</a>#}
+{#                {% endif %}: {{message.body}}#}
+{#            </div>#}
         {% endfor %}
     </div>
 <script type="text/javascript">

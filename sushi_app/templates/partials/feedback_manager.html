@@ -21,6 +21,9 @@
                                                                 <br>
                                                                 <span class="text-muted">Магазин: {{ review.shop.address }}</span>
                                                             </div>
+                                                        <div class="small">
+                    <a href="{% url 'feedback' review.id user.id %}" class="text-primary">Подробнее</a>
+                </div>
                                                         </div>
 
                                                         <div class="btn-group project-actions">

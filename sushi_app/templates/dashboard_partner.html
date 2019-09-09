@@ -26,8 +26,8 @@
                                     {% endif %}
                                 <div class="small ml-3">
                                     <div class="text-muted">Ваш менеджер</div>
-                                    <div class="text-primary">{{ manager.user.get_full_name }}</div>
-                                    <a href="#" class="btn btn-xs btn-round btn-outline-dark">Написать в чат</a>
+                                    <a href="{% url 'employee_info' manager.user.id %}" class="text-primary">{{ manager.user.get_full_name }}</a>
+{#                                    <a href="#" class="btn btn-xs btn-round btn-outline-dark">Написать в чат</a>#}
                                 </div>
                             </div>
                         </div>
@@ -50,10 +50,10 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#tasks">Задачи</a>
+                                        <a class="nav-link" data-toggle="tab" href="#tasks">Задачи<span class="badge badge-pill badge-primary indicator">{{ messages_task.count }}</span></a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#reviews">Отзывы</a>
+                                        <a class="nav-link" data-toggle="tab" href="#reviews">Отзывы<span class="badge badge-pill badge-primary indicator">{{ messages_feedback.count }}</span></a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#files">Файлы</a>
