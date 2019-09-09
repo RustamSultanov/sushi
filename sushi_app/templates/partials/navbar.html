@@ -24,31 +24,9 @@
                                 {{ messages_for_user.count }} новых оповещения
                             </div>
                             <div class="list-group list-group-flush">
-                                <div class="list-group-item list-group-item-action media d-flex align-items-center">
-                                    <div class="ui-icon ui-icon-sm ion ion-md-home bg-secondary border-0 text-white"></div>
-                                    <div class="media-body line-height-condenced ml-3">
-                                        <div class="text-dark">Login from 192.168.1.1</div>
-                                        <div class="text-light small mt-1">
-                                            Aliquam ex eros, imperdiet vulputate hendrerit et.
-                                        </div>
-                                        <div class="text-light small mt-1">12h ago</div>
-                                    </div>
-                                    <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat align-self-start" data-toggle="dropdown">
-                                        <span class="ion ion-md-close"></span>
-                                    </button>
-                                </div>
-                                <div class="list-group-item list-group-item-action media d-flex align-items-center">
-                                    <div class="media-body line-height-condenced">
-                                        <div class="text-dark">Login from 192.168.1.1</div>
-                                        <div class="text-light small mt-1">
-                                            Aliquam ex eros, imperdiet vulputate hendrerit et.
-                                        </div>
-                                        <div class="text-light small mt-1">12h ago</div>
-                                    </div>
-                                    <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat align-self-start" data-toggle="dropdown">
-                                        <span class="ion ion-md-close"></span>
-                                    </button>
-                                </div>
+                             {% block messages_user%}
+                            {% include 'partials/messages_user.html' %}
+                        {% endblock %}
 
 
                             </div>
