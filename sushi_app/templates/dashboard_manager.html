@@ -109,14 +109,14 @@
                                             <a href="{%url 'load_filtered_ideas' %}?filter_idea=1" class="text-muted" onclick="load_ideas($(this))">Одобрено</a>
                                             <a href="{%url 'load_filtered_ideas' %}?filter_idea=2" class="text-muted" onclick="load_ideas($(this))">Отклонено</a>
                                         </div>
-                                        <div class="my-4 row">
-                                            <form id="ideas_manager" method="post">
+
+                                        <form method="post">
+                                            <div id="ideas_manager" class="my-4 row">
 
 
                                                 {% include 'partials/ideas_manager.html'%}
-												</form>
-
-                                        </div>
+                                            </div>
+                                        </form>
                                     </div>
                                     <div class="tab-pane fade" id="tasks">
                                         <div class="my-4 small text-right">

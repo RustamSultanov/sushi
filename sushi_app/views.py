@@ -275,6 +275,9 @@ def get_filtered_feedback(request):
 
 
 def get_filtered_idea(request):
+    StatusFormSet = modelformset_factory(IdeaModel, form=IdeaStatusForm, extra=0)
+    formset = StatusFormSet(request.POST or None, queryset=IdeaModel.objects.filter(recipient=request.user),
+                            prefix='idea')
     if request.user.user_profile.is_manager:
         idea_list = IdeaModel.objects.select_related("sender", "recipient").filter(
             recipient=request.user
@@ -284,8 +287,13 @@ def get_filtered_idea(request):
             sender=request.user
         )
     if "filter_idea" in request.GET:
-        return idea_list.filter(status=request.GET['filter_idea'])
-    return idea_list
+        return (idea_list.filter(status=request.GET['filter_idea']), StatusFormSet(request.POST or None,
+                                                                                   queryset=IdeaModel.objects.filter(
+                                                                                       recipient=request.user,
+                                                                                       status=request.GET[
+                                                                                           'filter_idea']),
+                                                                                   prefix='idea'))
+    return (idea_list, formset)
 
 
 @login_required
@@ -338,11 +346,9 @@ def manager_lk_view(request):
     is_paginated = False
     page = request.GET['page'] if 'page' in request.GET else 1
     page_obj = documents = page_object.get_page(page)
-    print(page_obj)
-    idea_list = get_filtered_idea(request)
-    StatusFormSet = modelformset_factory(IdeaModel, form=IdeaStatusForm, extra=0)
-    formset = StatusFormSet(request.POST or None, queryset=IdeaModel.objects.filter(recipient=request.user),
-                            prefix='idea')
+    data = get_filtered_idea(request)
+    idea_list = data[0]
+    formset = data[1]
     if formset.is_valid():
         formset.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER') + "#ideas")
@@ -367,10 +373,9 @@ def manager_lk_view(request):
 
 @csrf_exempt
 def load_filtered_idea(request):
-    idea_list = get_filtered_idea(request)
-    StatusFormSet = modelformset_factory(IdeaModel, form=IdeaStatusForm, extra=0)
-    formset = StatusFormSet(request.POST or None, queryset=IdeaModel.objects.filter(recipient=request.user),
-                            prefix='idea')
+    data = get_filtered_idea(request)
+    idea_list = data[0]
+    formset = data[1]
     return render(
         request,
         'partials/ideas_manager.html',
