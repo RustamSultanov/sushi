@@ -274,6 +274,20 @@ def get_filtered_feedback(request):
     return feedback_list
 
 
+def get_filtered_idea(request):
+    if request.user.user_profile.is_manager:
+        idea_list = IdeaModel.objects.select_related("sender", "recipient").filter(
+            recipient=request.user
+        )
+    else:
+        idea_list = IdeaModel.objects.select_related("sender", "recipient").filter(
+            sender=request.user
+        )
+    if "filter_idea" in request.GET:
+        return idea_list.filter(status=request.GET['filter_idea'])
+    return idea_list
+
+
 @login_required
 @user_passes_test(manager_check)
 def faq_list(request):
@@ -325,7 +339,7 @@ def manager_lk_view(request):
     page = request.GET['page'] if 'page' in request.GET else 1
     page_obj = documents = page_object.get_page(page)
     print(page_obj)
-    ideas = IdeaModel.objects.select_related("sender").filter(recipient=request.user)
+    idea_list = get_filtered_idea(request)
     StatusFormSet = modelformset_factory(IdeaModel, form=IdeaStatusForm, extra=0)
     formset = StatusFormSet(request.POST or None, queryset=IdeaModel.objects.filter(recipient=request.user),
                             prefix='idea')
@@ -336,7 +350,7 @@ def manager_lk_view(request):
         request,
         "dashboard_manager.html",
         {
-            'ideas': ideas,
+            'idea_list': idea_list,
             'formset': formset,
             "partner_list": partner_list,
             "request_list": request_list,
@@ -348,6 +362,19 @@ def manager_lk_view(request):
             "is_paginated": is_paginated
 
         },
+    )
+
+
+@csrf_exempt
+def load_filtered_idea(request):
+    idea_list = get_filtered_idea(request)
+    StatusFormSet = modelformset_factory(IdeaModel, form=IdeaStatusForm, extra=0)
+    formset = StatusFormSet(request.POST or None, queryset=IdeaModel.objects.filter(recipient=request.user),
+                            prefix='idea')
+    return render(
+        request,
+        'partials/ideas_manager.html',
+        {'idea_list': idea_list, 'formset': formset}
     )
 
 

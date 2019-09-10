@@ -91,3 +91,12 @@ function load_feedback(element){
     $('a')[0].focus()
     return false;
 }
+
+function load_ideas(element){
+    event.preventDefault();
+    element.siblings('a').removeClass('active');
+    element.addClass('active');
+    $('#ideas_manager').load(element[0].href)
+    $('a')[0].focus()
+    return false;
+}

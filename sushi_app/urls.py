@@ -48,6 +48,7 @@ urlpatterns = [
     path('load/feedback-shop/<int:shop_id>', views.load_filtered_shop_feedback, name='load_filtered_shop_feedback'),
     path('load/feedback', views.load_filtered_feedback, name='load_filtered_feedback'),
     path('load/tasks', views.load_filtered_tasks, name='load_filtered_tasks'),
+    path('load/idea', views.load_filtered_idea, name='load_filtered_ideas'),
     path('load_paginations_docs', views.load_paginations_docs, name='load_paginations_docs'),
     path('load_docs', views.load_docs, name='load_docs')
 ]
