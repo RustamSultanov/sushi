@@ -24,6 +24,11 @@
             {{ page.owner }} - {{ page.first_published_at }}
         </div>
         {% image page.image max-896x597%}
-        <p>{{ page.body | richtext }}</p>
+        <div class="ql-content">
+            <p>{{ page.body | richtext }}</p>
+        </div>
 {% endblock %}
 
+{% block extracss %}
+    <link rel="stylesheet" href='{% static "libs/quill/typography.css" %}'>
+{% endblock %}
