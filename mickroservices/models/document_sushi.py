@@ -60,6 +60,7 @@ class DocumentSushi(Document):
     search_fields = Document.search_fields +[
         index.SearchField('doc_type'),
         index.FilterField('doc_type'),
+        index.FilterField('sub_type_id')
     ]
 
 
