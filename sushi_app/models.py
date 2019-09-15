@@ -48,7 +48,7 @@ class UserProfile(models.Model):
                              null=True, blank=True, limit_choices_to={'is_head': True})
     department = models.ForeignKey(on_delete=models.SET_NULL, to=Department, related_name='member',
                                    null=True, blank=True)
-    scan = models.FileField(blank=True)
+    scan = models.FileField(upload_to='images',blank=True)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
@@ -170,6 +170,7 @@ class Messeges(models.Model):
     feedback = models.ForeignKey(on_delete=models.CASCADE, to=Feedback, blank=True, null=True)
     text = models.TextField()
     date_create = models.DateTimeField(auto_now_add=True)
+    file = models.FileField(blank=True)
 
     def __str__(self):
         return f"{self.date_create}"

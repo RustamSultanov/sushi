@@ -47,6 +47,16 @@ class MessegesForm(forms.ModelForm):
         }
 
 
+class MessegesFileForm(forms.ModelForm):
+    class Meta:
+        model = Messeges
+        fields = ['text', 'file']
+        widgets = {
+            'text': forms.TextInput(attrs={'placeholder': "Введите сообщение", 'class': 'form-control'}),
+            'file': forms.FileInput(attrs={'class': 'hidden'})
+        }
+
+
 class StatusTaskForm(forms.ModelForm):
     class Meta:
         model = Task

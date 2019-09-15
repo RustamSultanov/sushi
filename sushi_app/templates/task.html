@@ -80,13 +80,27 @@
                                     <div class="media-body alert-primary rounded py-2 px-3 ml-md-3">
                                             <div class="font-weight-semibold mb-1">{{ messege.from_user.get_full_name }}</div>
                                             {{ messege.text }}
+                                   {% if messege.file %}
+                <strong class="project-attachment-filename">{{messege.file}}</strong>
+                <div class="text-muted small"  >{{messege.file.size|filesizeformat}}</div>
+                <div>
+                    <a href="{{ messege.file.url }}">Загрузить</a>
+                </div>
+            
+                                       {% endif %}
                                         </div>
                                     {% endif %}
                                     </div>
-                                {% endfor %} <form action="" method="post">    {% csrf_token %}
+                                {% endfor %} <form action="" method="post" enctype="multipart/form-data">    {% csrf_token %}
                                     <div class="input-group">
                                         {{ form.text }}
                                         <div class="input-group-append">
+                                            <label style="margin-bottom: 0;">
+                                                {{ form.file }}
+                                                <span class="btn btn-default icon-btn borderless btn-round md-btn-flat">
+                                                    <i class="ion ion-md-attach"></i>
+                                                </span>
+                                            </label>
                                             <button type="submit" class="btn btn-primary">Отправить</button>
                                         </div>
                                     </div>

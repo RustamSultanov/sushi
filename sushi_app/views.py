@@ -225,7 +225,7 @@ def employee_info(request, user_id):
 
 @login_required
 def notification_view(request):
-    notifications = Chat_Message.objects.filter(recipient=request.user, status=Chat_Message.ST_READING)
+    notifications = Chat_Message.objects.filter(recipient=request.user).order_by('created_at')
     return render(request, "notifications.html", {"notifications": notifications, "breadcrumb": [
         {"title": "Оповещения"},
     ]})
@@ -599,7 +599,7 @@ def create_partner_view(request):
         form_user_profile.manager = request.user.user_profile
         form_user_profile.is_partner = True
         form_user_profile.save()
-        return HttpResponseRedirect(reverse("manager_lk"))
+        return HttpResponseRedirect(reverse("employee_info", args=[form_user.id]))
     context = {
         "form_user": form_user,
         "form_user_profile": form_user_profile,
@@ -683,7 +683,7 @@ def create_employee_view(request):
         form_user_profile.head = request.user.user_profile
         form_user_profile.is_manager = True
         form_user_profile.save()
-        return HttpResponseRedirect(reverse("manager_lk"))
+        return HttpResponseRedirect(reverse("employee_info", args=[form_user.id]))
     context = {
         "form_user": form_user,
         "form_user_profile": form_user_profile,
@@ -790,20 +790,22 @@ def task_view(request, task_id, user_id):
         task=task, to_user=request.user.id
     )
     messeges = qs1.union(qs2).order_by("date_create")
-    form = MessegesForm(request.POST or None)
+    form = MessegesFileForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        form = form.save(commit=False)
-        form.task = task
-        form.from_user = request.user
+        task_new = form.save(commit=False)
+        # print(task_new.file,form.cleaned_data['file'])
+        # task_new.file = form.cleaned_data['file']
+        task_new.task = task
+        task_new.from_user = request.user
         if request.user == task.responsible:
-            form.to_user = task.manager.user
+            task_new.to_user = task.manager.user
         else:
-            form.to_user = task.responsible
-        form.save()
+            task_new.to_user = task.responsible
+        task_new.save()
         Chat_Message.objects.create(
-            sender=form.from_user,
-            recipient=form.to_user,
-            body=form.text,
+            sender=task_new.from_user,
+            recipient=task_new.to_user,
+            body=task_new.text,
             task=task
         )
         return HttpResponseRedirect(request.META.get("HTTP_REFERER") + "#coments")

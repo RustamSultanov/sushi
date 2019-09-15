@@ -53,11 +53,11 @@
             <h4>Ответы на часто задаваемые вопросы</h4>
             {% for question in questions_ok %}
                 <div class="bg-white ui-bordered mb-2">
-                    <a href="#company-faq-1" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
+                    <a href="#company-faq-{{ forloop.counter }}" class="d-flex justify-content-between text-dark py-3 px-4" data-toggle="collapse">
                         {{question.body}}
                         <span class="collapse-icon"></span>
                     </a>
-                    <div id="company-faq-1" class="collapse text-muted">
+                    <div id="company-faq-{{ forloop.counter }}" class="collapse text-muted">
                         <div class="px-4 pb-3">{{question.answer}}</div>
                     </div>
                 </div>
