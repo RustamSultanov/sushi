@@ -74,6 +74,14 @@
                                         <div class="media-body bg-lighter rounded py-2 px-3 ml-3">
                                             <div class="font-weight-semibold mb-1">{{ messege.from_user.get_full_name }}</div>
                                             {{ messege.text }}
+                                        {% if messege.file %}
+                <strong class="project-attachment-filename">{{messege.file}}</strong>
+                <div class="text-muted small"  >{{messege.file.size|filesizeformat}}</div>
+                <div>
+                    <a href="{{ messege.file.url }}">Загрузить</a>
+                </div>
+
+                                       {% endif %}
                                         </div>
                                     {% else %}
 

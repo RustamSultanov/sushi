@@ -40,6 +40,9 @@
                 "message_id":element.data("id")
             }
         );
+       $(element).parent('.list-group-item').remove();
+       $('#notifications_count').text($('#notifications_count').text()-1);
     };
+
 </script>
 {% endif %}

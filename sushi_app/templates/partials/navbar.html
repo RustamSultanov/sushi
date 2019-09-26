@@ -21,7 +21,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="bg-primary text-center text-white font-weight-bold p-3">
-                                {{ messages_for_user.count }} новых оповещения
+                                <span id="notifications_count">{{ messages_for_user.count }}</span> новых оповещения
                             </div>
                             <div class="list-group list-group-flush">
                              {% block messages_user%}

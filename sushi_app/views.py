@@ -793,8 +793,6 @@ def task_view(request, task_id, user_id):
     form = MessegesFileForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         task_new = form.save(commit=False)
-        # print(task_new.file,form.cleaned_data['file'])
-        # task_new.file = form.cleaned_data['file']
         task_new.task = task
         task_new.from_user = request.user
         if request.user == task.responsible:
@@ -850,7 +848,7 @@ def requests_view(request, requests_id, user_id):
         requests=requests, to_user=request.user.id
     )
     messeges = qs1.union(qs2).order_by("date_create")
-    form = MessegesForm(request.POST or None)
+    form = MessegesFileForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form = form.save(commit=False)
         form.requests = requests
@@ -907,7 +905,7 @@ def feedback_view(request, feedback_id, user_id):
         feedback=feedback, to_user=request.user.id
     )
     messeges = qs1.union(qs2).order_by("date_create")
-    form = MessegesForm(request.POST or None)
+    form = MessegesFileForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form = form.save(commit=False)
         form.feedback = feedback
