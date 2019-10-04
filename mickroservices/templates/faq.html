@@ -62,6 +62,9 @@
                     </div>
                 </div>
             {% endfor %}
+            {% if is_paginated %}
+                {% include 'partials/pagination.html' with posts=questions_ok %}
+            {% endif %}
         </div>
     {% endif %}
  {% endblock %}

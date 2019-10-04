@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.template.response import TemplateResponse
 from django.views.generic.edit import FormView
@@ -18,8 +19,18 @@ class QuestionView(FormView):
 
     def get_context_data(self, **kwargs):
         ctx = super(QuestionView, self).get_context_data(**kwargs)
-        ctx['questions_ok'] = QuestionModel.objects.filter(status=QuestionModel.ST_OK)[:5]
+        questions_ok_list= QuestionModel.objects.filter(status=QuestionModel.ST_OK)
         ctx['breadcrumb'] = [{'title': 'FAQ'}]
+
+        paginator = Paginator(questions_ok_list, 5)
+        page = self.request.GET.get('page')
+        try:
+            ctx['questions_ok'] = paginator.page(page)
+        except PageNotAnInteger:
+            ctx['questions_ok'] = paginator.page(1)
+        except EmptyPage:
+            ctx['questions_ok'] = paginator.page(paginator.num_pages)
+        ctx['is_paginated'] = paginator.num_pages > 1
         return ctx
 
     def post(self, request, *args, **kwargs):
