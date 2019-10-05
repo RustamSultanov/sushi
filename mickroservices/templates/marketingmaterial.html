@@ -58,29 +58,29 @@
             {% endif %}
             </div>
         </div>        
-        <div class="row mt-3">
-            <div class="col-12 col-md-8">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <i class="input-group-text ion-ios-search"></i>
-                    </div>
-                    <input type="search" class="form-control" placeholder="Поиск...">
-                </div>
-            </div>
-        </div>
+{#        <div class="row mt-3">#}
+{#            <div class="col-12 col-md-8">#}
+{#                <div class="input-group">#}
+{#                    <div class="input-group-prepend">#}
+{#                        <i class="input-group-text ion-ios-search"></i>#}
+{#                    </div>#}
+{#                    <input type="search" class="form-control" placeholder="Поиск...">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
     </div>
-    <div class="my-5">
-        <div class="row">
-            {% for material in materials %}
-                {% include "partials/item_preview.html"  with post=material %}
-            {% empty %}
-                Новых постов нет
-            {% endfor %}
-        </div>
-    </div>
-    {% if is_paginated %}
-        {% include 'partials/pagination.html' with posts=page_obj %}
-    {% endif %}
+{#    <div class="my-5">#}
+{#        <div class="row">#}
+{#            {% for material in materials %}#}
+{#                {% include "partials/item_preview.html"  with post=material %}#}
+{#            {% empty %}#}
+{#                Новых постов нет#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
+{#    {% if is_paginated %}#}
+{#        {% include 'partials/pagination.html' with posts=page_obj %}#}
+{#    {% endif %}#}
 {% endblock %}
 
 {% block css %}
