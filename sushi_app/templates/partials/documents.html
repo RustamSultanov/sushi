@@ -12,15 +12,18 @@
                     <a href="{{ document.url }}">Загрузить</a>
                 </div>
             </div>
+            {% if user.user_profile.is_partner %}
+                {% else %}
             <div class="btn-group project-actions align-self-start">
                 <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
                     <i class="ion ion-ios-more"></i>
                 </button>
-                                            <div class="dropdown-menu dropdown-menu-right">
-
-                                                <a class="dropdown-item" href="/cms/documents/delete/{{ document.id }}/">Удалить</a>
-                                            </div>
+                    <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="/cms/documents/edit/{{ document.id }}/">Редактировать</a>
+                                <a class="dropdown-item" href="/cms/documents/delete/{{ document.id }}/">Удалить</a>
+                    </div>
             </div>
+            {% endif %}
         </div>
     </div>
 {% endfor %}

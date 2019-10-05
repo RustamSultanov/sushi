@@ -339,7 +339,8 @@ def manager_lk_view(request):
     partner_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile"
     ).filter(manager=request.user.user_profile)
-    feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED).count()
+    feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
+                                                  manager=request.user.user_profile).count()
     request_list = get_filtered_request(request)
     task_list = get_filtered_tasks(request)
     feedback_list = get_filtered_feedback(request)
@@ -457,7 +458,7 @@ def partner_lk_view(request):
     shop_list = Shop.objects.prefetch_related("checks", "docs").filter(
         partner=request.user.user_profile
     )
-    feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED).count()
+    feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED, responsible=request.user.user_profile).count()
     task_list = get_filtered_tasks(request)
     feedback_list = get_filtered_feedback(request)
     documents = DocumentSushi.objects.all()
