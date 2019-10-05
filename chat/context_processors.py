@@ -13,12 +13,12 @@ def messages_for_user(request):
                                                                           recipient=request.user).count
         messages_task = Message.objects.exclude(task__isnull=True).filter(status=Message.ST_WAITNG,
                                                                           recipient=request.user).count
-        messages_feedback = Message.objects.exclude(feedback__isnull=True).filter(status=Message.ST_WAITNG,
-                                                                                  recipient=request.user).count
+        # messages_feedback = Message.objects.exclude(feedback__isnull=True).filter(status=Message.ST_WAITNG,
+        #                                                                           recipient=request.user).count
         return {'messages_requests': messages_requests,
                 'messages_idea': messages_idea,
                 'messages_for_user': messages,
                 'messages_task': messages_task,
-                'messages_feedback': messages_feedback,
+                # 'messages_feedback': messages_feedback,
                 }
     return {}

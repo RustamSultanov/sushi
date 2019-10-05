@@ -40,7 +40,7 @@
                       <img src="{{ user.wagtail_userprofile.avatar.url }}" alt class="d-block ui-w-30 rounded-circle">
                       <div class="ml-3 text-right d-none d-md-block">
                         <div class="navbar-name">{{ user.first_name }}</div>
-                          <div class="text-primary small">Партнер 3 уровня</div>
+{#                          <div class="text-primary small">Партнер 3 уровня</div>#}
                       </div>
                     </span>
             </a>
@@ -112,7 +112,7 @@
 
         <div class="navbar-nav align-items-center ml-auto">
             {% if user.user_profile.is_manager %} <a href="{% url 'faq_list' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Ответить на вопросы</div></a>
-                {% elif user.user_profile.is_partner %}<a href="{% url 'mickroservices:faq' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">Задать вопрос</div></a>
+                {% elif user.user_profile.is_partner %}<a href="{% url 'mickroservices:faq' %}"> <div class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0">FAQ</div></a>
                 {% else %}
                 {% endif %}
 {% if user.user_profile.is_manager %}
