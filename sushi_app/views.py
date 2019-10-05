@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.vary import vary_on_headers
 from django.urls import reverse, reverse_lazy
 from django.forms.models import model_to_dict
@@ -218,6 +218,19 @@ def base(request):
 
 
 @login_required
+def employee_list(request):
+    employees_list = UserProfile.objects.prefetch_related(
+        "user", "wagtail_profile",
+    ).filter(
+        head=request.user.user_profile) \
+        if request.user.user_profile.is_head \
+        else UserProfile.objects.prefetch_related(
+        "user", "wagtail_profile", "department"
+    ).filter(is_manager=True)
+    return render(request, "employees.html", {"employee_list": employees_list, "breadcrumb": [{"title": "Сотрудники"}]})
+
+
+@login_required
 def employee_info(request, user_id):
     user = get_object_or_404(User, id=user_id)
     return render(request, "employee.html", {"employee": user})
@@ -225,10 +238,21 @@ def employee_info(request, user_id):
 
 @login_required
 def notification_view(request):
-    notifications = Chat_Message.objects.filter(recipient=request.user).order_by('created_at')
-    return render(request, "notifications.html", {"notifications": notifications, "breadcrumb": [
-        {"title": "Оповещения"},
-    ]})
+    notifications = Chat_Message.objects.select_related("sender", "task", "requests", "feedback", "idea",
+                                                        "question").filter(recipient=request.user).order_by('created_at')
+    paginator = Paginator(notifications, 10)
+    page = request.GET.get('page')
+    try:
+        notifications = paginator.page(page)
+    except PageNotAnInteger:
+        notifications = paginator.page(1)
+    except EmptyPage:
+        notifications = paginator.page(paginator.num_pages)
+    is_paginated = paginator.num_pages > 1
+    return render(request, "notifications.html",
+                  {"notifications": notifications, "is_paginated": is_paginated, "breadcrumb": [
+                      {"title": "Оповещения"},
+                  ]})
 
 
 def get_filtered_tasks(request):
@@ -458,7 +482,8 @@ def partner_lk_view(request):
     shop_list = Shop.objects.prefetch_related("checks", "docs").filter(
         partner=request.user.user_profile
     )
-    feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED, responsible=request.user.user_profile).count()
+    feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
+                                                  responsible=request.user.user_profile).count()
     task_list = get_filtered_tasks(request)
     feedback_list = get_filtered_feedback(request)
     documents = DocumentSushi.objects.all()

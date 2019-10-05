@@ -65,19 +65,19 @@
         <hr class="d-lg-none w-100 my-2">
 
         <div class="navbar-nav align-items-lg-center mr-auto ml-xl-4">
-        {% if user.user_profile.is_head %}
+{#        {% if user.user_profile.is_head %}#}
 
             <div class="nav-item">
-               {% if user.user_profile.is_manager %} <a href="{% url 'manager_lk' %}" class="nav-link nav-link__icon">
-                {% elif user.user_profile.is_partner %}<a href="{% url 'partner_lk' %}" class="nav-link nav-link__icon">
-                {% else %}
-                {% endif %}
+               <a href="{% url 'employee_list' %}" class="nav-link nav-link__icon">
+{#                {% elif user.user_profile.is_partner %}<a href="{% url 'partner_lk' %}" class="nav-link nav-link__icon">#}
+{#                {% else %}#}
+{#                {% endif %}#}
                     <i class="icon-user"></i>
                     <span>Сотрудники</span>
                 </a>
             </div>
-        {% else %}
-                {% endif %}
+{#        {% else %}#}
+{#                {% endif %}#}
             <div class="nav-item">
                 <a href="{% url 'mickroservices:regulations' %}" class="nav-link nav-link__icon">
                     <i class="icon-folder"></i>

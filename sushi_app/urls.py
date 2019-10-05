@@ -18,6 +18,7 @@ urlpatterns = [
         auth_view.LogoutView.as_view(next_page="login"),
         name='logout'),
     path('employee/<int:user_id>', views.employee_info, name='employee_info'),
+    path('employee/all', views.employee_list, name='employee_list'),
     path('faq-all', views.faq_list, name='faq_list'),
     path('faq/<int:faq_id>', views.faq_answer, name='faq_answer'),
     path('manager-lk', views.manager_lk_view, name='manager_lk'),
