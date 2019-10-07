@@ -9,7 +9,7 @@
                 <strong class="project-attachment-filename">{{document.title}}</strong>
                 <div class="text-muted small"  >{{document.file_size|filesizeformat}}</div>
                 <div>
-                    <a href="{{ document.url }}">Загрузить</a>
+                    <a href="{{ document.url }}" download>Загрузить</a>
                 </div>
             </div>
             {% if user.user_profile.is_partner %}
