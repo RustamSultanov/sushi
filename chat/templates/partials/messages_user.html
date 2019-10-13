@@ -20,7 +20,7 @@
                                         </div>
                                         <div class="text-light small mt-1">{{message.created_at}}</div>
                                     </div>
-                                    <button data-id="{{message.pk}}" type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat align-self-start" data-toggle="dropdown" onclick="close_message($(this))">
+                                    <button data-id="{{message.pk}}" type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat align-self-start" onclick="close_message($(this))">
                                         <span class="close ion ion-md-close"></span>
                                     </button>
                                 </div>
@@ -49,4 +49,5 @@
     };
 
 </script>
+
 {% endif %}

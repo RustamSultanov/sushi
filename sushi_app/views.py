@@ -239,7 +239,7 @@ def employee_info(request, user_id):
 @login_required
 def notification_view(request):
     notifications = Chat_Message.objects.select_related("sender", "task", "requests", "feedback", "idea",
-                                                        "question").filter(recipient=request.user).order_by('created_at')
+                                                        "question").filter(recipient=request.user).order_by('-created_at')
     paginator = Paginator(notifications, 10)
     page = request.GET.get('page')
     try:

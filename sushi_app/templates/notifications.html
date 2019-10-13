@@ -13,7 +13,7 @@
 
  {% block content %}
 
-            {% for notification in notifications reversed %}
+            {% for notification in notifications %}
                 <div class="card my-4">
                 <div class="card-body">
                 {% if notification.task %}<a class="h5 text-dark" href="{% url 'task' notification.task.id notification.sender.id %}">По задаче</a>
