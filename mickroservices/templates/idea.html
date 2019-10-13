@@ -17,7 +17,7 @@
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     <div class="card my-4">
         <div class="card-body">
-            <form action="{% url 'mickroservices:idea' %}" method="post">
+            <form action="{% url 'mickroservices:idea' %}" enctype="multipart/form-data" method="post">
                 {% csrf_token %}
                 <h4>Предложить идею</h4>
                 {% comment %}
@@ -35,6 +35,10 @@
                 <div class="form-group">
                     <label class="form-label">Идея</label>
                     {% render_field form.body placeholder="Идея" class+="form-control" %}
+                    </div>
+                    <div class="form-group">
+                    <label class="form-label">Файл</label>
+                    {% render_field form.file %}
                 </div>
                 <div class="text-right">
                     <button class="btn btn-primary btn-round">Отправить</button>

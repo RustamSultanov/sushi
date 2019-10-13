@@ -22,7 +22,7 @@ class IdeaView(FormView):
         return ctx
 
     def post(self, request, *args, **kwargs):
-        form = self.get_form()
+        form = IdeaForm(request.POST or None, request.FILES or None)
         ctx = self.get_context_data(**kwargs)
         if form.is_valid():
             idea = form.save(commit=False)

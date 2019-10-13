@@ -17,10 +17,13 @@
                             <a href="mailto:{{ employee.email }}" class="btn btn-default btn-sm">
                                 <i class="fas fa-envelope"></i>&nbsp;Написать письмо
                             </a>
-
+ {% if user.user_profile.is_partner %}
+     <a href="{% url 'form_request' %}" class="btn btn-round btn-outline-primary btn-sm">Поставить задачу менеджеру</a>
+                        {% else %}
                        <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'form_task' employee.user_profile.id %}">Добавить задачу</a>
                         <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'edit_partner' employee.id %}">Редактировать франчайзи</a>
                         <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'form_review' %}">Добавить отзыв</a>
+                        {% endif %}
                         </div>
                     </div>
                     <div class="card my-4">
@@ -29,6 +32,18 @@
                             <h6 class="mb-3">Ключевые обязанности</h6>
                        {% else %}{% endif %}
                             {{ employee.user_profile.key_responsibilities | richtext }}
+                         {% if employee.user_profile.is_partner %}
+                        <h6 class="mt-4 mb-3">Магазины</h6>
+                            <table class="table user-view-table m-0">
+                                <tbody>
+                                {% for shop in employee.user_profile.shop_partner.all %}
+                                <tr>
+                                    <td><a class="text-primary" href="{% url 'shop' shop.id %}"> {{shop.address}} </a></td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}{% endif %}
                             <h6 class="mt-4 mb-3">Социальные сети</h6>
                             <table class="table user-view-table m-0">
                                 <tbody>

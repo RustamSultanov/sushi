@@ -239,7 +239,8 @@ def employee_info(request, user_id):
 @login_required
 def notification_view(request):
     notifications = Chat_Message.objects.select_related("sender", "task", "requests", "feedback", "idea",
-                                                        "question").filter(recipient=request.user).order_by('-created_at')
+                                                        "question").filter(recipient=request.user).order_by(
+        '-created_at')
     paginator = Paginator(notifications, 10)
     page = request.GET.get('page')
     try:
@@ -363,6 +364,12 @@ def manager_lk_view(request):
     partner_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile"
     ).filter(manager=request.user.user_profile)
+    task_not_solved = Task.objects.filter(status=ST_IN_PROGRESS,
+                                          manager=request.user.user_profile).count()
+    requests_not_solved = Requests.objects.filter(status=ST_IN_PROGRESS,
+                                                  manager=request.user.user_profile).count()
+    ideas_not_solved = IdeaModel.objects.filter(status=IdeaModel.ST_CONSIDERATION,
+                                                  recipient=request.user).count()
     feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
                                                   manager=request.user.user_profile).count()
     request_list = get_filtered_request(request)
@@ -387,6 +394,9 @@ def manager_lk_view(request):
             "partner_list": partner_list,
             "request_list": request_list,
             "task_list": task_list,
+            "task_not_solved": task_not_solved,
+            "ideas_not_solved":ideas_not_solved,
+            "requests_not_solved": requests_not_solved,
             "feedback_not_solved": feedback_not_solved,
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
@@ -482,6 +492,8 @@ def partner_lk_view(request):
     shop_list = Shop.objects.prefetch_related("checks", "docs").filter(
         partner=request.user.user_profile
     )
+    task_not_solved = Task.objects.filter(status=ST_IN_PROGRESS,
+                                          responsible=request.user).count()
     feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
                                                   responsible=request.user.user_profile).count()
     task_list = get_filtered_tasks(request)
@@ -503,6 +515,7 @@ def partner_lk_view(request):
             # "request_list": request_list,
             "task_list": task_list,
             "feedback_not_solved": feedback_not_solved,
+            "task_not_solved": task_not_solved,
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
             "manager": request.user.user_profile.manager,
@@ -811,7 +824,15 @@ def task_view(request, task_id, user_id):
     )
     if request.user.user_profile.is_manager:
         if form_status.is_valid():
-            form_status.save()
+            new_status = form_status.save(commit=False)
+            if new_status.status == ST_SOLVED:
+                Chat_Message.objects.create(
+                    sender=request.user,
+                    recipient=task.responsible,
+                    body="Задача переведена в статус решена",
+                    task=new_status
+                )
+            new_status.save()
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     qs1 = Messeges.objects.prefetch_related("from_user", "to_user").filter(
         task=task, from_user=request.user.id

@@ -16,15 +16,17 @@
                                                                 {{ forms.status }}
                                                                 <button class="btn btn-warning btn-xs btn-round" type="submit">Сохранить</button>
                                                             </div>
-                                                            <div class="small mt-2">
-                                                                <a href="#" class="text-primary">Подробнее</a>
-                                                            </div>
+{#                                                            <div class="small mt-2">#}
+{#                                                                <a href="#" class="text-primary">Подробнее</a>#}
+{#                                                            </div>#}
                                                         </div>
 
 
                                                     </div>
                                                     <div class="card-body">
                                                         <div>Описание идеи: {{ idea.body }}</div>
+                                                        {% if idea.file %}<div>Файл: <a href="{{ idea.file.url }}" class="text-primary" download="">{{ idea.file }}</a></div>
+                                                            {% else %}{% endif %}
                                                     </div>
                                                 </div>
                                             </div>

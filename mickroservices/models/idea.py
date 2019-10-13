@@ -30,6 +30,7 @@ class IdeaModel(models.Model):
                               verbose_name='Ответ')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     date_answer = models.DateTimeField(auto_now_add=True, verbose_name='Дата оповещения автора')
+    file = models.FileField(upload_to='ideas', blank=True)
 
     class Meta:
         verbose_name = 'Идея от пользователя'

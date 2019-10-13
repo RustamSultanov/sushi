@@ -99,7 +99,7 @@ class Shop(models.Model):
         related_name='+'
     )
     partner = models.ForeignKey(on_delete=models.DO_NOTHING, to=UserProfile,
-                                limit_choices_to={'is_partner': True})
+                                limit_choices_to={'is_partner': True}, related_name='shop_partner')
     responsibles = models.ManyToManyField(to=UserProfile,
                                           limit_choices_to={'is_manager': True}, related_name='shop_responsible')
     date_create = models.DateTimeField(auto_now_add=True)
