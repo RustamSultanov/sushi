@@ -9,7 +9,11 @@
                         <div class="media-body ml-4">
                             <h4 class="font-weight-bold mb-0">{{ employee.first_name }} {{ employee.last_name }}
                             </h4>
+                            {% if employee.user_profile.is_partner %}
+                                <div class="text-muted mb-2"></div>
+                                 {% else %}
                             <div class="text-muted mb-2">{{ employee.user_profile.position }}</div>
+                          {% endif %}
                             <a href="mailto:{{ employee.email }}" class="btn btn-default btn-sm">
                                 <i class="fas fa-envelope"></i>&nbsp;Написать письмо
                             </a>
