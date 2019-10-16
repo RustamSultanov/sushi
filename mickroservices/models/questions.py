@@ -30,6 +30,7 @@ class QuestionModel(models.Model):
     answer = models.CharField(max_length=1000, blank=False, null=False,
                               verbose_name='Ответ')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    hide = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Вопрос от пользователя'

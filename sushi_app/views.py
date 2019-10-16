@@ -334,13 +334,13 @@ def faq_answer(request, faq_id):
     question = get_object_or_404(QuestionModel, id=faq_id)
     form = AnswerForm(request.POST or None, instance=question)
     if form.is_valid():
-        form = form.save(commit=False)
-        form.status = QuestionModel.ST_OK
-        form.save()
+        new_q = form.save(commit=False)
+        new_q.status = QuestionModel.ST_REJECTED if new_q.hide else QuestionModel.ST_OK
+        new_q.save()
         Chat_Message.objects.create(
             sender=request.user,
             recipient=question.user,
-            body=f"Дан ответ на вопрос {form.theme}",
+            body=f"Дан ответ на вопрос {new_q.theme}",
             question=question
         )
         return HttpResponseRedirect(reverse_lazy("faq_list"))
