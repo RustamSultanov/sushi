@@ -550,7 +550,7 @@ def form_request_view(request):
             "form": form,
             "breadcrumb": [
                 {"title": "Личный кабинет", "url": reverse_lazy("partner_lk")},
-                {"title": "Добавить запрос"},
+                {"title": "Добавить задачу"},
             ],
         },
     )
