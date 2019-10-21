@@ -87,12 +87,12 @@ class StatusFeedbackForm(forms.ModelForm):
 class RequestsForm(forms.ModelForm):
     class Meta:
         model = Requests
-        fields = ['title', 'description']
+        fields = ['title', 'description', "file"]
         widgets = {
             'title': forms.TextInput(
-                attrs={'name': 'title', 'class': 'form-control', 'placeholder': "Название запроса"}),
+                attrs={'name': 'title', 'class': 'form-control', 'placeholder': "Название задачи"}),
             'description': forms.Textarea(
-                attrs={'placeholder': "Описание запроса", 'class': "form-control"}),
+                attrs={'placeholder': "Описание задачи", 'class': "form-control"}),
         }
 
 

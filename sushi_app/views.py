@@ -282,7 +282,7 @@ def get_filtered_request(request):
             .filter(responsible=request.user)
     if "filter_request" in request.GET:
         return request_list.filter(status=request.GET['filter_request'])
-    return request_list
+    return request_list.order_by("-date_create")
 
 
 def get_filtered_feedback(request):
@@ -296,7 +296,7 @@ def get_filtered_feedback(request):
         )
     if "filter_feedback" in request.GET:
         return feedback_list.filter(status=request.GET['filter_feedback'])
-    return feedback_list
+    return feedback_list.order_by("-date_create")
 
 
 def get_filtered_idea(request):
@@ -496,6 +496,9 @@ def partner_lk_view(request):
                                           responsible=request.user).count()
     feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
                                                   responsible=request.user.user_profile).count()
+    requests_not_solved = Requests.objects.filter(status=ST_IN_PROGRESS,
+                                                  responsible=request.user).count()
+    request_list = get_filtered_request(request)
     task_list = get_filtered_tasks(request)
     feedback_list = get_filtered_feedback(request)
     documents = DocumentSushi.objects.all()
@@ -512,10 +515,11 @@ def partner_lk_view(request):
         "dashboard_partner.html",
         {
             "shop_list": shop_list,
-            # "request_list": request_list,
+            "request_list": request_list,
             "task_list": task_list,
             "feedback_not_solved": feedback_not_solved,
             "task_not_solved": task_not_solved,
+            "requests_not_solved": requests_not_solved,
             "feedback_list": feedback_list,
             "breadcrumb": [{"title": "Личный кабинет"}],
             "manager": request.user.user_profile.manager,
@@ -529,7 +533,7 @@ def partner_lk_view(request):
 @login_required
 @user_passes_test(partner_check)
 def form_request_view(request):
-    form = RequestsForm(request.POST or None)
+    form = RequestsForm(request.POST or None,request.FILES or None)
     if form.is_valid():
         form = form.save(commit=False)
         form.responsible = request.user

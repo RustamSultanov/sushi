@@ -78,6 +78,7 @@ class Requests(models.Model):
     description = models.TextField()
     date_create = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
+    file = models.FileField(blank=True)
 
     def __str__(self):
         return f"{self.date_create}, {self.status}"
@@ -168,7 +169,7 @@ class Messeges(models.Model):
     task = models.ForeignKey(on_delete=models.CASCADE, to=Task, blank=True, null=True)
     requests = models.ForeignKey(on_delete=models.CASCADE, to=Requests, blank=True, null=True)
     feedback = models.ForeignKey(on_delete=models.CASCADE, to=Feedback, blank=True, null=True)
-    text = models.TextField()
+    text = models.TextField(null=True, blank=True)
     date_create = models.DateTimeField(auto_now_add=True)
     file = models.FileField(blank=True)
 

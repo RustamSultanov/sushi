@@ -26,24 +26,41 @@
                         {% endif %}
                         </div>
                     </div>
+     {% if employee.user_profile.is_partner %}
+         <div class="my-4 row">
+{% for shop in employee.user_profile.shop_partner.all %}
+                  <div class="col-md-6 mb-4">
+                                                <div class="card hoverable h-100">
+                                                    <div class="card-header d-flex justify-content-between  align-items-start">
+                                                        <div>
+                                                            <div class="h5 mb-0 font-weight-semibold"><a href="{% url 'shop' shop.id %}" class="text-primary">{{ shop.address }}</a></div>
+                                                        </div>
+
+
+                                                        <div class="btn-group project-actions">
+                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                                <i class="ion ion-ios-more"></i>
+                                                            </button>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="{% url 'shop' shop.id %}">Просмотр</a>
+{#                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
+{#                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+         </div>
+                        {% else %}{% endif %}
                     <div class="card my-4">
                         <div class="card-body">
                         {% if employee.user_profile.key_responsibilities %}
                             <h6 class="mb-3">Ключевые обязанности</h6>
                        {% else %}{% endif %}
                             {{ employee.user_profile.key_responsibilities | richtext }}
-                         {% if employee.user_profile.is_partner %}
-                        <h6 class="mt-4 mb-3">Магазины</h6>
-                            <table class="table user-view-table m-0">
-                                <tbody>
-                                {% for shop in employee.user_profile.shop_partner.all %}
-                                <tr>
-                                    <td><a class="text-primary" href="{% url 'shop' shop.id %}"> {{shop.address}} </a></td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}{% endif %}
+
                             <h6 class="mt-4 mb-3">Социальные сети</h6>
                             <table class="table user-view-table m-0">
                                 <tbody>
