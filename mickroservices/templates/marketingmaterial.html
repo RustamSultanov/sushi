@@ -113,8 +113,8 @@
         });
         function load_marketing_docs(element){           
             event.preventDefault();
-            $('.nav-mm').removeClass('text-dark');
-            element.addClass('text-dark');
+            $('.nav-mm').removeClass('text-dark current_doc_type');
+            element.addClass('text-dark current_doc_type');
             $('input[name="type"').val(element.data("id"));
             $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + element.data("id"))
             $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type="+ element.data("id"));
