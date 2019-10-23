@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e6c40c64-9555-4371-ad37-0f63c7916757" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/sushi_app/templates/employees.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/dashboard_manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/dashboard_manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/dashboard_partner.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/dashboard_partner.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/employee.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/employee.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/notifications.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/notifications.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/templates/partials/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/templates/partials/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sushi_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/sushi_app/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="e6c40c64-9555-4371-ad37-0f63c7916757" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution>
+      <executable />
+    </execution>
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -36,6 +30,50 @@
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/mickroservices/templates/marketingmaterial.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1710" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sushi_app/templates/partials/documents.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="114">
+              <caret line="6" column="55" lean-forward="true" selection-start-line="6" selection-start-column="55" selection-end-line="6" selection-end-column="55" />
+              <folding>
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/my_proj/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-171" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sushi_app/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-399" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sushi_app/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-8607" />
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -45,14 +83,90 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="53" />
+    <option name="y" value="27" />
+    <option name="width" value="1387" />
+    <option name="height" value="873" />
   </component>
   <component name="ProjectId" id="1RL647u0eNuhdjhIehSE0YeRX9K" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+              <item name="mickroservices" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+              <item name="mickroservices" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+              <item name="mickroservices" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+              <item name="mickroservices" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+              <item name="my_proj" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+              <item name="sushi_app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+              <item name="sushi_app" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sushi" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sushi" type="462c0819:PsiDirectoryNode" />
+              <item name="sushi_app" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="partials" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Python-test-registry-" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -115,8 +229,37 @@
       <workItem from="1566807943211" duration="79265000" />
       <workItem from="1569433844612" duration="8564000" />
       <workItem from="1570221239483" duration="10840000" />
+      <workItem from="1571826228171" duration="1760000" />
     </task>
     <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1760000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="52" y="27" width="1388" height="873" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24962743" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -127,11 +270,87 @@
         <entry key="MAIN">
           <value>
             <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
               <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
       </map>
     </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/mickroservices/urls.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manage.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/apps.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/tests.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/utils.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/__init__.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/models/marketing_material.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/views/marketing_material.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/my_proj/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-171" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sushi_app/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-399" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sushi_app/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8607" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sushi_app/templates/partials/documents.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="55" lean-forward="true" selection-start-line="6" selection-start-column="55" selection-end-line="6" selection-end-column="55" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mickroservices/templates/marketingmaterial.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1710" />
+      </provider>
+    </entry>
   </component>
 </project>
