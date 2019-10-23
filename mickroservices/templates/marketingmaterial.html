@@ -21,7 +21,7 @@
         <div class="nav">
             {% for item in types_marketing %}
                 <li class="nav-item">
-                    <a data-id={{item.0|add:"4" }} class="nav-mm nav-link {% if active_tab == item.0 %}text-dark{% endif %} pl-0" href="javascript:void(0)" onclick="load_marketing_docs($(this))">{{item.1}}</a>
+                    <a data-id={{item.0|add:"4" }} class="nav-mm nav-link {% if active_tab == item.0 %}text-dark current_doc_type{% endif %} pl-0" href="javascript:void(0)" onclick="load_marketing_docs($(this))">{{item.1}}</a>
                 </li>
             {% endfor %}
         </div>
@@ -97,8 +97,8 @@
                 filesizeBase:    3000,
                 addRemoveLinks:  true,
                 success : function(file, response){
-                    $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + $('.text-dark').data("id"));
-                    $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type=" + $('.text-dark').data("id"));
+                    $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + $('.current_doc_type').data("id"));
+                    $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type=" + $('.current_doc_type').data("id"));
                     this.removeAllFiles();
                 }        
             });
@@ -113,8 +113,8 @@
         });
         function load_marketing_docs(element){           
             event.preventDefault();
-            $('.nav-mm').removeClass('text-dark');
-            element.addClass('text-dark');
+            $('.nav-mm').removeClass('text-dark current_doc_type');
+            element.addClass('text-dark current_doc_type');
             $('input[name="type"').val(element.data("id"));
             $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + element.data("id"))
             $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type="+ element.data("id"));
