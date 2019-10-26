@@ -214,8 +214,7 @@ def base(request):
         news = news_all
     else:
         news = news_all[len(news_all) - 3:]
-    return render(request, "index.html", {"employee_list": employees_list, "news": news.order_by(
-        '-first_published_at')})
+    return render(request, "index.html", {"employee_list": employees_list, "news": news})
 
 
 @login_required
