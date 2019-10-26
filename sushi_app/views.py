@@ -206,7 +206,7 @@ def head_check(user):
 
 @login_required
 def base(request):
-    employee_list = UserProfile.objects.prefetch_related(
+    employees_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile", "department"
     ).filter(head=request.user.user_profile)
     news_all = NewsPage.objects.all()
@@ -214,7 +214,8 @@ def base(request):
         news = news_all
     else:
         news = news_all[len(news_all) - 3:]
-    return render(request, "index.html", {"employee_list": employee_list, "news": news})
+    return render(request, "index.html", {"employee_list": employees_list, "news": news.order_by(
+        '-first_published_at')})
 
 
 @login_required

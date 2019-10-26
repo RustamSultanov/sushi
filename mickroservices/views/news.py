@@ -15,6 +15,7 @@ class NewsView(ListView):
     model = NewsPage
     paginate_by = 9
     context_object_name = 'news'
+    ordering = 'first_published_at'
 
     def get_context_data(self, **kwargs):
         context = super(NewsView, self).get_context_data(**kwargs)

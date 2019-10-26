@@ -10,7 +10,7 @@ class NewsForm(forms.ModelForm):
 
     class Meta:
         model = NewsPage
-        fields = ('title', 'first_published_at', 'image', 'body', 'content')
+        fields = ('title', 'first_published_at', 'image', 'body', 'content', 'announcement')
         widgets = {'first_published_at': forms.TextInput(attrs={
             'class': 'form-control datetimepicker-input',
             'data-target': '#datetimepicker1',

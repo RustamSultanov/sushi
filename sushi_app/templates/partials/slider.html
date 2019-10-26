@@ -27,12 +27,16 @@
 {#            </div>#}
 {#        </div>#}
         {% for new in news %}
+            {% if new.image %}
+                 <div class="swiper-slide" style="background-image: url({{ new.image.file.url }})">
+                {% else %}
         <div class="swiper-slide" style="background-image: url('{% static 'img/slider.png' %}')">
+        {% endif %}
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-9">
                         <div class="hero-slider__title">{{ new.title }}</div>
-                        <div class="hero-slider__description">{{new.body | richtext |truncatewords_html:5 }}</div>
+                        <div class="hero-slider__description">{{new.announcement | richtext }}</div>
                         <a href="{{new.url}}" class="btn btn-round btn-outline-white">Подробнее</a>
                     </div>
                 </div>

@@ -17,6 +17,7 @@ class NewsPage(Page):
     )
     preview = RichTextField(blank=True)
     body = RichTextField(blank=True)
+    announcement = models.TextField(blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel('body', classname="full"),

@@ -28,7 +28,12 @@
             {% render_field form.first_published_at placeholder="Дата и время публикации" class+="form-control" %}
         </div>
         <div class="form-group">
-            <label class="form-label">Изображение</label>
+            <label class="form-label">Текст анонса</label>
+            {% render_field form.announcement placeholder="Текст анонса" class+="form-control" %}
+        </div>
+        <div class="form-group">
+            <label class="form-label">Изображение анонса</label>
+            <a href="../../cms/images/" target="_blank" class="btn btn-round btn-outline-primary btn-sm">Добавить изображение</a>
             {% render_field form.image placeholder="Изображение публикации" class+="form-control" %}
         </div>
         <label class="form-label">Текст новости</label>
