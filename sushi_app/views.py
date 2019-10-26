@@ -209,7 +209,8 @@ def base(request):
     employees_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile", "department"
     ).filter(head=request.user.user_profile)
-    news_all = NewsPage.objects.all()
+    news_all = NewsPage.objects.all().order_by(
+        '-first_published_at')
     if len(news_all) == 0 or len(news_all) == 1 or len(news_all) == 2 or len(news_all) == 3:
         news = news_all
     else:
