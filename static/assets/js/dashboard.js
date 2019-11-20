@@ -1,6 +1,6 @@
 $(function() {
     $('#dropzone-files').dropzone({
-        parallelUploads: 2,
+        parallelUploads: 10,
         maxFilesize:     50000,
         filesizeBase:    3000,
         addRemoveLinks:  true,
