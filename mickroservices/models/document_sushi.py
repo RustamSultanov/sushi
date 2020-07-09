@@ -63,4 +63,30 @@ class DocumentSushi(Document):
         index.FilterField('sub_type_id')
     ]
 
+    @property
+    def preview(self):
+        path ='/media/icons_documents/'
 
+        if self.file_extension == 'jpg' or\
+            self.file_extension == 'svg' or\
+            self.file_extension == 'png' or\
+            self.file_extension == 'bmp':
+            return self.url
+
+        if self.file_extension == 'doc' or\
+            self.file_extension == 'docx':
+            return f'{path}word.svg'
+
+        if self.file_extension == 'xls' or\
+            self.file_extension == 'xlsx':
+            return f'{path}excel.svg'
+
+        if self.file_extension == 'pdf':
+            return f'{path}pdf.svg'
+
+        if self.file_extension == 'ppt':
+            return f'{path}ppt.svg'
+        if self.file_extension == 'cdr':
+            return f'{path}cdr.svg'
+        if self.file_extension == 'ai':
+            return f'{path}ai.svg'

@@ -453,13 +453,18 @@ def load_filtered_feedback(request):
 
 @csrf_exempt
 def load_docs(request):
+    count_objects = 9
+    current_page = int(request.GET.get('page', 1))
+    offset = (current_page * count_objects) - count_objects
+    limmit = (current_page * count_objects) - 1
+    print(offset, limmit)
     if 'doc_type' in request.GET:
-        docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
+        docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])[offset: limmit]
     else:
         docs = []
 
     if docs and 'sub_type' in request.GET:
-        docs = DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])
+        docs = DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])[offset: limmit]
     return render(
         request,
         'partials/documents.html',
@@ -469,6 +474,7 @@ def load_docs(request):
 
 @csrf_exempt
 def load_paginations_docs(request):
+    current_page = int(request.GET.get('page', 1))
     if 'doc_type' in request.GET:
         docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
     else:
@@ -476,14 +482,12 @@ def load_paginations_docs(request):
 
     if docs and 'sub_type' in request.GET:
         docs = docs.filter(sub_type=request.GET['sub_type'])
-        print("=====================================================")
-        print(docs[0], docs[0].sub_type)
 
     page_object = Paginator(docs, 9)
     return render(
         request,
         'partials/pagination.html',
-        {'posts': page_object.get_page(1)}
+        {'posts': page_object.get_page(current_page)}
     )
 
 

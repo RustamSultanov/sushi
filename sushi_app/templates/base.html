@@ -65,6 +65,7 @@
         <script src="{% static "js/landing.js" %}"></script>
 <script type="text/javascript">
     $(function() {
+        Dropzone.autoDiscover = false;
         $('#notifications_dropdown_link').click(function (e) {
             $(this).parent().toggleClass('show');
             $(this).next('.dropdown-menu').toggleClass('show');
