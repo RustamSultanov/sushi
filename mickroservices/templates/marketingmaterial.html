@@ -50,12 +50,8 @@
                 <a href="?ordering=file_size" class="text-muted">По размеру</a>
             </div>
             <div class="row" id="documents_wraper">
-                {% include 'partials/documents.html' with documents=documents %}
             </div>
             <div id="pagination">
-            {% if is_paginated %}
-                {% include 'partials/pagination.html' with posts=page_obj %}
-            {% endif %}
             </div>
         </div>        
 {#        <div class="row mt-3">#}
@@ -90,15 +86,28 @@
 {% block extrascripts %}
     <script src='{% static "libs/dropzone/dropzone.js" %}'></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+                    $('#documents_wraper').load("{% url 'load_docs' %}?page=1&doc_type=4");
+                    $('#pagination').load("{% url 'load_paginations_docs' %}?page=1&doc_type=4");
+        });
         $(function() {
             $('#dropzone-files').dropzone({
                 parallelUploads: 10,
                 maxFilesize:     50000,
                 filesizeBase:    3000,
                 addRemoveLinks:  true,
+                acceptedFiles: 'image/*,application/pdf,.cdr,.ai,.doc,.docx,.csv,.xls,.xlsx,.ppt,.pptx',
                 success : function(file, response){
-                    $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + $('.current_doc_type').data("id"));
-                    $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type=" + $('.current_doc_type').data("id"));
+                    let current_page = 1
+                    let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
+
+                    if(page_param){
+                        current_page = decodeURIComponent(page_param[2]);
+                        console.log(page_param, current_page);
+                    }
+
+                    $('#documents_wraper').load("{% url 'load_docs' %}?page="+current_page+"&doc_type=" + element.data("id"))
+                    $('#pagination').load("{% url 'load_paginations_docs' %}?page="+current_page+"&doc_type="+ element.data("id"));
                     this.removeAllFiles();
                 }        
             });
@@ -111,13 +120,23 @@
             dictResponseError: 'Server not Configured',
           };
         });
-        function load_marketing_docs(element){           
+
+        function load_marketing_docs(element){ 
             event.preventDefault();
+
+            let current_page = 1
+            let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
+
+            if(page_param){
+                current_page = decodeURIComponent(page_param[2]);
+                console.log(page_param, current_page);
+            }
+
             $('.nav-mm').removeClass('text-dark current_doc_type');
             element.addClass('text-dark current_doc_type');
             $('input[name="type"').val(element.data("id"));
-            $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + element.data("id"))
-            $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type="+ element.data("id"));
+            $('#documents_wraper').load("{% url 'load_docs' %}?page="+current_page+"&doc_type=" + element.data("id"))
+            $('#pagination').load("{% url 'load_paginations_docs' %}?page="+current_page+"&doc_type="+ element.data("id"));
             console.log($('.text-dark'))
             return false;
         }

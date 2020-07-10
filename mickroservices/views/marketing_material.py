@@ -24,7 +24,7 @@ class MarketingView(ListView):
 
         context['types_marketing'] =MarketingMaterial.TYPE_CHOICE
         context['breadcrumb'] = [{'title': 'Маркетинговые материалы'}]
-        context['documents'] = get_marketing_documents()
+        #context['documents'] = get_marketing_documents()
         context['active_tab'] = MarketingMaterial.T_PROMOTIONS
         return context
 

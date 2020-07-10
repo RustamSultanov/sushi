@@ -77,39 +77,8 @@
 {% endblock %}
 
 {% block extrascripts %}
-    <script src='{% static "libs/dropzone/dropzone.js" %}'></script>
+    {% include 'partials/dropezone_script.html' %}
     <script type="text/javascript">
-        $(function() {
-            $('#dropzone-files').dropzone({
-                parallelUploads: 10,
-                maxFilesize:     50000,
-                filesizeBase:    3000,
-                addRemoveLinks:  true,
-                acceptedFiles: 'image/*,application/pdf,.cdr,.ai,.doc,.docx,.csv,.xls,.xlsx,.ppt,.pptx',
-                success : function(file, response){
-                    console.log(response.documents.length);
-                    let current_page = 1
-                    let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
-
-                    if(page_param){
-                        current_page = decodeURIComponent(page_param[2]);
-                        console.log(page_param, current_page);
-                    }
-
-                    $('#documents_wraper').load("{% url 'load_docs' %}?page="+current_page+"&doc_type={{doc_type}}&sub_type=" + $('.text-dark').data("id"));
-                    $('#pagination').load("{% url 'load_paginations_docs' %}?page="+current_page+"&doc_type={{doc_type}}&sub_type=" + $('.text-dark').data("id"));
-                    this.removeAllFiles();
-                }        
-            });
-
-            // Mock the file upload progress (only for the demo)
-            //
-        Dropzone.options.myAwesomeDropzone = {
-            maxFilesize: 5,
-            addRemoveLinks: true,
-            dictResponseError: 'Server not Configured',
-          };
-        });
         function load_tech_cards_docs(element){           
             event.preventDefault();
             $('.nav-mm').removeClass('text-dark');
