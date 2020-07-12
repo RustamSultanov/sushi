@@ -18,7 +18,7 @@
                             <label class="form-label">Ответственный за задачу</label>
                             <div class="media align-items-center mb-3">
                                 {% if partner.wagtail_profile.avatar %}
-                                <img src="{{ partner.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                                    <a href="{% url 'employee_info' partner.user.id %}">         <img src="{{ partner.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>
                                 {% else %}
                                 {% endif %}
                                 <div class="small ml-3">

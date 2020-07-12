@@ -17,7 +17,7 @@
 
                             <div class="media align-items-center mb-3">
                                 {% if feedback.responsible.wagtail_profile.avatar %}
-                                <img src="{{ feedback.responsible.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                      <a href="{% url 'employee_info' feedback.responsible.user.id %}">           <img src="{{ feedback.responsible.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>
                                   {% else %}
                                     {% endif %}
                                 <div class="small ml-3">
@@ -64,7 +64,7 @@
                                     {% for messege in messeges %}
                                     <div class="media mb-3">
                                         <div>{% if messege.from_user.wagtail_userprofile.avatar %}
-                                <img src="{{ messege.from_user.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-40 rounded-circle">
+                           <a href="{% url 'employee_info' messege.from_user.id %}">      <img src="{{ messege.from_user.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-40 rounded-circle"></a>
                                   {% else %}
                                     {% endif %}
                                             <div class="text-muted small text-nowrap mt-2">
