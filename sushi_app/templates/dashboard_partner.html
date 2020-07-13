@@ -21,7 +21,7 @@
 
                             <div class="media align-items-center mb-3">
                                 {% if manager.wagtail_profile.avatar %}
-                                <img src="{{ manager.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                                    <a href="{% url 'employee_info' manager.user.id %}" >  <img src="{{ manager.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>
                                   {% else %}
                                     {% endif %}
                                 <div class="small ml-3">
