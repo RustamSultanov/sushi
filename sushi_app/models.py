@@ -116,7 +116,7 @@ class Shop(models.Model):
     date_create = models.DateTimeField(auto_now_add=True)
     file = models.FileField(blank=True)
     details = models.TextField(blank=True)
-    sign = models.ForeignKey(ShopSign, on_delete=models.DO_NOTHING, blank=True, null=True,
+    signs = models.ManyToManyField(ShopSign, blank=True,
                              related_name='shop_sings')
 
     def __str__(self):

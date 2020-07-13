@@ -40,10 +40,6 @@
                         <dt class="col-md-3">Файл</dt>
                         <dd class="col-md-9">{{ shop.file }}</dd>
                         <dt class="col-md-3">Признак</dt>
-                        <dd class="col-md-9">
-                            <img src="{{ shop.sign.icon.url }}" alt="" class="ui-w-60 rounded-circle">
-                            {{ shop.sign }}
-                        </dd>
                     </dl>
 {#                    <div class="py-1 mb-2">#}
 {#                        <div class="input-group">#}
@@ -69,6 +65,9 @@
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#reviews">Отзывы</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#signs">Признаки</a>
                                     </li>
 {#                                    <li class="nav-item">#}
 {#                                        <a class="nav-link" data-toggle="tab" href="#files">Файлы</a>#}
@@ -182,6 +181,25 @@
                                        <div id="feedback_manager" class="my-4 row">
                                             {% include 'partials/feedback_manager.html'%}
                                         </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="signs">
+
+                                       <div id="feedback_manager" class="my-4 row">
+                                           {% for sign in shop.signs.all %}
+                                                <div class="col-md-6 col-lg-4 mb-4">
+                                                    <div class="card hoverable">
+                                                        <div class="card-body">
+                                                            <div class="media align-items-center mb-3">
+                                                                <img src="{{ sign.icon.url }}" alt="" class="ui-w-60 rounded-circle">
+                                                                <div class="ml-3">
+                                                                    {{sign.title}}    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                       </div>
                                     </div>
                                 </div>
                             </div>
