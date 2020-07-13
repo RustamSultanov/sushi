@@ -66,27 +66,14 @@ class DocumentSushi(Document):
     @property
     def preview(self):
         path ='/media/icons_documents/'
+        file_extension = self.file_extension.lower()
 
-        if self.file_extension == 'jpg' or\
-            self.file_extension == 'svg' or\
-            self.file_extension == 'png' or\
-            self.file_extension == 'bmp':
+        if file_extension in('jpg', 'svg', 'png', 'bmp'):
             return self.url
 
-        if self.file_extension == 'doc' or\
-            self.file_extension == 'docx':
+        if file_extension in ('doc', 'docx'):
             return f'{path}word.svg'
-
-        if self.file_extension == 'xls' or\
-            self.file_extension == 'xlsx':
+        elif file_extension in ('xls', 'xlsx'):
             return f'{path}excel.svg'
-
-        if self.file_extension == 'pdf':
-            return f'{path}pdf.svg'
-
-        if self.file_extension == 'ppt':
-            return f'{path}ppt.svg'
-        if self.file_extension == 'cdr':
-            return f'{path}cdr.svg'
-        if self.file_extension == 'ai':
-            return f'{path}ai.svg'
+        else:
+            return f'{path}{file_extension}.svg'

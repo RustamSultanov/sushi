@@ -274,5 +274,6 @@ class ShopForm(forms.ModelForm):
             'entity_name': forms.TextInput(attrs={'placeholder': "Юридическое лицо", 'class': 'form-control', }),
             'partner': forms.Select(attrs={'class': "select2 form-control"}),
             'responsibles': forms.SelectMultiple(attrs={'class': 'select2 form-control'}),
-
+            'partner': forms.Select(attrs={'class': "select2 form-control"}),
+            'sign': forms.Select(attrs={'class': "select2 form-control"}),
         }
