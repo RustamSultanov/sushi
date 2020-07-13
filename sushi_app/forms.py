@@ -1,16 +1,13 @@
-from .models import Messeges, Feedback, Requests, Task, UserProfile, Shop
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
-from django.db import models
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
-# from django_registration.forms import RegistrationForm
-from phonenumber_field.widgets import PhoneNumberInternationalFallbackWidget
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
+
+from .models import Messeges, Feedback, Requests, Task, UserProfile, Shop
 
 User = get_user_model()
 
 
-# class RegistrationCustomForm(RegistrationForm):
 #     class Meta(RegistrationForm.Meta):
 #         model = User
 #         fields = [
@@ -19,7 +16,7 @@ User = get_user_model()
 
 #         ]
 #         widgets = {
-#             User.USERNAME_FIELD : PhoneNumberInternationalFallbackWidget(attrs={'id':"email", 'class':"validate"}),
+#             User.USERNAME_FIELD : PhoneNumberPrefixWidget(attrs={'id':"'data-mask':"(000) 000-00-00"
 #         }
 #     def __init__(self, *args, **kwargs):
 #         super(RegistrationCustomForm, self).__init__(*args, **kwargs)
@@ -167,10 +164,10 @@ class RegistrationEmployeeAdditionForm(forms.ModelForm):
         widgets = {
             'key_responsibilities': forms.Textarea(
                 attrs={'placeholder': "Перечень должностных обязанностей", 'class': "form-control", 'rows': '2'}),
-            'phone_number': PhoneNumberInternationalFallbackWidget(
-                attrs={'placeholder': "Телефон", 'class': 'form-control', }),
-            'whatsapp': PhoneNumberInternationalFallbackWidget(
-                attrs={'placeholder': "Whatsapp", 'class': 'form-control', }),
+            'phone_number': PhoneNumberPrefixWidget(
+                attrs={'data-mask': "(000) 000-00-00", 'class': 'form-control', }),
+            'whatsapp': PhoneNumberPrefixWidget(
+                attrs={'data-mask': "(000) 000-00-00", 'class': 'form-control', }),
             'twitter': forms.URLInput(attrs={'placeholder': "Twitter", 'class': 'form-control', }),
             'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
             'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
@@ -194,10 +191,10 @@ class RegistrationPartnerAdditionForm(forms.ModelForm):
         widgets = {
             # 'key_responsibilities': forms.Textarea(
             #     attrs={'placeholder': "Перечень должностных обязанностей", 'class': "form-control", 'rows': '2'}),
-            'phone_number': PhoneNumberInternationalFallbackWidget(
-                attrs={'placeholder': "Телефон", 'class': 'form-control', }),
-            'whatsapp': PhoneNumberInternationalFallbackWidget(
-                attrs={'placeholder': "Whatsapp", 'class': 'form-control', }),
+            'phone_number': PhoneNumberPrefixWidget(
+                attrs={'data-mask': "(000) 000-00-00", 'class': 'form-control', }),
+            'whatsapp': PhoneNumberPrefixWidget(
+                attrs={'data-mask': "(000) 000-00-00", 'class': 'form-control', }),
             'twitter': forms.URLInput(attrs={'placeholder': "Twitter", 'class': 'form-control', }),
             'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
             'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
@@ -229,10 +226,10 @@ class EditPartnerAdditionForm(forms.ModelForm):
             'user', 'position', 'key_responsibilities '
         ]
         widgets = {
-            'phone_number': PhoneNumberInternationalFallbackWidget(
-                attrs={'placeholder': "Телефон", 'class': 'form-control', }),
-            'whatsapp': PhoneNumberInternationalFallbackWidget(
-                attrs={'placeholder': "Whatsapp", 'class': 'form-control', }),
+            'phone_number': PhoneNumberPrefixWidget(
+                attrs={'data-mask': "(000) 000-00-00", 'class': 'form-control', }),
+            'whatsapp': PhoneNumberPrefixWidget(
+                attrs={'data-mask': "(000) 000-00-00", 'class': 'form-control', }),
             'twitter': forms.URLInput(attrs={'placeholder': "Twitter", 'class': 'form-control', }),
             'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
             'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
@@ -249,10 +246,10 @@ class EditEmployeeAdditionForm(forms.ModelForm):
         widgets = {
             'key_responsibilities': forms.Textarea(
                 attrs={'placeholder': "Перечень должностных обязанностей", 'class': "form-control", 'rows': '2'}),
-            'phone_number': PhoneNumberInternationalFallbackWidget(
-                attrs={'placeholder': "Телефон", 'class': 'form-control', }),
-            'whatsapp': PhoneNumberInternationalFallbackWidget(
-                attrs={'placeholder': "Whatsapp", 'class': 'form-control', }),
+            'phone_number': PhoneNumberPrefixWidget(
+                attrs={'data-mask': "(000) 000-00-00", 'class': 'form-control', }),
+            'whatsapp': PhoneNumberPrefixWidget(
+                attrs={'data-mask': "(000) 000-00-00", 'class': 'form-control', }),
             'twitter': forms.URLInput(attrs={'placeholder': "Twitter", 'class': 'form-control', }),
             'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
             'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),

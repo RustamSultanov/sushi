@@ -23,7 +23,8 @@
                                   {% else %}
                                     {% endif %}
                                 <div class="small ml-3">
-                                    <div class="text-primary">{{ shop.partner }}</div>
+                                   {% if shop.partner %} <div class="text-primary">{{ shop.partner }}</div>{% else %}
+                                    {% endif %}
 {#                                    <a href="#" class="btn btn-xs btn-round btn-outline-dark">Написать в чат</a>#}
                                 </div>
                             </div>
