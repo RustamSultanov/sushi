@@ -50,6 +50,7 @@ class UserProfile(models.Model):
                                    null=True, blank=True)
     scan = models.FileField(upload_to='images',blank=True)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
+    ddk_number = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.user.get_full_name()

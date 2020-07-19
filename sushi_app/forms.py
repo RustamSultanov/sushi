@@ -159,7 +159,7 @@ class RegistrationEmployeeAdditionForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         exclude = [
-            'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile', 'user'
+            'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile', 'user', 'ddk_number'
         ]
         widgets = {
             'key_responsibilities': forms.Textarea(
@@ -199,6 +199,7 @@ class RegistrationPartnerAdditionForm(forms.ModelForm):
             'facebook': forms.URLInput(attrs={'placeholder': "Facebook", 'class': 'form-control', }),
             'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
             'middle_name': forms.TextInput(attrs={'placeholder': "Отчество", 'class': 'form-control', }),
+            'ddk_number': forms.TextInput(attrs={'placeholder': "Номер ДКК", 'class': 'form-control', }),
             # 'position': forms.TextInput(attrs={'placeholder': "Должность", 'class': 'form-control', }),
 
         }

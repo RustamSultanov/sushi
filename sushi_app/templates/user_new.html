@@ -70,6 +70,12 @@
                             <label class="form-label">Instagram</label>
                            {{ form_user_profile.instagram }}
                         </div>
+                    {% if form_user_profile.ddk_number %}
+                        <div class="form-group">
+                            <label class="form-label">Номер ДКК</label>
+                           {{ form_user_profile.ddk_number }}
+                        </div>
+                    {% else %}{% endif %}
         {% block create %}
                         <div class="form-group">
                             <label class="form-label">Логин</label>
