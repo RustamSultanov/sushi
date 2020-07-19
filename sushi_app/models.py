@@ -85,6 +85,16 @@ class Requests(models.Model):
         return f"{self.date_create}, {self.status}"
 
 
+class ShopSign(models.Model):
+    title = models.CharField(max_length=255, verbose_name='Наименование')
+    icon = models.ImageField('Иконка', blank=True, null=True)
+    def __str__(self):
+        return f"{self.title}"
+
+    class Meta:
+        verbose_name = 'Признак магазин'
+        verbose_name_plural = 'Признаки магазинов'
+
 class Shop(models.Model):
     address = models.CharField(max_length=255, blank=False, null=False,
                                verbose_name='Адрес магазина')
@@ -107,6 +117,8 @@ class Shop(models.Model):
     date_create = models.DateTimeField(auto_now_add=True)
     file = models.FileField(blank=True)
     details = models.TextField(blank=True)
+    signs = models.ManyToManyField(ShopSign, blank=True,
+                             related_name='shop_sings')
 
     def __str__(self):
         return f"{self.city} {self.address}"
