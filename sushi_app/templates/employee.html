@@ -71,6 +71,9 @@
 
                 {{ employee.user_profile.key_responsibilities | richtext }}
             {% else %}{% endif %}
+         {% if employee.user_profile.ddk_number %}
+             {{ employee.user_profile.ddk_number }}
+        {% else %}{% endif %}
             {% if employee.user_profile.twitter or employee.user_profile.facebook or employee.user_profile.instagram %}
                 <h6 class="mt-4 mb-3">Социальные сети</h6>
                 <table class="table user-view-table m-0">
