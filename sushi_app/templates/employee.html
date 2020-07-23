@@ -72,6 +72,7 @@
                 {{ employee.user_profile.key_responsibilities | richtext }}
             {% else %}{% endif %}
          {% if employee.user_profile.ddk_number %}
+             <h6 class="mb-3">Номер ДДК</h6>
              {{ employee.user_profile.ddk_number }}
         {% else %}{% endif %}
             {% if employee.user_profile.twitter or employee.user_profile.facebook or employee.user_profile.instagram %}
