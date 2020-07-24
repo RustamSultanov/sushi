@@ -8,6 +8,7 @@ from wagtail.documents.models import get_document_model
 import wagtail.users.models
 
 from mickroservices.models import DocumentSushi
+from sushi_app.utils import create_dict_from_choices
 
 ST_SOLVED, ST_IN_PROGRESS, ST_NOT_SOLVED = range(3)
 STATUS_CHOICE = (
@@ -67,7 +68,12 @@ class Task(models.Model):
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
 
     def __str__(self):
-        return f"{self.date_create}, {self.status}"
+        print(create_dict_from_choices(STATUS_CHOICE))
+        return '{0} | {1} | {2}'.format(
+            self.id,
+            self.date_create,
+            create_dict_from_choices(STATUS_CHOICE)[self.status]
+        )
 
 
 class Requests(models.Model):

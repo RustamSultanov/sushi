@@ -5,7 +5,10 @@ from django.views.decorators.vary import vary_on_headers
 from django.urls import reverse, reverse_lazy
 from django.forms.models import model_to_dict
 from django.contrib.auth import get_user_model
-from wagtail.admin.utils import user_passes_test
+try:
+    from wagtail.admin.utils import user_passes_test
+except ImportError:
+    from wagtail.admin.auth import user_passes_test
 from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
 from django.http import (
@@ -211,7 +214,7 @@ def base(request):
     ).filter(head=request.user.user_profile)
     news_all = NewsPage.objects.all().order_by(
         'first_published_at')
-    if len(news_all) == 0 or len(news_all) == 1 or len(news_all) == 2 or len(news_all) == 3:
+    if len(news_all) == 0 or len(news_all) <= 3:
         news = news_all
     else:
         news = news_all[len(news_all) - 3:]
