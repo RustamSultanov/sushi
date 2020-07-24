@@ -68,7 +68,6 @@ class Task(models.Model):
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
 
     def __str__(self):
-        print(create_dict_from_choices(STATUS_CHOICE))
         return '{0} | {1} | {2}'.format(
             self.id,
             self.date_create,
@@ -88,7 +87,11 @@ class Requests(models.Model):
     file = models.FileField(blank=True)
 
     def __str__(self):
-        return f"{self.date_create}, {self.status}"
+        return '{0} | {1} | {2}'.format(
+            self.id,
+            self.date_create,
+            create_dict_from_choices(STATUS_CHOICE)[self.status]
+        )
 
 
 class ShopSign(models.Model):
@@ -179,8 +182,11 @@ class Feedback(models.Model):
     source = models.CharField(max_length=256)
 
     def __str__(self):
-        return f"{self.date_create}, {self.status}"
-
+        return '{0} | {1} | {2}'.format(
+            self.id,
+            self.date_create,
+            create_dict_from_choices(STATUS_CHOICE)[self.status]
+        )
 
 class Messeges(models.Model):
     from_user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='user_messeges')
