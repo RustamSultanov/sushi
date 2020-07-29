@@ -233,11 +233,28 @@ _COUNTRY_CODE_TO_REGION_CODE = {
 }
 
 
-class PhonePrefixSelect(Select):
+class DataAttributesSelect(Select):
+
+    def __init__(self, attrs=None, choices=(), data={}):
+        super(DataAttributesSelect, self).__init__(attrs, choices)
+        self.data = data
+
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):  # noqa
+        option = super(DataAttributesSelect, self).create_option(name, value, label, selected, index, subindex=None,
+                                                                 attrs=None)  # noqa
+        # adds the data-attributes to the attrs context var
+        for data_attr, values in self.data.items():
+            option['attrs'][data_attr] = values[option['value']]
+
+        return option
+
+
+class PhonePrefixSelect(DataAttributesSelect):
     initial = None
 
     def __init__(self, initial=None):
         choices = [("", "---------")]
+        data = {'data-iso': {'': ''}}
         language = translation.get_language() or settings.LANGUAGE_CODE
         if language:
             locale = Locale(translation.to_locale(language))
@@ -246,10 +263,11 @@ class PhonePrefixSelect(Select):
                 if initial and initial in values:
                     self.initial = prefix
                 for country_code in values:
+                    data['data-iso'][prefix] = country_code
                     country_name = locale.territories.get(country_code)
                     if country_name:
                         choices.append((prefix, "{} {}".format(country_name, prefix)))
-        super().__init__(choices=sorted(choices, key=lambda item: item[1]))
+        super().__init__(choices=sorted(choices, key=lambda item: item[1]),data=data)
 
     def render(self, name, value, *args, **kwargs):
         return super().render(name, value or self.initial, *args, **kwargs)
