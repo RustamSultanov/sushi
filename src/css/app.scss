@@ -1,0 +1,182 @@
+@import "_custom-variables/sushishop-material";
+@import "rtl/bootstrap-material";
+@import "rtl/appwork-material";
+@import "rtl/theme-sushishop-material";
+@import "colors-material";
+@import "uikit";
+@import "pages/users";
+
+.demo-navbar-messages .dropdown-toggle,
+.demo-navbar-notifications .dropdown-toggle,
+.demo-navbar-user .dropdown-toggle,
+.demo-navbar-messages.b-nav-dropdown .nav-link,
+.demo-navbar-notifications.b-nav-dropdown .nav-link,
+.demo-navbar-user.b-nav-dropdown .nav-link {
+  white-space: nowrap;
+}
+
+.demo-navbar-messages .dropdown-menu,
+.demo-navbar-notifications .dropdown-menu {
+  overflow: hidden;
+  padding: 0;
+}
+
+@media (min-width: 576px) {
+  .demo-navbar-messages .dropdown-menu,
+  .demo-navbar-notifications .dropdown-menu {
+    margin-top: .5rem;
+    width: 22rem;
+  }
+
+  .demo-navbar-user .dropdown-menu {
+    margin-top: .25rem;
+  }
+}
+
+.demo-navbar-messages .dropdown-menu,
+.demo-navbar-notifications .dropdown-menu {
+  min-width: 245px;
+}
+
+.demo-navbar-user .dropdown-menu,
+.demo-navbar-messages .dropdown-menu,
+.demo-navbar-notifications .dropdown-menu{
+  position: absolute!important;
+}
+.navbar-name{
+  font-weight: 300;
+  font-size: 14px;
+}
+.nav-tabs .nav-link .badge, .nav-pills .nav-link .badge{
+  position: absolute;
+  top: auto;
+}
+.btn{
+  text-transform: none;
+}
+.icon-demo{
+  font-size: 25px;
+  [class^="icon"]{
+    padding: .625rem;
+    margin: .125rem;
+    border: 1px solid #e7e7e7;
+    display: inline-block;
+    &:hover{
+      background-color: #e7e7e7;
+    }
+  }
+}
+.h2, h2{
+  font-size: 32px;
+}
+
+a{
+  &.text-dark[href]{
+    @include hover-focus{
+      color: $primary-color!important;
+    }
+  }
+}
+
+.ui-bg-circle-180{
+  width: 180px;
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+}
+.mt--3{
+  margin-top: -3rem;
+}
+
+// Attachments
+
+.project-attachment {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  > .media-body {
+    min-width: 0;
+  }
+}
+
+.project-attachment-file,
+.project-attachment-img,
+.project-attachment-icon  {
+  display: block;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: $project-attachment-size;
+  height: $project-attachment-size;
+}
+
+.project-attachment-file {
+  display: inline-block;
+  text-align: center;
+  line-height: $project-attachment-size;
+}
+
+.project-attachment-img {
+  background-color: transparent;
+  background-position: center center;
+  background-size: cover;
+}
+.project-attachment-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img{
+    width: 32px;
+  }
+}
+.project-attachment-filename {
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.responsive-video{
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+.no-shadow{
+  box-shadow: none!important;
+}
+a.text-muted.active{
+  color: $body-color!important;
+}
+a.project-attachment{
+  cursor: pointer;
+}
+.ql-content{
+  img{
+    max-width: 100%;
+  }
+  iframe{
+    max-width: 100%;
+  }
+}
+
+.card{
+  border: 1px solid rgba(24, 28, 33, 0.15);
+}
+.material-style .ui-bordered {
+  border: 1px solid rgba(24, 28, 33, 0.15);
+}
+
+.hidden{
+  position: absolute;
+  z-index: -1;
+  width: 0;
+  height: 0;
+  left: -999;
+}

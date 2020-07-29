@@ -1,0 +1,26 @@
+.hero-slider{
+  .swiper-slide{
+    padding-top: 70px;
+    padding-bottom: 70px;
+  }
+  &__title{
+    font-style: normal;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 43px;
+    color: #FFFFFF;
+    padding-bottom: 20px;
+  }
+  &__description{
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 22px;
+    color: #FFFFFF;
+    padding-bottom: 20px;
+  }
+  .swiper-pagination-bullet{
+    width: 12px;
+    height: 12px;
+    background: #fff;
+  }
+}
