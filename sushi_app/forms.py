@@ -535,7 +535,7 @@ class EditEmployeeAdditionForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         exclude = [
-            'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile', 'user'
+            'head', 'manager', 'is_head', 'is_partner', 'is_manager', 'wagtail_profile', 'user', 'ddk_number'
         ]
         widgets = {
             'key_responsibilities': forms.Textarea(
