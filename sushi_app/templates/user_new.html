@@ -50,11 +50,11 @@
                             <label class="form-label">Почта</label>
                           {{ form_user.email }}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group position-relative">
                             <label class="form-label">Телефон</label>
                            {{ form_user_profile.phone_number }}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group position-relative">
                             <label class="form-label">Whatsapp</label>
                            {{ form_user_profile.whatsapp }}
                         </div>
@@ -98,5 +98,37 @@
 
              {% block extrascripts %}
                 <script src="{% static "js/form.js" %}"></script>
+                 <link rel="stylesheet" href="{% static "libs/select2/select2.css" %}">
+<script src="{% static "libs/select2/select2.js" %}"></script>
+<script>
+    function formatState (state) {
+        if (!state.id) {
+            return state.text;
+        }
+
+        var baseUrl = "{% static "img/flags" %}";
+        var $state = $(
+            '<span><img class="img-flag" /> <span></span></span>'
+        );
+
+        // Use .text() instead of HTML string concatenation to avoid script injection issues
+        $state.find("span").text(state.text);
+        $state.find("img").attr("src", baseUrl + "/" + state.element.dataset.iso + ".png");
+
+        return $state;
+    };
+    $(function() {
+        $("#id_user_profile-phone_number_0").select2({
+            templateSelection: formatState,
+            templateResult: formatState,
+        });
+    });
+    $(function() {
+        $("#id_user_profile-whatsapp_0").select2({
+            templateSelection: formatState,
+            templateResult: formatState,
+        });
+    });
+</script>
                 {% endblock %}
 {% endblock %}
