@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Личный кабинет{% endblock %}
+{% block page_title %}
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Список Франчайзи</h2>
+{% endblock %}
+
+{% block content %}
+    {% for shop in object.shop_sings.all %}
+        <div class="card">
+            <div class="card-body">
+                <a href="{% url 'employee_info' shop.partner.user.pk %}"><br><h4>{{ shop.partner.user }}</h4></a>
+            </div>
+        </div>
+    {% empty %}
+        <br><h4>Признак не относится ни к одному Франчайзи</h4>
+    {% endfor %}
+{% endblock %}

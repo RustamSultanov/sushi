@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -10,7 +11,7 @@ from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
 from django.http import (
     HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_text
 from wagtail.admin.forms.search import SearchForm
@@ -63,6 +64,7 @@ class ShopListView(ListView):
         context = super().get_context_data(**kwargs)
         context["invoices"] = self.get_invoices()
         context["shop"] = shop
+        context["shop_sign"] = ShopSign.objects.all()
         context["feedback_list"] = get_filtered_shop_feedback(self.request, self.kwargs["shop_id"])
         context["doc_type"] = DocumentSushi.T_PERSONAL
         context["type_invoice"] = DocumentSushi.T_PERSONAL_INVOICES
@@ -189,6 +191,13 @@ class ShopListView(ListView):
                     ),
                 }
             )
+
+
+class ShopSignDetailView(UserPassesTestMixin, DetailView):
+    model = ShopSign
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head
 
 
 # # Create your views here

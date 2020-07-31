@@ -37,6 +37,7 @@ urlpatterns = [
         'shop/<int:shop_id>',
         login_required(views.ShopListView.as_view()),
         name='shop'),
+    path('shop_sign_detail/<int:pk>', login_required(views.ShopSignDetailView.as_view()), name='shop_sign_detail'),
     path(
         'task/new/<int:partner_id>', views.form_task_view, name='form_task'),
     path(
