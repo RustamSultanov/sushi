@@ -376,7 +376,7 @@ class StatusFeedbackForm(forms.ModelForm):
 class RequestsForm(forms.ModelForm):
     class Meta:
         model = Requests
-        fields = ['title', 'description', "file"]
+        fields = ['title', 'description']
         widgets = {
             'title': forms.TextInput(
                 attrs={'name': 'title', 'class': 'form-control', 'placeholder': "Название задачи"}),

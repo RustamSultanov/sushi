@@ -47,14 +47,13 @@
                             <h5>{{ requests.title }}</h5>
 
                             <p>{{ requests.description }}</p>
-                        {% if requests.file %}
-                <strong class="project-attachment-filename">{{requests.file}}</strong>
-                <div class="text-muted small"  >{{requests.file.size|filesizeformat}}</div>
-                <div>
-                    <a href="{{ requests.file.url }}" download="">Загрузить</a>
-                </div>
-
-                                       {% endif %}
+                            {% for file in requests.files.all %}
+                                <strong class="project-attachment-filename">{{ file.file }}</strong>
+                                <div class="text-muted small">{{ file.file.size|filesizeformat }}</div>
+                                <div>
+                                    <a href="{{ file.file.url }}" download="">Загрузить</a>
+                                </div>
+                            {% endfor %}
                             <div class="nav-tabs-top mb-4">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item">
