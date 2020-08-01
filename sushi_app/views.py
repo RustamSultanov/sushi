@@ -549,10 +549,13 @@ def partner_lk_view(request):
 def form_request_view(request):
     form = RequestsForm(request.POST or None,request.FILES or None)
     if form.is_valid():
-        form = form.save(commit=False)
-        form.responsible = request.user
-        form.manager = request.user.user_profile.manager
-        form.save()
+        req = form.save(commit=False)
+        req.responsible = request.user
+        req.manager = request.user.user_profile.manager
+        req.save()
+        if 'file' in request.FILES:
+            for f in request.FILES.getlist('file'):
+                RequestFile.objects.create(file=f, request=req)
         Chat_Message.objects.create(
             sender=request.user,
             recipient=request.user.user_profile.manager.user,

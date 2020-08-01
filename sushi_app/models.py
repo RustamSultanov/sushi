@@ -79,10 +79,15 @@ class Requests(models.Model):
     description = models.TextField()
     date_create = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
-    file = models.FileField(blank=True)
 
     def __str__(self):
         return f"{self.date_create}, {self.status}"
+
+
+class RequestFile(models.Model):
+    request = models.ForeignKey(Requests, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='requests', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class ShopSign(models.Model):
