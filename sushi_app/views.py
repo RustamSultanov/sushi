@@ -563,7 +563,7 @@ def form_request_view(request):
             sender=request.user,
             recipient=request.user.user_profile.manager.user,
             body="Создан запрос",
-            requests=form
+            requests=req
         )
         return HttpResponseRedirect(reverse_lazy("partner_lk"))
     return render(
