@@ -52,5 +52,7 @@ urlpatterns = [
     path('load/tasks', views.load_filtered_tasks, name='load_filtered_tasks'),
     path('load/idea', views.load_filtered_idea, name='load_filtered_ideas'),
     path('load_paginations_docs', views.load_paginations_docs, name='load_paginations_docs'),
-    path('load_docs', views.load_docs, name='load_docs')
+    path('load_docs', views.load_docs, name='load_docs'),
+    path('load_pdf_stream_preview/<int:doc_id>', views.load_pdf_stream_preview, name='load_pdf_stream_preview'),
+    path('load_excel/<int:doc_id>', views.load_excel, name='load_excel')
 ]

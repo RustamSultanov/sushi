@@ -12,7 +12,7 @@ except ImportError:
     from wagtail.admin.auth import user_passes_test
 from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
-from django.http import (
+from django.http import (HttpResponse,
     HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
 from django.views.generic import ListView, DetailView
 from django.views.decorators.csrf import csrf_exempt
@@ -33,6 +33,7 @@ from .forms import *
 from .models import *
 
 import json
+import pandas as pd
 
 User = get_user_model()
 
@@ -501,8 +502,14 @@ def load_docs(request):
         id_to_preview_type = dict()
         for doc in docs:
             ext = doc.file_extension.lower()
-            if ext in CONVERT_TO_PDF_EXTENSIONS or ext == 'pdf':
+            if ext in CONVERT_TO_PDF_EXTENSIONS:
                 id_to_preview_type[doc.id] ='embed'
+
+            if ext == 'pdf':
+                id_to_preview_type[doc.id] ='clear_pdf'
+
+            if ext in ('xls', 'xlsx'):
+                id_to_preview_type[doc.id] ='excel'
 
             if ext in IMAGE_TYPES:
                 id_to_preview_type[doc.id] ='image'
@@ -514,6 +521,22 @@ def load_docs(request):
 
     return render(request, 'partials/documents.html', context)
 
+
+@csrf_exempt
+def load_pdf_stream_preview(request, doc_id):
+
+    with DocumentSushi.objects.get(pk=doc_id).file.open('rb') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'filename=some_file.pdf'
+        return response
+
+@csrf_exempt
+def load_excel(request, doc_id):
+
+    with DocumentSushi.objects.get(pk=doc_id).file.open('rb') as f:
+        excel_df = pd.read_excel(f);
+        response = HttpResponse(excel_df.to_html())
+        return response
 
 @csrf_exempt
 def load_paginations_docs(request):
