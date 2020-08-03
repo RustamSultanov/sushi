@@ -25,11 +25,14 @@ from django.contrib.auth.models import Group
 from django.forms import modelformset_factory
 
 from chat.models import Message as Chat_Message
-from mickroservices.models import DocumentSushi
+from mickroservices.models import DocumentSushi, DocumentPreview
 from mickroservices.models import NewsPage, QuestionModel, IdeaModel
 from mickroservices.forms import AnswerForm, IdeaStatusForm
+from mickroservices.consts import * 
 from .forms import *
 from .models import *
+
+import json
 
 User = get_user_model()
 
@@ -464,7 +467,7 @@ def load_filtered_feedback(request):
 
 
 @csrf_exempt
-def load_docs(request):
+def _load_docs(request):
     count_objects = 9
     current_page = int(request.GET.get('page', 1))
     offset = (current_page * count_objects) - count_objects
@@ -477,11 +480,39 @@ def load_docs(request):
 
     if docs and 'sub_type' in request.GET:
         docs = DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])[offset: limmit]
-    return render(
-        request,
-        'partials/documents.html',
-        {'documents': docs}
-    )
+
+    return docs
+
+
+@csrf_exempt
+def load_docs(request):
+    docs = _load_docs(request)
+    context = {'documents' : docs}
+    with_preview = int(request.GET.get('with_preview', 0))
+    
+    if with_preview:
+        urls = {doc.id : doc.url for doc in docs} 
+
+        #сопоставляем каждому документу ссылку на выделенное превью в случае её наличия 
+        preview_docs = DocumentPreview.objects.filter(base_document_id__in=(doc.id for doc in docs))
+        for pdoc in preview_docs:
+            urls[pdoc.base_document.id] = pdoc.preview_file.url
+
+        id_to_preview_type = dict()
+        for doc in docs:
+            ext = doc.file_extension.lower()
+            if ext in CONVERT_TO_PDF_EXTENSIONS or ext == 'pdf':
+                id_to_preview_type[doc.id] ='embed'
+
+            if ext in IMAGE_TYPES:
+                id_to_preview_type[doc.id] ='image'
+ 
+        context['js_map_keys'] = json.dumps([k for k in urls.keys()])
+        context['js_map_vals'] = json.dumps([j for i, j in urls.items()])
+        context['id_to_preview_type'] = json.dumps(id_to_preview_type)
+
+
+    return render(request, 'partials/documents.html', context)
 
 
 @csrf_exempt

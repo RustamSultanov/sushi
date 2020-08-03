@@ -82,9 +82,8 @@ class DocumentSushi(Document):
 
 
 class DocumentPreview(models.Model):
-    wagtail_document = models.ForeignKey(DocumentSushi,
-                                         on_delete=models.CASCADE,
-                                         related_name='documents')
+    base_document = models.ForeignKey(DocumentSushi,
+                                      on_delete=models.CASCADE)
 
     preview_title = models.CharField(max_length=255, verbose_name=_('preview_title'), default=None)
     preview_file = models.FileField(upload_to='document_previews', verbose_name=_('preview_file'), default=None)

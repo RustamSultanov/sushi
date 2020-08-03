@@ -35,7 +35,6 @@ def send_message(template, ctx, subject, to_email, request=None,
 
 
 
-
 class FileConverter:
 
     def __init__(self):
@@ -44,6 +43,8 @@ class FileConverter:
             ('doc', 'pdf') : self.convert_docx_to_pdf,
             ('ppt', 'pdf') : self.convert_ppt_to_pdf,
             ('pptx', 'pdf') : self.convert_pptx_to_pdf,
+            ('xls', 'pdf') : self.convert_excel_to_pdf,
+            ('xlsx', 'pdf') : self.convert_excel_to_pdf,
         }
 
     def convert(self, type_a, type_b, path_a, path_b):
@@ -59,7 +60,7 @@ class FileConverter:
         command = ['libreoffice', '--headless', 
                    '--convert-to', target_type, source_path]
 
-        output_dir, output_name = path.split(output_path)
+        output_dir = path.dirname(output_path)
 
         try:
             success = call(command, cwd=output_dir) == 0
@@ -69,7 +70,7 @@ class FileConverter:
                 real_path = path.join(output_dir, real_output_name)
                 rename(real_path, output_path)
                 return success
-                
+
         except Exception as e:
             return False
         
@@ -80,6 +81,9 @@ class FileConverter:
         return self._libre_convert('pdf', source_path, output_path)
 
     def convert_pptx_to_pdf(self, source_path, output_path):
+        return self._libre_convert('pdf', source_path, output_path)
+
+    def convert_excel_to_pdf(self, source_path, output_path):
         return self._libre_convert('pdf', source_path, output_path)
 
 
