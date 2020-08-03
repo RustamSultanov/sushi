@@ -6,7 +6,13 @@ from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 
 from mickroservices.models import MarketingMaterial
-from mickroservices.models import DocumentSushi
+from mickroservices.models import DocumentSushi, DocumentPreview
+from mickroservices.utils import FileConverter
+from mickroservices.consts import CONVERT_TO_PDF_EXTENSIONS
+
+from os import path
+from django.conf import settings
+
 
 
 def get_marketing_documents(doc_type=4):
@@ -58,6 +64,39 @@ class MarketingView(ListView):
         doc._set_file_hash(doc.file.read())
         doc.file.seek(0)
         doc.save()
+
+        self.generate_doc_preview(doc)
+
+    def generate_doc_preview(self, doc):
+        try:
+            self._generate_doc_preview(doc)
+        except Exception as e:
+            pass
+        
+    def _generate_doc_preview(self, doc):
+        filename = doc.file.name
+        media_preview_path = path.join(settings.MEDIA_ROOT, 'document_previews/')
+        source_path = path.join(settings.MEDIA_ROOT, filename)
+        ext = filename.split('.')[-1].lower()
+        
+        available_types = CONVERT_TO_PDF_EXTENSIONS
+
+        if ext == 'pdf':
+            return 
+
+        if ext in available_types:
+            target_filename = path.split(filename)[1]
+            target_filename = target_filename.split('.')[0] + '_preview.pdf'
+            target_path = path.join(media_preview_path, target_filename)
+            relative_target_path = path.join('document_previews/', target_filename)
+            converter = FileConverter()
+            if converter.convert(ext, 'pdf', source_path, target_path):
+                preview = DocumentPreview(preview_file=relative_target_path,
+                                          preview_title=target_filename,
+                                          base_document=doc)
+
+                preview.save()
+
 
     @vary_on_headers("X-Requested-With")
     def post(self, request, *args, **kwargs):

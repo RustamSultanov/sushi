@@ -4,7 +4,7 @@
     <div class="col-md-6 col-lg-4 p-1">
         <div class="project-attachment ui-bordered p-2">
 
-            <div class="project-attachment-img" style="background-image: url({{ document.preview }})"></div>
+            <div class="project-attachment-img" style="background-image: url({{ document.preview }})" doc-id="{{ document.id }}"></div>
             <div class="media-body ml-3">
                 <strong class="project-attachment-filename">{{document.title}}</strong>
                 <div class="text-muted small"  >{{document.file_size|filesizeformat}}</div>
@@ -27,3 +27,77 @@
         </div>
     </div>
 {% endfor %}
+{% block previewscripts %}
+    <script type="text/javascript">
+        let activePreviewId;
+
+        //отображение id доков в url
+        let previewsMap = new Map();
+
+        let t0 = "{{ js_map_vals }}";
+        let t1 = "{{ id_to_preview_type }}";
+
+        let preKeys = JSON.parse("{{ js_map_keys }}");
+        let preVals = JSON.parse(t0.replace(/&quot;/g,'"'));
+    
+        //хранит таблицу соответствия id документа и типа его превью
+        let id_to_preview_type = JSON.parse(t1.replace(/&quot;/g,'"'));
+
+        for(let i = 0; i < preKeys.length; ++i)
+            previewsMap.set(preKeys[i], preVals[i])
+
+        existing_preview = new Set();
+
+        const prKey = (docId) => "prw-" + docId
+        const prKeySh = (docId) => "#prw-" + docId
+
+        $(".project-attachment-img").click(function(){
+                let docId = parseInt(($(this).attr('doc-id')))
+                if (previewsMap.has(docId)) {
+                    if (activePreviewId !== undefined){
+                        $(prKeySh(activePreviewId)).hide()
+                        activePreviewId = docId
+                        $('#show-preview-button').show()
+                    }
+                    if (!existing_preview.has(docId) && (docId in id_to_preview_type)){
+
+                        if (id_to_preview_type[docId] == 'embed'){
+                            let element_template =  `<embed class="preview-internal" id="${prKey(docId)}" src="${previewsMap.get(docId)}" type="application/pdf">`
+                            $(".preview-content").append(element_template);
+                            existing_preview.add(docId)
+                        }
+
+                        if (id_to_preview_type[docId] == 'image'){
+                            let element_template =  `<img class="preview-img" id="${prKey(docId)}" src="${previewsMap.get(docId)}">`
+                            existing_preview.add(docId)
+                            $(".preview-content").append(element_template);
+                        }
+
+                        if (id_to_preview_type[docId] == 'excel'){
+                            let element_template = `<div id="${prKey(docId)}" class="table-wrapper table-responsive"></div>`
+                            existing_preview.add(docId)
+                            
+                            //устанавливаем bootstrap стили в таблицу загруженную через api
+                            $(".preview-content").append(element_template);
+                            $(prKeySh(docId)).load('/load_excel/'+ docId, function(){
+                                $('table').attr('class', 'table')
+                                $('table thead th').attr('scope', 'col')
+                                $('table tbody tr th').attr('scope', 'row')
+                            })
+                        }
+
+                        if (id_to_preview_type[docId] == 'clear_pdf'){
+                            let element_template = `<embed class="preview-internal" id="${prKey(docId)}" src="/load_pdf_stream_preview/${docId}" type="application/pdf">`
+                            existing_preview.add(docId)
+                            $(".preview-content").append(element_template);
+                        }
+                        activePreviewId = docId
+                        $('#show-preview-button').show()
+                    } else if ((docId in id_to_preview_type)){
+                        activePreviewId = docId
+                        $(prKeySh(activePreviewId)).show()
+                    }
+                }  
+        })
+    </script>
+{% endblock %}
