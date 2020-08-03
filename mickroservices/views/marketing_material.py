@@ -8,7 +8,7 @@ from wagtail.documents.permissions import permission_policy
 from mickroservices.models import MarketingMaterial
 from mickroservices.models import DocumentSushi, DocumentPreview
 from mickroservices.utils import FileConverter
-from mickroservices.consts import EXTENSIONS_AVAILABLE_TO_CONVERT
+from mickroservices.consts import CONVERT_TO_PDF_EXTENSIONS
 
 from os import path
 from django.conf import settings
@@ -79,7 +79,7 @@ class MarketingView(ListView):
         source_path = path.join(settings.MEDIA_ROOT, filename)
         ext = filename.split('.')[-1].lower()
         
-        available_types = EXTENSIONS_AVAILABLE_TO_CONVERT
+        available_types = CONVERT_TO_PDF_EXTENSIONS
 
         if ext == 'pdf':
             return 
