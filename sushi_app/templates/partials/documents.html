@@ -4,7 +4,7 @@
     <div class="col-md-6 col-lg-4 p-1">
         <div class="project-attachment ui-bordered p-2">
 
-            <div class="project-attachment-img" style="background-image: url({{ document.preview }})"></div>
+            <div class="project-attachment-img" style="background-image: url({{ document.preview }})" doc-id="{{ document.id }}"></div>
             <div class="media-body ml-3">
                 <strong class="project-attachment-filename">{{document.title}}</strong>
                 <div class="text-muted small"  >{{document.file_size|filesizeformat}}</div>
@@ -27,3 +27,45 @@
         </div>
     </div>
 {% endfor %}
+{% block previewscripts %}
+    <script type="text/javascript">
+        let activePreviewId;
+        let previewsMap = new Map();
+        let preKeys = JSON.parse("{{ js_map_keys }}");
+
+        let p = "{{ js_map_vals }}";
+        let preVals = JSON.parse(p.replace(/&quot;/g,'"'));
+        
+        //2 разновидности окна - изображения и pdf
+        //image и embed соответственно
+        p = "{{ id_to_preview_type }}";
+        let id_to_preview_type = JSON.parse(p.replace(/&quot;/g,'"'));
+
+        for(let i = 0; i < preKeys.length; ++i)
+            previewsMap.set(preKeys[i], preVals[i])
+
+        existing_preview = new Set();
+
+        $(".project-attachment-img").click(function(){
+                let docId = parseInt(($(this).attr('doc-id')))
+                if (previewsMap.has(docId)) {
+                    if (activePreviewId !== undefined){
+                        $("#prw-" + activePreviewId.toString()).hide()
+                        activePreviewId = docId
+                    }
+                    
+                    if (!existing_preview.has(docId) && (docId in id_to_preview_type)){
+                        if (id_to_preview_type[docId] == 'embed'){
+                            let element_template =  `<embed id="prw-${docId}" src="${previewsMap.get(docId)}" type="application/pdf" height="700px" width="100%">`
+                            existing_preview.add(docId)
+                            $(".preview-content").append(element_template);
+                            activePreviewId = docId
+                        }
+                    } else if ((docId in id_to_preview_type)){
+                        activePreviewId = docId
+                        $("#prw-" + activePreviewId.toString()).show()
+                    }
+                }  
+        })
+    </script>
+{% endblock %}

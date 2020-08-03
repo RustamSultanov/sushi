@@ -8,6 +8,7 @@ from wagtail.documents.permissions import permission_policy
 from mickroservices.models import MarketingMaterial
 from mickroservices.models import DocumentSushi, DocumentPreview
 from mickroservices.utils import FileConverter
+from mickroservices.consts import EXTENSIONS_AVAILABLE_TO_CONVERT
 
 from os import path
 from django.conf import settings
@@ -64,31 +65,35 @@ class MarketingView(ListView):
         doc.file.seek(0)
         doc.save()
 
-        self.generate_doc_preview(doc.id)
+        self.generate_doc_preview(doc)
 
-    def generate_doc_preview(self, id_):
-        self._generate_doc_preview(id_)
+    def generate_doc_preview(self, doc):
+        try:
+            self._generate_doc_preview(doc)
+        except Exception as e:
+            pass
         
-    def _generate_doc_preview(self, id_):
-        doc = DocumentSushi.objects.get(pk=id_)
+    def _generate_doc_preview(self, doc):
         filename = doc.file.name
+        media_preview_path = path.join(settings.MEDIA_ROOT, 'document_previews/')
         source_path = path.join(settings.MEDIA_ROOT, filename)
         ext = filename.split('.')[-1].lower()
         
-        available_types = ('docx', 'doc', 'ppt', 'pptx')
+        available_types = EXTENSIONS_AVAILABLE_TO_CONVERT
 
         if ext == 'pdf':
             return 
 
         if ext in available_types:
-            target_filename = filename.split('.')[0] + '_preview.pdf'
-            target_path = path.normpath(path.join(settings.MEDIA_ROOT, target_filename))
-            
+            target_filename = path.split(filename)[1]
+            target_filename = target_filename.split('.')[0] + '_preview.pdf'
+            target_path = path.join(media_preview_path, target_filename)
+            relative_target_path = path.join('document_previews/', target_filename)
             converter = FileConverter()
             if converter.convert(ext, 'pdf', source_path, target_path):
-                preview = DocumentPreview(file=target_path,
-                                          title=target_filename,
-                                          wagtail_document=id_)
+                preview = DocumentPreview(preview_file=relative_target_path,
+                                          preview_title=target_filename,
+                                          base_document=doc)
 
                 preview.save()
 
