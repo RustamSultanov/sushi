@@ -15,11 +15,15 @@
 
                 if(page_param){
                     current_page = decodeURIComponent(page_param[2]);
-                    console.log(page_param, current_page);
                 }
 
-                $('#documents_wraper').load("{% url 'load_docs' %}?page="+current_page+"&doc_type={{doc_type}}&sub_type=" + $('.text-dark').data("id"));
-                $('#pagination').load("{% url 'load_paginations_docs' %}?page="+current_page+"&doc_type={{doc_type}}&sub_type=" + $('.text-dark').data("id"));
+                var path = "?page="+current_page+"&doc_type={{doc_type}}"
+                if($('.text-dark').length > 0 && $('.text-dark').data('id')){
+                    path += "&sub_type=" + $('.text-dark').data("id")
+                }
+
+                $('#documents_wraper').load("{% url 'load_docs' %}" + path);
+                $('#pagination').load("{% url 'load_paginations_docs' %}" + path);
                 this.removeAllFiles();
             }        
         });

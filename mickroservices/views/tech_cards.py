@@ -98,7 +98,7 @@ class SushiDocListView(ListView):
             # Save it
             doc = form.save(commit=False)
             doc.doc_type = self.doc_type
-            if 'sub_type' in request.POST:
+            if 'sub_type' in request.POST and request.POST['sub_type']:
                 print('sub_type:',request.POST['sub_type'])
                 doc.sub_type = Subjects.objects.get(pk=request.POST['sub_type'])
             doc.uploaded_by_user = request.user

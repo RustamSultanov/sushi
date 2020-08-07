@@ -472,7 +472,7 @@ def _load_docs(request):
     count_objects = 9
     current_page = int(request.GET.get('page', 1))
     offset = (current_page * count_objects) - count_objects
-    limmit = (current_page * count_objects) - 1
+    limmit = (current_page * count_objects)
     print(offset, limmit)
     if 'doc_type' in request.GET:
         docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])[offset: limmit]
