@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from wagtail.documents.models import Document, AbstractDocument
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
@@ -9,13 +11,8 @@ import wagtail.users.models
 
 from mickroservices.models import DocumentSushi
 from sushi_app.utils import create_dict_from_choices
-
-ST_SOLVED, ST_IN_PROGRESS, ST_NOT_SOLVED = range(3)
-STATUS_CHOICE = (
-    (ST_SOLVED, "Решен"),
-    (ST_IN_PROGRESS, "Обрабатывается"),
-    (ST_NOT_SOLVED, "Не решен"),
-)
+from datetime import datetime
+from .enums import * 
 
 
 class Department(models.Model):
@@ -209,3 +206,29 @@ class Messeges(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+
+
+class Subscribes(models.Model):
+    user_id = models.ForeignKey(on_delete=models.CASCADE, 
+                                to=settings.AUTH_USER_MODEL, 
+                                related_name='user_subscribes')
+
+    event_type = models.CharField(choices=EVENT_TYPE_CHOICES, 
+                                  max_length=10)
+
+    subscribe_type = models.CharField(choices=EVENT_TYPE_CHOICES, 
+                                      max_length=10)
+
+class NotificationEvents(models.Model):
+    #ForeginKey для интересующей модели 
+    event_id = models.IntegerField()
+    event_type = models.CharField(choices=EVENT_TYPE_CHOICES,  
+                                  max_length=10)
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+    subscribe = models.ForeignKey(on_delete=models.CASCADE, 
+                                  to=Subscribes, 
+                                  related_name='subscribe_events')
+    value = models.CharField(max_length=50, null=True)
+
+
+from .signals import *

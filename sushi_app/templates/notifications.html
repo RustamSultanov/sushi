@@ -4,7 +4,9 @@
 
 {% block title %}Оповещения{% endblock %}
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Оповещения</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Оповещения
+         <a href="{% url 'notification_settings' %}" class="btn btn-round btn-outline-primary btn-sm">Настройка уведомлений</a>
+    </h2>
 {% endblock %}
 
 {% block  breadcrumb%}

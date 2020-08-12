@@ -31,6 +31,7 @@ from mickroservices.forms import AnswerForm, IdeaStatusForm
 from mickroservices.consts import * 
 from .forms import *
 from .models import *
+from .enums import * 
 
 import json
 import pandas as pd
@@ -1070,3 +1071,111 @@ def feedback_view(request, feedback_id, user_id):
             ],
         },
     )
+
+
+@login_required
+def notification_settings_view(request): 
+
+    def _build_input_info(dict_, name_prefix, sort_map):
+        return [{
+                    'name' : f'{name_prefix}_{key}',
+                    'val' : key,
+                    'checked': 'checked' if dict_[key] else ''
+                } for key in sorted(dict_.keys(), 
+                                    key=lambda x: sort_map[x])]   
+    
+    context = {
+        "breadcrumb": [
+            {
+                "title": "Личный кабинет", 
+                "url": reverse_lazy("partner_lk")
+                       if request.user.user_profile.is_partner
+                       else reverse_lazy("manager_lk"),
+            },
+            {"title": "Настройки уведомлений"},
+        ],
+    }
+
+    event_types = [j[0] for j in EVENT_TYPE_CHOICES]
+    site_rules = {i : False for i in event_types}
+    email_rules = {i : False for i in event_types}
+    site_rule_name = SUBSCRIBE_TYPE_CHOICES[0][0]
+    email_rule_name = SUBSCRIBE_TYPE_CHOICES[1][0]
+    
+    for event in Subscribes.objects.filter(user_id=request.user.id):
+        if event.subscribe_type == email_rule_name:
+            email_rules[event.event_type] = True
+
+        if event.subscribe_type == site_rule_name:
+            site_rules[event.event_type] = True
+
+    sort_map = {j : i for i, j in enumerate(event_types)}
+
+    context['names'] = [i[1] for i in sorted(EVENT_TYPE_CHOICES, key=lambda x: sort_map[x[0]])]
+                           
+    context['site_rules'] = _build_input_info(site_rules, site_rule_name, sort_map)
+    context['email_rules'] = _build_input_info(email_rules, email_rule_name, sort_map)
+
+    return render(request, 'notification_settings.html', context)
+
+
+@csrf_exempt
+@login_required
+def update_notificaqton_rules(request):
+    subs = Subscribes.objects.filter(user_id=request.user.id)
+    subs_d = {(x.event_type, x.subscribe_type) : x for x in subs}
+    models = []
+    for k, v in request.POST.items():
+        prefix, event_type= k.split('_')
+        event_type = event_type
+
+        key = (prefix, event_type)
+    
+        if key in subs_d:
+            del subs_d[key]
+            continue
+
+        sub = Subscribes(user_id=request.user,
+                         event_type=event_type,
+                         subscribe_type=prefix)
+
+        models.append(sub)
+
+    Subscribes.objects.bulk_create(models)
+    for _, v in subs_d.items():
+        v.delete()
+
+    return HttpResponseRedirect(reverse_lazy('notification'))
+
+
+@login_required
+def load_notifcations(request):
+    subs = Subscribes.objects.filter(subscribe_type=REALTIME_C, 
+                                     user_id=request.user.id)
+
+    res = {'exist' : True}
+
+    for sub in subs.all():
+        for event in sub.subscribe_events.all():
+            res[event.event_id] = event.event_type
+    
+    if len(res.keys()) == 1:
+        res['exist'] = False
+
+    from .tasks import bulk_event_mailing
+    bulk_event_mailing()
+    return JsonResponse(res)
+
+
+@login_required
+def load_typed_notifcations(request, notif_type):
+    subs = Subscribes.objects.filter(subscribe_type=REALTIME_C, 
+                                     user_id=request.user.id,
+                                     )
+
+    res = {}
+    
+    return JsonResponse()
+
+    
+    
