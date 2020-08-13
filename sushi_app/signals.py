@@ -3,6 +3,7 @@ from django.dispatch import receiver
 from .models import *
 from .enums import * 
 from mickroservices.models import NewsPage, IdeaModel
+from datetime import datetime
 
 
 def register_event_type(event_type):
@@ -50,7 +51,6 @@ def handle_feedback(instance, event_type, **kwargs):
                                    event_type=event_type,
                                    subscribe=sub,
                                    value=status)
-
         event.save()
 
 
@@ -66,7 +66,6 @@ def handle_messeges(instance, event_type, **kwargs):
                                    event_type=event_type,
                                    subscribe=sub,
                                    value=status)
-
         event.save()
 
 
@@ -81,7 +80,6 @@ def handle_shop(instance, event_type, **kwargs):
                                    event_type=event_type,
                                    subscribe=sub,
                                    value=status)
-
         event.save()
 
 
@@ -107,7 +105,53 @@ def handle_idea(instance, event_type, **kwargs):
                                    event_type=event_type,
                                    subscribe=sub,
                                    value=status)
-                                   
-
         event.save()
+
+
+@receiver(post_save, sender=NewsPage)
+@register_event_type(NEWS_T)
+def handle_news(instance, event_type, **kwargs):
+    first = NotificationEvents.objects.filter(event_type=event_type, 
+                                              event_id=instance.pk)\
+                                       .order_by('date_of_creation').first()
+    if first:
+        date = first.date_of_creation
+        from django.utils import timezone
+        cur_time = timezone.now()
+        if (cur_time - date).seconds < 10:
+            return
+
+    subs = Subscribes.objects.filter(event_type=event_type)
+
+    for sub in subs:
+        status = 'updated' if first else 'new'
+        event = NotificationEvents(event_id=instance.pk,
+                                   event_type=event_type,
+                                   subscribe=sub,
+                                   value=status)                   
+        event.save()
+
+
+@register_event_type(MATERIALS_T)
+def handle_materials(instance, event_type):
+    shops = Shop.objects.filter(docs__id=instance.pk)
+    if shops:
+        subscribers = set()
+        for shop in shops:
+            subscribers.add(shop.partner.user.pk)
+            for resp in shop.responsibles.all():
+               subscribers.add(resp.user.pk) 
+
+        
+        subs = Subscribes.objects.filter(event_type=event_type,
+                                         user_id__in=subscribers)
+
+        for sub in subs:
+            status = 'new'
+            event = NotificationEvents(event_id=instance.pk,
+                                       event_type=event_type,
+                                       subscribe=sub,
+                                       value=status)
+            event.save()
+        
 

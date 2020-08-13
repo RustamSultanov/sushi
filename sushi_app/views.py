@@ -32,6 +32,7 @@ from mickroservices.consts import *
 from .forms import *
 from .models import *
 from .enums import * 
+from .signals import handle_materials
 
 import json
 import pandas as pd
@@ -183,6 +184,7 @@ class ShopListView(ListView):
 
             if request.POST.get("type") == "doc":
                 shop.docs.add(doc)
+                handle_materials(doc)
             elif request.POST.get("type") == "invoice":
                 shop.checks.add(doc)
             return JsonResponse({"success": True})
@@ -1175,7 +1177,7 @@ def notifcation_events(request):
             events = [int(i) for i in json.loads(request.body)]
             NotificationEvents.objects.filter(pk__in=events).delete()
     
-    return HttpResponse('OK')
+    return JsonResponse({})
 
 def notification_widget(request):
     return render(request, 'partials/notification_widget.html')

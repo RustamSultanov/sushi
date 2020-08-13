@@ -1,5 +1,5 @@
 const countNotifLimit = 3
-const intervalTime = 300
+const intervalTime = 5000
 const [toastrType, successStatus] = ["success", "success"]
 let [notifToShow, showingNotif] = [new Map(), new Set()]
 let buildedNotifInfo = new Map()
@@ -27,14 +27,17 @@ const loadNotifications = (data, status, jqXHR) => {
         return false
     
     toBuild = notIn(notifDataKeys, new Set(buildedNotifInfo.keys()))
-    console.log(buildedNotifInfo.size)
+    let cnt = buildedNotifInfo.size
     for(let key of toBuild){
+        if (cnt == countNotifLimit)
+            break
+        ++cnt
         buildedNotifInfo.set(key, buildNotificationInfo(notifData[key].type,
-            notifData[key].status,
-            notifData[key].entityId)) 
+                                                        notifData[key].status,
+                                                        notifData[key].entityId)) 
     }    
              
-    let cnt = notifToShow.size                                                 
+    cnt = notifToShow.size                                                 
     for(let entityId of buildedNotifInfo){
         if (cnt == countNotifLimit)
             break
@@ -137,7 +140,22 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
             }
 
             break
+        
+        case 'news':
+            title = 'Новость'
+
+            switch (eventStatus) {
+                case eventStatusNew:
+                    messege = 'Создана новая новость!'
+                    break
+
+                case eventStatyusUpdated:
+                    messege = 'Есть обновлённая новость!'
+                    break
+            }
+                break
     }
+
     return {'messege': messege, 'title': title } 
 }
 
@@ -148,13 +166,9 @@ const onToastClose = (eventData) => {
         dataType: 'json',
         data: JSON.stringify(eventData.data.json_data),
         success: () => {
-            //console.log(eventData.data.key)
-            //showingNotif.delete(eventData.data.key)
-            console.log('aaaaaaaaaaa')
-        },
-        error: function () {
-            console.log('asdsad')
-          },
+            showingNotif.delete(eventData.data.key)
+            buildedNotifInfo.delete(eventData.data.key)
+        }
     })
 }
 
@@ -162,7 +176,7 @@ const showNotifications = () => {
     for(let [key, val] of buildedNotifInfo){
         if (showingNotif.has(key))
             continue
-
+            
         let msg = val.messege
         let title = val.title
         let type = toastrType
