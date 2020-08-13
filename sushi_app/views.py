@@ -1128,7 +1128,6 @@ def update_notificaqton_rules(request):
     models = []
     for k, v in request.POST.items():
         prefix, event_type = k.split('_')
-        event_type = event_type
 
         key = (prefix, event_type)
 
@@ -1178,5 +1177,3 @@ def notifcation_events(request):
     return JsonResponse({})
 
 
-def notification_widget(request):
-    return render(request, 'partials/notification_widget.html')

@@ -1,15 +1,8 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from .models import *
-from .enums import * 
-from mickroservices.models import NewsPage, IdeaModel
-from datetime import datetime
 
 
 def register_event_type(event_type):
-    
     def deco(func):
-
         def wrapper(*args, **kwargs):
             return func(*args, event_type=event_type, **kwargs)
 
@@ -24,14 +17,14 @@ def handle_task(instance, event_type, **kwargs):
     fin = [instance.responsible]
     if fin[0] != instance.manager.user:
         fin.append(instance.manager.user)
-    
+
     subs = Subscribes.objects.filter(event_type=event_type,
                                      user_id__in=fin)
     for sub in subs:
         status = 'new' if kwargs['created'] else 'updated'
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
-                                   subscribe=sub, 
+                                   subscribe=sub,
                                    value=status)
         event.save()
 
@@ -42,7 +35,7 @@ def handle_feedback(instance, event_type, **kwargs):
     fin = [instance.responsible.user]
     if fin[0] != instance.manager.user:
         fin.append(instance.manager.user)
-    
+
     subs = Subscribes.objects.filter(event_type=event_type,
                                      user_id__in=fin)
     for sub in subs:
@@ -73,7 +66,7 @@ def handle_messeges(instance, event_type, **kwargs):
 @register_event_type(SHOP_T)
 def handle_shop(instance, event_type, **kwargs):
     fin = [instance.partner.user, *[i.user for i in instance.responsibles.all()]]
-    subs = Subscribes.objects.filter(event_type=event_type)
+    subs = Subscribes.objects.filter(event_type=event_type, user_id__in=fin)
     for sub in subs:
         status = 'new' if kwargs['created'] else 'updated'
         event = NotificationEvents(event_id=instance.pk,
@@ -83,12 +76,11 @@ def handle_shop(instance, event_type, **kwargs):
         event.save()
 
 
-
 @receiver(post_save, sender=IdeaModel)
 @register_event_type(IDEA_T)
 def handle_idea(instance, event_type, **kwargs):
     fin = [instance.recipient]
-    subs = Subscribes.objects.filter(event_type=event_type)
+    subs = Subscribes.objects.filter(event_type=event_type, user_id__in=fin)
     if kwargs['created']:
         return
 
@@ -99,7 +91,7 @@ def handle_idea(instance, event_type, **kwargs):
         elif instance.status == IdeaModel.ST_REJECTED:
             status = 'rejected'
         else:
-             return
+            return
 
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
@@ -110,10 +102,10 @@ def handle_idea(instance, event_type, **kwargs):
 
 @receiver(post_save, sender=NewsPage)
 @register_event_type(NEWS_T)
-def handle_news(instance, event_type, **kwargs):
-    first = NotificationEvents.objects.filter(event_type=event_type, 
-                                              event_id=instance.pk)\
-                                       .order_by('date_of_creation').first()
+def handle_news(instance, event_type):
+    first = NotificationEvents.objects.filter(event_type=event_type,
+                                              event_id=instance.pk) \
+        .order_by('date_of_creation').first()
     if first:
         date = first.date_of_creation
         from django.utils import timezone
@@ -128,7 +120,7 @@ def handle_news(instance, event_type, **kwargs):
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
                                    subscribe=sub,
-                                   value=status)                   
+                                   value=status)
         event.save()
 
 
@@ -140,9 +132,8 @@ def handle_materials(instance, event_type):
         for shop in shops:
             subscribers.add(shop.partner.user.pk)
             for resp in shop.responsibles.all():
-               subscribers.add(resp.user.pk) 
+                subscribers.add(resp.user.pk)
 
-        
         subs = Subscribes.objects.filter(event_type=event_type,
                                          user_id__in=subscribers)
 
@@ -153,5 +144,3 @@ def handle_materials(instance, event_type):
                                        subscribe=sub,
                                        value=status)
             event.save()
-        
-
