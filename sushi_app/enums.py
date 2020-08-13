@@ -1,4 +1,3 @@
-
 ST_SOLVED, ST_IN_PROGRESS, ST_NOT_SOLVED = range(3)
 STATUS_CHOICE = (
     (ST_SOLVED, "Решен"),
@@ -6,13 +5,12 @@ STATUS_CHOICE = (
     (ST_NOT_SOLVED, "Не решен"),
 )
 
-
-#Типы сообытий регистрируемые для оповещений
-(TASK_T, MESSEGE_T, NEWS_T, 
+# Типы сообытий регистрируемые для оповещений
+(TASK_T, MESSEGE_T, NEWS_T,
  FEEDBACK_T, SHOP_T, MATERIALS_T,
- IDEA_T) = ('task', 'messege', 'news', 
- 'feedback', 'shop', 'materials',
- 'idea',)
+ IDEA_T) = ('task', 'messege', 'news',
+            'feedback', 'shop', 'materials',
+            'idea',)
 
 EVENT_TYPE_CHOICES = (
     (TASK_T, 'Задачи'),
@@ -24,7 +22,7 @@ EVENT_TYPE_CHOICES = (
     (MATERIALS_T, 'Материалы')
 )
 
-#Селекторы пользовательской подписки  - принимать оповещения на сайте/по почте
+# Селекторы пользовательской подписки  - принимать оповещения на сайте/по почте
 REALTIME_C, EMAIL_C = ('site', 'email')
 SUBSCRIBE_TYPE_CHOICES = (
     (REALTIME_C, 'На сайте'),

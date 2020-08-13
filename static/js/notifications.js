@@ -13,7 +13,7 @@ const notIn = (setA, setB) => {
 }
 
 const loadNotifications = (data, status, jqXHR) => {
-    if (status != successStatus)
+    if (status !== successStatus)
         return false 
 
     notifData = data
@@ -23,13 +23,13 @@ const loadNotifications = (data, status, jqXHR) => {
     for(let key in notifData)
         notifDataKeys.add(key)
 
-    if (notifDataKeys.size == 0)
+    if (notifDataKeys.size === 0)
         return false
     
     toBuild = notIn(notifDataKeys, new Set(buildedNotifInfo.keys()))
     let cnt = buildedNotifInfo.size
     for(let key of toBuild){
-        if (cnt == countNotifLimit)
+        if (cnt === countNotifLimit)
             break
         ++cnt
         buildedNotifInfo.set(key, buildNotificationInfo(notifData[key].type,
@@ -39,7 +39,7 @@ const loadNotifications = (data, status, jqXHR) => {
              
     cnt = notifToShow.size                                                 
     for(let entityId of buildedNotifInfo){
-        if (cnt == countNotifLimit)
+        if (cnt === countNotifLimit)
             break
         ++cnt
         notifToShow.set(entityId, buildedNotifInfo.get(entityId))
@@ -179,9 +179,7 @@ const showNotifications = () => {
             
         let msg = val.messege
         let title = val.title
-        let type = toastrType
-
-        let myToast = toastr[type](msg, title, {
+        let myToast = toastr[toastrType](msg, title, {
             positionClass: "toast-bottom-right",
             closeButton: true,
             progressBar: false,
@@ -207,10 +205,11 @@ const showNotifications = () => {
 let baseUrl = new URL(document.URL).origin + '/'
 
 const updateNotificationsEvent = () => {
-    if (showingNotif.size < countNotifLimit){
+    let success;
+    if (showingNotif.size < countNotifLimit) {
         success = $.getJSON(baseUrl + 'load_notifications/', {}, loadNotifications)
 
-        if (success) 
+        if (success)
             showNotifications()
     }
 }
