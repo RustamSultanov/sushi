@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block title %}Настройка уведомлений{% endblock %}
+
+{% block page_title %}
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Настройка оповещений</h2>
+{% endblock %}
+
+{% block  breadcrumb%}
+    {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+
+{% block content %}
+
+<form action="/notification-rules" class="notif-form" method="POST">
+    <div class="checkbox-container">
+        <div class="site-notif">
+            <p>Сайт</p>
+            <div class="inputs">
+                {% for rule in site_rules %}
+                <div class="form-check">
+                        <input class="form-check-input" type="checkbox" 
+                                                        value="{{ rule.val }}" 
+                                                        id="site-check-{{ forloop.counter0 }}"
+                                                        name="{{ rule.name }}" 
+                                                        {{rule.checked}} >
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="email-notif">
+            <p>Почта</p>
+            <div class="inputs">
+                {% for rule in email_rules %}
+                <div class="form-check">
+                        <input class="form-check-input" type="checkbox" 
+                                                        value="{{ rule.val }}" 
+                                                        id="email-check-{{ forloop.counter0 }}"
+                                                        name="{{ rule.name }}" 
+                                                        {{rule.checked}}>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="names-notif">
+            <p>Тип</p>
+            {% for name in names %}
+                <p>{{ name }}</p>
+            {% endfor %}
+        </div>
+    </div>
+  <input class="btn btn-primary btn-round mr-xl-2 mb-2 mb-xl-0" type="submit" value="Сохранить">
+</form>
+
+{% endblock %} 
+
+{% block css %}
+        <link rel="stylesheet" href='{% static "css/widgets/notification-settings.css" %}'>
+{% endblock %}     
+

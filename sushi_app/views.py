@@ -6,6 +6,7 @@ from django.views.decorators.vary import vary_on_headers
 from django.urls import reverse, reverse_lazy
 from django.forms.models import model_to_dict
 from django.contrib.auth import get_user_model
+
 try:
     from wagtail.admin.utils import user_passes_test
 except ImportError:
@@ -13,7 +14,7 @@ except ImportError:
 from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
 from django.http import (HttpResponse,
-    HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
+                         HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
 from django.views.generic import ListView, DetailView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_text
@@ -28,9 +29,11 @@ from chat.models import Message as Chat_Message
 from mickroservices.models import DocumentSushi, DocumentPreview
 from mickroservices.models import NewsPage, QuestionModel, IdeaModel
 from mickroservices.forms import AnswerForm, IdeaStatusForm
-from mickroservices.consts import * 
+from mickroservices.consts import *
 from .forms import *
 from .models import *
+from .enums import *
+from .signals import handle_materials
 
 import json
 import pandas as pd
@@ -182,6 +185,7 @@ class ShopListView(ListView):
 
             if request.POST.get("type") == "doc":
                 shop.docs.add(doc)
+                handle_materials(doc)
             elif request.POST.get("type") == "invoice":
                 shop.checks.add(doc)
             return JsonResponse({"success": True})
@@ -386,7 +390,7 @@ def manager_lk_view(request):
     requests_not_solved = Requests.objects.filter(status=ST_IN_PROGRESS,
                                                   manager=request.user.user_profile).count()
     ideas_not_solved = IdeaModel.objects.filter(status=IdeaModel.ST_CONSIDERATION,
-                                                  recipient=request.user).count()
+                                                recipient=request.user).count()
     feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
                                                   manager=request.user.user_profile).count()
     request_list = get_filtered_request(request)
@@ -412,7 +416,7 @@ def manager_lk_view(request):
             "request_list": request_list,
             "task_list": task_list,
             "task_not_solved": task_not_solved,
-            "ideas_not_solved":ideas_not_solved,
+            "ideas_not_solved": ideas_not_solved,
             "requests_not_solved": requests_not_solved,
             "feedback_not_solved": feedback_not_solved,
             "feedback_list": feedback_list,
@@ -488,13 +492,13 @@ def _load_docs(request):
 @csrf_exempt
 def load_docs(request):
     docs = _load_docs(request)
-    context = {'documents' : docs}
+    context = {'documents': docs}
     with_preview = int(request.GET.get('with_preview', 0))
-    
-    if with_preview:
-        urls = {doc.id : doc.url for doc in docs} 
 
-        #сопоставляем каждому документу ссылку на выделенное превью в случае её наличия 
+    if with_preview:
+        urls = {doc.id: doc.url for doc in docs}
+
+        # сопоставляем каждому документу ссылку на выделенное превью в случае её наличия
         preview_docs = DocumentPreview.objects.filter(base_document_id__in=(doc.id for doc in docs))
         for pdoc in preview_docs:
             urls[pdoc.base_document.id] = pdoc.preview_file.url
@@ -503,40 +507,39 @@ def load_docs(request):
         for doc in docs:
             ext = doc.file_extension.lower()
             if ext in CONVERT_TO_PDF_EXTENSIONS:
-                id_to_preview_type[doc.id] ='embed'
+                id_to_preview_type[doc.id] = 'embed'
 
             if ext == 'pdf':
-                id_to_preview_type[doc.id] ='clear_pdf'
+                id_to_preview_type[doc.id] = 'clear_pdf'
 
             if ext in ('xls', 'xlsx'):
-                id_to_preview_type[doc.id] ='excel'
+                id_to_preview_type[doc.id] = 'excel'
 
             if ext in IMAGE_TYPES:
-                id_to_preview_type[doc.id] ='image'
- 
+                id_to_preview_type[doc.id] = 'image'
+
         context['js_map_keys'] = json.dumps([k for k in urls.keys()])
         context['js_map_vals'] = json.dumps([j for i, j in urls.items()])
         context['id_to_preview_type'] = json.dumps(id_to_preview_type)
-
 
     return render(request, 'partials/documents.html', context)
 
 
 @csrf_exempt
 def load_pdf_stream_preview(request, doc_id):
-
     with DocumentSushi.objects.get(pk=doc_id).file.open('rb') as pdf:
         response = HttpResponse(pdf.read(), content_type='application/pdf')
         response['Content-Disposition'] = 'filename=some_file.pdf'
         return response
 
+
 @csrf_exempt
 def load_excel(request, doc_id):
-
     with DocumentSushi.objects.get(pk=doc_id).file.open('rb') as f:
         excel_df = pd.read_excel(f);
         response = HttpResponse(excel_df.to_html())
         return response
+
 
 @csrf_exempt
 def load_paginations_docs(request):
@@ -604,7 +607,7 @@ def partner_lk_view(request):
 @login_required
 @user_passes_test(partner_check)
 def form_request_view(request):
-    form = RequestsForm(request.POST or None,request.FILES or None)
+    form = RequestsForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         req = form.save(commit=False)
         req.responsible = request.user
@@ -1070,3 +1073,107 @@ def feedback_view(request, feedback_id, user_id):
             ],
         },
     )
+
+
+@login_required
+def notification_settings_view(request):
+    def _build_input_info(dict_, name_prefix, sort_map):
+        return [{
+            'name': f'{name_prefix}_{key}',
+            'val': key,
+            'checked': 'checked' if dict_[key] else ''
+        } for key in sorted(dict_.keys(),
+                            key=lambda x: sort_map[x])]
+
+    context = {
+        "breadcrumb": [
+            {
+                "title": "Личный кабинет",
+                "url": reverse_lazy("partner_lk")
+                if request.user.user_profile.is_partner
+                else reverse_lazy("manager_lk"),
+            },
+            {"title": "Настройки уведомлений"},
+        ],
+    }
+
+    event_types = [j[0] for j in EVENT_TYPE_CHOICES]
+    site_rules = {i: False for i in event_types}
+    email_rules = {i: False for i in event_types}
+    site_rule_name = SUBSCRIBE_TYPE_CHOICES[0][0]
+    email_rule_name = SUBSCRIBE_TYPE_CHOICES[1][0]
+
+    for event in Subscribes.objects.filter(user_id=request.user.id):
+        if event.subscribe_type == email_rule_name:
+            email_rules[event.event_type] = True
+
+        if event.subscribe_type == site_rule_name:
+            site_rules[event.event_type] = True
+
+    sort_map = {j: i for i, j in enumerate(event_types)}
+
+    context['names'] = [i[1] for i in sorted(EVENT_TYPE_CHOICES, key=lambda x: sort_map[x[0]])]
+
+    context['site_rules'] = _build_input_info(site_rules, site_rule_name, sort_map)
+    context['email_rules'] = _build_input_info(email_rules, email_rule_name, sort_map)
+
+    return render(request, 'notification_settings.html', context)
+
+
+@csrf_exempt
+@login_required
+def update_notificaqton_rules(request):
+    subs = Subscribes.objects.filter(user_id=request.user.id)
+    subs_d = {(x.event_type, x.subscribe_type): x for x in subs}
+    models = []
+    for k, v in request.POST.items():
+        prefix, event_type = k.split('_')
+
+        key = (prefix, event_type)
+
+        if key in subs_d:
+            del subs_d[key]
+            continue
+
+        sub = Subscribes(user_id=request.user,
+                         event_type=event_type,
+                         subscribe_type=prefix)
+
+        models.append(sub)
+
+    Subscribes.objects.bulk_create(models)
+    for _, v in subs_d.items():
+        v.delete()
+
+    return HttpResponseRedirect(reverse_lazy('notification'))
+
+
+@login_required
+def load_notifcations(request):
+    subs = Subscribes.objects.filter(subscribe_type=REALTIME_C,
+                                     user_id=request.user.id)
+
+    res = {}
+
+    for sub in subs.all():
+        for event in sub.subscribe_events.order_by('date_of_creation').all():
+            res[event.pk] = {
+                'type': event.event_type,
+                'status': event.value,
+                'entityId': event.event_id
+            }
+
+    return JsonResponse(res)
+
+
+@login_required
+@csrf_exempt
+def notifcation_events(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            events = [int(i) for i in json.loads(request.body)]
+            NotificationEvents.objects.filter(pk__in=events).delete()
+
+    return JsonResponse({})
+
+
