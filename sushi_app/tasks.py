@@ -7,39 +7,43 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from itertools import chain
 from mickroservices.utils import send_message
-from mickroservices.models import NewsPage, IdeaModel
+from mickroservices.models import NewsPage, IdeaModel, DocumentSushi
 
 
 from django.core.mail import send_mail
 
 
 def _get_task_context(pk):
-    pass
+    return {}
 
 def _get_messege_context(pk):
-    pass
+    return {}
 
 def _get_news_context(pk):
-    pass
+    return {}
 
 def _get_feedback_context(pk):
-    pass
+    return {}
 
 def _get_shop_context(pk):
-    pass
+    return {}
 
 def _get_idea_context(pk):
-    pass
+    return {}
+
+def _get_materials_context(pk):
+    return {}
     
 
 EMAIL_TEMP_DIR_PREFIX = 'notification_emails'
 TEMPLATES_MAP = {
-    TASK_T: f'{EMAIL_TEMP_DIR_PREFIX}/task.html',
-    MESSEGE_T: f'{EMAIL_TEMP_DIR_PREFIX}/messege.html',
-    NEWS_T: f'{EMAIL_TEMP_DIR_PREFIX}/news.html',
-    FEEDBACK_T: f'{EMAIL_TEMP_DIR_PREFIX}/feedback.html',
-    SHOP_T: f'{EMAIL_TEMP_DIR_PREFIX}/shop_created.html',
-    IDEA_T: f'{EMAIL_TEMP_DIR_PREFIX}/idea.html',
+    TASK_T: f'{EMAIL_TEMP_DIR_PREFIX}/base.html',
+    MESSEGE_T: f'{EMAIL_TEMP_DIR_PREFIX}/base.html',
+    NEWS_T: f'{EMAIL_TEMP_DIR_PREFIX}/base.html',
+    FEEDBACK_T: f'{EMAIL_TEMP_DIR_PREFIX}/base.html',
+    SHOP_T: f'{EMAIL_TEMP_DIR_PREFIX}/base.html',
+    IDEA_T: f'{EMAIL_TEMP_DIR_PREFIX}/base.html',
+    MATERIALS_T: f'{EMAIL_TEMP_DIR_PREFIX}/base.html'
 }
 
 SELECT_CONTEXT_MAP = {
@@ -49,6 +53,7 @@ SELECT_CONTEXT_MAP = {
     FEEDBACK_T: _get_feedback_context,
     SHOP_T: _get_shop_context,
     IDEA_T: _get_idea_context,
+    MATERIALS_T: _get_materials_context
 }
 
 MODELS_SELECTOR = {
@@ -58,15 +63,17 @@ MODELS_SELECTOR = {
     FEEDBACK_T: Feedback,
     SHOP_T: Shop,
     IDEA_T: IdeaModel,
+    MATERIALS_T: DocumentSushi,
 }
 
+UNIVERSAL_SUBJECT = 'Новое уведомление на портале СУШИПОП'
 SUBJECTS = {
-    TASK_T: 'Pass',
-    MESSEGE_T: 'Pass',
-    NEWS_T: 'Pass',
-    FEEDBACK_T: 'Pass',
-    SHOP_T: 'Pass',
-    IDEA_T: 'Pass', 
+    TASK_T: UNIVERSAL_SUBJECT,
+    MESSEGE_T: UNIVERSAL_SUBJECT,
+    NEWS_T: UNIVERSAL_SUBJECT,
+    FEEDBACK_T: UNIVERSAL_SUBJECT,
+    SHOP_T: UNIVERSAL_SUBJECT,
+    IDEA_T: UNIVERSAL_SUBJECT, 
 }
 
 
