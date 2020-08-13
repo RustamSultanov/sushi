@@ -58,4 +58,5 @@ urlpatterns = [
     path('load_excel/<int:doc_id>', views.load_excel, name='load_excel'),
     path('notification-settings/', views.notification_settings_view, name='notification_settings'),
     path('notification-rules', views.update_notificaqton_rules, name='notification_rules'),
+    path('notification-events', views.notifcation_events, name='notification_events'),
 ]

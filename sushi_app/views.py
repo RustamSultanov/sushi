@@ -1153,29 +1153,33 @@ def load_notifcations(request):
     subs = Subscribes.objects.filter(subscribe_type=REALTIME_C, 
                                      user_id=request.user.id)
 
-    res = {'exist' : True}
+    res = {}
 
     for sub in subs.all():
-        for event in sub.subscribe_events.all():
-            res[event.event_id] = event.event_type
-    
-    if len(res.keys()) == 1:
-        res['exist'] = False
+        for event in sub.subscribe_events.order_by('date_of_creation').all():
+            res[event.pk] = { 
+                'type' : event.event_type,
+                'status' : event.value,
+                'entityId': event.event_id
+            }
 
-    from .tasks import bulk_event_mailing
-    bulk_event_mailing()
     return JsonResponse(res)
 
 
 @login_required
-def load_typed_notifcations(request, notif_type):
-    subs = Subscribes.objects.filter(subscribe_type=REALTIME_C, 
-                                     user_id=request.user.id,
-                                     )
+@csrf_exempt
+def notifcation_events(request):
 
-    res = {}
+    if request.is_ajax():
+        if request.method == 'POST':
+            events = [int(i) for i in json.loads(request.body)]
+            NotificationEvents.objects.filter(pk__in=events).delete()
     
-    return JsonResponse()
+    return HttpResponse('OK')
+
+def notification_widget(request):
+    return render(request, 'partials/notification_widget.html')
+
 
     
     

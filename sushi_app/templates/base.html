@@ -31,6 +31,7 @@
     <!--<link rel="stylesheet" href="{% static "css/uikit.css" %}">-->
     <link rel="stylesheet" href="{% static "libs/swiper/swiper.css" %}">
     <link rel="stylesheet" href="{% static "css/app.css" %}">
+    <link rel="stylesheet" href="{% static "assets/vendor/libs/toastr/toastr.css" %}">
 
     <!-- Layout helpers -->
     <script src="{% static "js/layout-helpers.js" %}"></script>
@@ -43,9 +44,8 @@
     {% block extracss %}{% endblock %}
 </head>
     <body>
-
         {% block layout %}{% endblock %}
-
+        
 
         <!-- Core scripts -->
 
@@ -54,6 +54,7 @@
         <script src="{% static "libs/popper/popper.js" %}"></script>
         <script src="{% static "js/bootstrap.js" %}"></script>
         <script src="{% static "js/sidenav.js" %}"></script>
+        <script src="{% static "assets/vendor/libs/toastr/toastr.js" %}"></script>
 
         <!-- Libs -->
         <script src="{% static "libs/swiper/swiper.js" %}"></script>
@@ -64,17 +65,18 @@
 
 
         <script src="{% static "js/landing.js" %}"></script>
-<script type="text/javascript">
-    $(function() {
-        Dropzone.autoDiscover = false;
-        $('#notifications_dropdown_link').click(function (e) {
-            $(this).parent().toggleClass('show');
-            $(this).next('.dropdown-menu').toggleClass('show');
-        });
-    });
-</script>
+        <script type="text/javascript">
+            $(function() {
+                Dropzone.autoDiscover = false;
+                $('#notifications_dropdown_link').click(function (e) {
+                    $(this).parent().toggleClass('show');
+                    $(this).next('.dropdown-menu').toggleClass('show');
+                });
+            });
+        </script>
         {% block extrascripts %}{% endblock %}
-
+        {% block notifications %}    
+            <script type="text/javascript"  src="{% static "js/notifications.js" %}"></script>
+        {% endblock %}
     </body>
-
 </html>

@@ -61,9 +61,11 @@ def handle_messeges(instance, event_type, **kwargs):
     subs = Subscribes.objects.filter(event_type=event_type,
                                      user_id__in=fin)
     for sub in subs:
+        status = 'new' if kwargs['created'] else 'updated'
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
-                                   subscribe=sub)
+                                   subscribe=sub,
+                                   value=status)
 
         event.save()
 
@@ -74,9 +76,11 @@ def handle_shop(instance, event_type, **kwargs):
     fin = [instance.partner.user, *[i.user for i in instance.responsibles.all()]]
     subs = Subscribes.objects.filter(event_type=event_type)
     for sub in subs:
+        status = 'new' if kwargs['created'] else 'updated'
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
-                                   subscribe=sub)
+                                   subscribe=sub,
+                                   value=status)
 
         event.save()
 
@@ -87,10 +91,23 @@ def handle_shop(instance, event_type, **kwargs):
 def handle_idea(instance, event_type, **kwargs):
     fin = [instance.recipient]
     subs = Subscribes.objects.filter(event_type=event_type)
+    if kwargs['created']:
+        return
+
     for sub in subs:
+        status = ''
+        if instance.status == IdeaModel.ST_OK:
+            status = 'accepted'
+        elif instance.status == IdeaModel.ST_REJECTED:
+            status = 'rejected'
+        else:
+             return
+
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
-                                   subscribe=sub)
+                                   subscribe=sub,
+                                   value=status)
+                                   
 
         event.save()
 
