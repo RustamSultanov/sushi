@@ -1,3 +1,4 @@
+from mickroservices.models import IdeaModel, NewsPage
 from .models import *
 
 
