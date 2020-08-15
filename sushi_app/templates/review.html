@@ -1,47 +1,53 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block css %}<link rel="stylesheet" href="{% static "libs/dropzone/dropzone.css" %}">{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static "libs/dropzone/dropzone.css" %}">{% endblock %}
 
 {% block title %}Отзыв #{{ feedback.id }}{% endblock %}
 {% block page_title %}
     <h2 class="text-light font-weight-normal mt-4 mb-1">Отзыв #{{ feedback.id }}</h2>
 {% endblock %}
 
-{% block  breadcrumb%}
+{% block  breadcrumb %}
     {% include 'partials/breadcrumb.html' %}
 {% endblock %}
-    {% block content %}
-                    <div class="row my-4">
-                        <div class="col">
+{% block content %}
+    <div class="row my-4">
+        <div class="col">
 
-                            <div class="media align-items-center mb-3">
-                                {% if feedback.responsible.wagtail_profile.avatar %}
-                      <a href="{% url 'employee_info' feedback.responsible.user.id %}">           <img src="{{ feedback.responsible.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>
-                                  {% else %}
-                                    {% endif %}
-                                <div class="small ml-3">
-                                    <div class="text-dark">{{ feedback.responsible.user.get_full_name }} <span class="text-muted">{{ feedback.responsible.phone_number }}</span></div>
-                                    <div class="text-muted">{{ feedback.date_create }}
-                                    </div>
-                                    <!--   Вариант для партнера   -->
-                                    {% if user == feedback.responsible %}
-                                    <span class="badge badge-pill badge-warning">{{ feedback.get_status_display }}</span>
-                                        {% else %}
-                                    <!--   Вариант для менеджера   -->
-                                    <div class="btn-group">
-                                    <form action="" method="post">    {% csrf_token %}
-                                        {{ form_status.status }}
-                                        <button class="btn btn-warning btn-xs btn-round" type="submit">Сохранить</button>
-{#                                        <button class="btn btn-warning btn-xs btn-round dropdown-toggle" type="button" data-toggle="dropdown">Не решена</button>#}
-{#                                        <div class="dropdown-menu">#}
-{#                                            <a class="dropdown-item" href="javascript:void(0)">Решена</a>#}
-{#                                            <a class="dropdown-item" href="javascript:void(0)">Провалена</a>#}
-{#                                        </div>#}
-                                    </form>
-                                    </div>
-                                    {% endif %}
-                                        <div>Магазин: <a href="{% url 'shop' feedback.shop.id %}" class="text-primary">{{ feedback.shop }}</a></div>
+            <div class="media align-items-center mb-3">
+                {% if feedback.responsible.wagtail_profile.avatar %}
+                    <a href="{% url 'employee_info' feedback.responsible.user.id %}"> <img
+                            src="{{ feedback.responsible.wagtail_profile.avatar.url }}" alt=""
+                            class="ui-w-60 rounded-circle"></a>
+                {% else %}
+                {% endif %}
+                <div class="small ml-3">
+                    <a href="{% url 'employee_info' feedback.responsible.user.id %}"
+                       class="text-dark">{{ feedback.responsible.user.get_full_name }} <span
+                            class="text-muted">{{ feedback.responsible.phone_number }}</span></a>
+                    <div class="text-muted">{{ feedback.date_create }}
+                    </div>
+                    <!--   Вариант для партнера   -->
+                    {% if user == feedback.responsible %}
+                        <span class="badge badge-pill badge-warning">{{ feedback.get_status_display }}</span>
+                    {% else %}
+                        <!--   Вариант для менеджера   -->
+                        <div class="btn-group">
+                            <form action="" method="post">    {% csrf_token %}
+                                {{ form_status.status }}
+                                <button class="btn btn-warning btn-xs btn-round" type="submit">Сохранить</button>
+                                {#                                        <button class="btn btn-warning btn-xs btn-round dropdown-toggle" type="button" data-toggle="dropdown">Не решена</button>#}
+                                {#                                        <div class="dropdown-menu">#}
+                                {#                                            <a class="dropdown-item" href="javascript:void(0)">Решена</a>#}
+                                {#                                            <a class="dropdown-item" href="javascript:void(0)">Провалена</a>#}
+                                {#                                        </div>#}
+                            </form>
+                        </div>
+                    {% endif %}
+                    <div>Магазин: <a href="{% url 'shop' feedback.shop.id %}"
+                                     class="text-primary">{{ feedback.shop }}</a></div>
 
 
                                 </div>
@@ -54,60 +60,65 @@
                                     <li class="nav-item">
                                         <a class="nav-link active show" data-toggle="tab" href="#coments">Комментарии</a>
                                     </li>
-{#                                    <li class="nav-item">#}
-{#                                        <a class="nav-link" data-toggle="tab" href="#files">Файлы</a>#}
-{#                                    </li>#}
+                                    {#                                    <li class="nav-item">#}
+                                    {#                                        <a class="nav-link" data-toggle="tab" href="#files">Файлы</a>#}
+                                    {#                                    </li>#}
                                 </ul>
                             </div>
-                            <div class="tab-content no-shadow">
-                                <div class="tab-pane fade active show" id="coments">
-                                    {% for messege in messeges %}
-                                    <div class="media mb-3">
-                                        <div>{% if messege.from_user.wagtail_userprofile.avatar %}
-                           <a href="{% url 'employee_info' messege.from_user.id %}">      <img src="{{ messege.from_user.wagtail_userprofile.avatar.url }}" alt="" class="ui-w-40 rounded-circle"></a>
-                                  {% else %}
+            <div class="tab-content no-shadow">
+                <div class="tab-pane fade active show" id="coments">
+                    {% for messege in messeges %}
+                        <div class="media mb-3">
+                            <div>{% if messege.from_user.wagtail_userprofile.avatar %}
+                                <a href="{% url 'employee_info' messege.from_user.id %}"> <img
+                                        src="{{ messege.from_user.wagtail_userprofile.avatar.url }}" alt=""
+                                        class="ui-w-40 rounded-circle"></a>
+                            {% else %}
+                            {% endif %}
+                                <div class="text-muted small text-nowrap mt-2">
+                                    {{ messege.date_create }}
+
+                                </div>
+                            </div>
+                            {% if messege.from_user == user %}
+                                <div class="media-body bg-lighter rounded py-2 px-3 ml-3">
+                                    <a href="{% url 'employee_info' messege.from_user.id %}"
+                                       class="font-weight-semibold mb-1">{{ messege.from_user.get_full_name }}</a>
+                                    {{ messege.text }}
+                                    {% if messege.file %}
+                                        <strong class="project-attachment-filename">{{ messege.file }}</strong>
+                                        <div class="text-muted small">{{ messege.file.size|filesizeformat }}</div>
+                                        <div>
+                                            <a href="{{ messege.file.url }}" download="">Загрузить</a>
+                                        </div>
+
                                     {% endif %}
-                                            <div class="text-muted small text-nowrap mt-2">
-                                                {{ messege.date_create }}
+                                </div>
+                            {% else %}
 
-                                            </div>
+                                <div class="media-body alert-primary rounded py-2 px-3 ml-md-3">
+                                    <a href="{% url 'employee_info' messege.from_user.id %}"
+                                       class="font-weight-semibold mb-1">{{ messege.from_user.get_full_name }}</a>
+                                    {{ messege.text }}
+                                    {% if messege.file %}
+                                        <strong class="project-attachment-filename">{{ messege.file }}</strong>
+                                        <div class="text-muted small">{{ messege.file.size|filesizeformat }}</div>
+                                        <div>
+                                            <a href="{{ messege.file.url }}" download="">Загрузить</a>
                                         </div>
-                                        {% if messege.from_user == user %}
-                                        <div class="media-body bg-lighter rounded py-2 px-3 ml-3">
-                                            <div class="font-weight-semibold mb-1">{{ messege.from_user.get_full_name }}</div>
-                                            {{ messege.text }}
-                                        {% if messege.file %}
-                <strong class="project-attachment-filename">{{messege.file}}</strong>
-                <div class="text-muted small"  >{{messege.file.size|filesizeformat}}</div>
-                <div>
-                    <a href="{{ messege.file.url }}" download="">Загрузить</a>
-                </div>
 
-                                       {% endif %}
-                                        </div>
-                                    {% else %}
-
-                                    <div class="media-body alert-primary rounded py-2 px-3 ml-md-3">
-                                            <div class="font-weight-semibold mb-1">{{ messege.from_user.get_full_name }}</div>
-                                            {{ messege.text }}
-                                        {% if messege.file %}
-                <strong class="project-attachment-filename">{{messege.file}}</strong>
-                <div class="text-muted small"  >{{messege.file.size|filesizeformat}}</div>
-                <div>
-                    <a href="{{ messege.file.url }}" download="">Загрузить</a>
-                </div>
-
-                                       {% endif %}
-                                        </div>
                                     {% endif %}
-                                    </div>
-                                {% endfor %} <form action="" method="post" enctype="multipart/form-data">    {% csrf_token %}
-                                    <div class="input-group">
-                                        {{ form.text }}
-                                        <div class="input-group-append">
-                                            <label style="margin-bottom: 0;">
-                                                {{ form.file }}
-                                                <span class="btn btn-default icon-btn borderless btn-round md-btn-flat">
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <form action="" method="post" enctype="multipart/form-data">    {% csrf_token %}
+                        <div class="input-group">
+                            {{ form.text }}
+                            <div class="input-group-append">
+                                <label style="margin-bottom: 0;">
+                                    {{ form.file }}
+                                    <span class="btn btn-default icon-btn borderless btn-round md-btn-flat">
                                                     <i class="ion ion-md-attach"></i>
                                                 </span>
                                             </label>
