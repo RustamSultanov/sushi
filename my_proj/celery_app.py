@@ -29,7 +29,7 @@ app.conf.update(
 app.conf.beat_schedule = {
     'bulk-email-send': {
         'task': 'sushi_app.tasks.bulk_event_mailing',
-        'schedule': 5,
+        'schedule': 300,
         'options': {'queue' : 'low', 'routing_key': 'low'}
     }
 }
