@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Список магазинов Франчайзи по выбранному признаку{% endblock %}
+{% block page_title %}
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Список магазинов Франчайзи {{ employee.first_name }} {{ employee.last_name }} по признаку {{ sign.title }}</h2>
+{% endblock %}
+
+{% block content %}
+    <div class="my-4 row">
+    {% for shop in object_list %}
+        <div class="col-md-6 mb-4">
+            <div class="card hoverable h-100">
+                <div class="card-header d-flex justify-content-between  align-items-start">
+                    <div>
+                        <div class="h5 mb-0 font-weight-semibold"><a href="{% url 'shop' shop.id %}"
+                                                                     class="text-primary">{{ shop.address }}</a>
+                        </div>
+                    </div>
+
+
+                    <div class="btn-group project-actions">
+                        <button type="button"
+                                class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow"
+                                data-toggle="dropdown">
+                            <i class="ion ion-ios-more"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="{% url 'shop' shop.id %}">Просмотр</a>
+                            <a class="dropdown-item" href="{% url 'shop_sign_edit' shop.id %}">Редактировать
+                                признаки</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% empty %}
+        <br><h4>Нет магазинов</h4>
+    {% endfor %}
+    </div>
+{% endblock %}

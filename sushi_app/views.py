@@ -15,7 +15,7 @@ from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
 from django.http import (HttpResponse,
                          HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_text
 from wagtail.admin.forms.search import SearchForm
@@ -204,12 +204,35 @@ class ShopListView(ListView):
             )
 
 
-class ShopSignDetailView(UserPassesTestMixin, DetailView):
-    model = ShopSign
+class ShopSignDetailView(UserPassesTestMixin, ListView):
+    template_name = 'sushi_app/shopsign_detail.html'
+
+    def get_queryset(self):
+        emps = UserProfile.objects.filter(shop_partner__signs__id=self.kwargs['pk'])
+        return emps
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = set(context['object_list'])
+        context['sign'] = ShopSign.objects.get(pk=self.kwargs['pk'])
+        return context
+
 
     def test_func(self):
         return self.request.user.is_staff or self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head
 
+
+class ShopSignEditView(UserPassesTestMixin, UpdateView):
+    model = Shop
+    form_class = ShopSignEditForm
+    template_name = 'store_sign_edit.html'
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return HttpResponseRedirect(reverse_lazy("shop", args=[self.object.id]))
 
 # # Create your views here
 def manager_check(user):
@@ -254,8 +277,34 @@ def employee_list(request):
 @login_required
 def employee_info(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    return render(request, "employee.html", {"employee": user})
+    all_signs = {}
+    shop_sign = ShopSign.objects.all()
+    if hasattr(user, 'user_profile') and hasattr(user.user_profile, 'shop_partner'):
+        user_shops_signs_ids = set(user.user_profile.shop_partner.values_list('signs__id', flat=True))
+        if None in user_shops_signs_ids:
+            user_shops_signs_ids.remove(None)
+    for sign in shop_sign:
+        all_signs[sign.title] = {'title': sign.title, 'id': sign.id, 'icon': sign.icon}
+        if sign.id in user_shops_signs_ids:
+            all_signs[sign.title]['active'] = True
+        else:
+            all_signs[sign.title]['active'] = False
+    all_signs_sorted = sorted(all_signs.values(), key=lambda x: x['active'], reverse=True)
+    return render(request, "employee.html", {"employee": user, "shop_sign": all_signs_sorted})
 
+
+class EmployeeSignShopsView(ListView):
+    template_name = "sushi_app/shops_list_by_sign.html"
+
+    def get_queryset(self):
+        shops = Shop.objects.filter(partner__user_id=self.kwargs['user_id'], signs__id=self.kwargs['sign_id'])
+        return shops
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sign'] = ShopSign.objects.get(pk=self.kwargs['sign_id'])
+        context['employee'] = User.objects.get(pk=self.kwargs['user_id'])
+        return context
 
 @login_required
 def notification_view(request):
@@ -872,9 +921,10 @@ def edit_employee_view(request, user_id):
 def shop_form_view(request):
     form = ShopForm(request.POST or None)
     if form.is_valid():
-        form = form.save(commit=False)
-        form.save()
-        return HttpResponseRedirect(reverse_lazy("shop", args=[form.id]))
+        shop = form.save()
+        sign = ShopSign.objects.filter(pk__in=request.POST.getlist('signs'))
+        shop.signs.add(*sign)
+        return HttpResponseRedirect(reverse_lazy("shop", args=[shop.id]))
     context = {
         "form": form,
         "breadcrumb": [
