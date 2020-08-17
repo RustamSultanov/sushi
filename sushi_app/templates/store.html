@@ -198,28 +198,14 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="signs">
+                        {% for sign in shop_sign %}
+                            <a href="{% url 'shop_sign_detail' sign.id %}"
+                               class="badge {% if sign in shop.signs.all %}badge-primary{% else %}badge-secondary{% endif %} badge-pill badge-w-icon">
+                                <img src="{{ sign.icon.url }}" height="18" width="18">
+                                {{ sign.title }}
+                            </a>
 
-                        <div id="feedback_manager" class="my-4 row">
-                            {% for sign in shop_sign %}
-                                <div class="col-md-6 col-lg-4 mb-4">
-                                    <div class="card hoverable"
-                                         {% if sign in shop.signs.all %}style="background-color: red"
-                                         {% else %}style="background-color: gray"{% endif %}>
-                                        <div class="card-body">
-                                            <div class="media align-items-center mb-3">
-                                                {% if sign.icon %}
-                                                    <img src="{{ sign.icon.url }}" alt=""
-                                                         class="ui-w-60 rounded-circle">
-                                                {% endif %}
-                                                <div class="ml-3">
-                                                    <a href="{% url 'shop_sign_detail' sign.id %}">{{ sign.title }}</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

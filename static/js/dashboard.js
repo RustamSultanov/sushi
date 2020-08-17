@@ -1,18 +1,18 @@
 $(function() {
     $('#dropzone-files').dropzone({
-        parallelUploads: 10,
+        parallelUploads: 2,
         maxFilesize:     50000,
         filesizeBase:    1000,
         addRemoveLinks:  true,
     });
     $('#dropzone-docs').dropzone({
-        parallelUploads: 10,
+        parallelUploads: 2,
         maxFilesize:     50000,
         filesizeBase:    1000,
         addRemoveLinks:  true,
     });
     $('#dropzone-invoices').dropzone({
-        parallelUploads: 10,
+        parallelUploads: 2,
         maxFilesize:     50000,
         filesizeBase:    1000,
         addRemoveLinks:  true,
@@ -65,38 +65,3 @@ $(function() {
         }
     };
 });
-
-
-function load_tasks(element){           
-    event.preventDefault();
-    element.siblings('a').removeClass('active');
-    element.addClass('active');
-    $('#tasks_manager').load(element[0].href)
-    $('a')[0].focus()
-    return false;
-}
-function load_request(element){
-    event.preventDefault();
-    element.siblings('a').removeClass('active');
-    element.addClass('active');
-    $('#request_manager').load(element[0].href)
-    $('a')[0].focus()
-    return false;
-}
-function load_feedback(element){
-    event.preventDefault();
-    element.siblings('a').removeClass('active');
-    element.addClass('active');
-    $('#feedback_manager').load(element[0].href)
-    $('a')[0].focus()
-    return false;
-}
-
-function load_ideas(element){
-    event.preventDefault();
-    element.siblings('a').removeClass('active');
-    element.addClass('active');
-    $('#ideas_manager').load(element[0].href)
-    $('a')[0].focus()
-    return false;
-}

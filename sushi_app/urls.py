@@ -18,6 +18,7 @@ urlpatterns = [
         auth_view.LogoutView.as_view(next_page="login"),
         name='logout'),
     path('employee/<int:user_id>', views.employee_info, name='employee_info'),
+    path('employee/<int:user_id>/shops_by_sign/<int:sign_id>', views.EmployeeSignShopsView.as_view(), name='employee_sign_shops'),
     path('employee/all', views.employee_list, name='employee_list'),
     path('faq-all', views.faq_list, name='faq_list'),
     path('faq/<int:faq_id>', views.faq_answer, name='faq_answer'),
@@ -38,6 +39,7 @@ urlpatterns = [
         login_required(views.ShopListView.as_view()),
         name='shop'),
     path('shop_sign_detail/<int:pk>', login_required(views.ShopSignDetailView.as_view()), name='shop_sign_detail'),
+    path('shop_sign_edit/<int:pk>', login_required(views.ShopSignEditView.as_view()), name='shop_sign_edit'),
     path(
         'task/new/<int:partner_id>', views.form_task_view, name='form_task'),
     path(

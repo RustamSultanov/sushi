@@ -568,3 +568,10 @@ class ShopForm(forms.ModelForm):
             'partner': forms.Select(attrs={'class': "select2 form-control"}),
             'signs': forms.SelectMultiple(attrs={'class': "select2 form-control"}),
         }
+
+
+class ShopSignEditForm(forms.ModelForm):
+    class Meta:
+        model = Shop
+        fields = ['signs']
+        widgets = {'signs': forms.SelectMultiple(attrs={'class': "select2 form-control"})}
