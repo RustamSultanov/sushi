@@ -28,7 +28,7 @@
                 {% endif %}
                 <div class="small ml-3">
                     {% if shop.partner %}
-                        <div class="text-primary">{{ shop.partner }}</div>{% else %}
+                        <a href="{% url 'employee_info' shop.partner.user.id %}" class="text-primary">{{ shop.partner }}</a>{% else %}
                     {% endif %}
                     {# <a href="#" class="btn btn-xs btn-round btn-outline-dark">Написать в чат</a>#}
                 </div>
