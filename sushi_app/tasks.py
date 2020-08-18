@@ -7,9 +7,8 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from itertools import chain
 from mickroservices.utils import send_message
-from mickroservices.models import NewsPage, IdeaModel, DocumentSushi
-
-
+from mickroservices.models import NewsPage, IdeaModel, DocumentSushi    
+from django.template.loader import render_to_string
 from django.core.mail import send_mail
 
 
@@ -78,27 +77,36 @@ SUBJECTS = {
 
 
 @celery_app.task(time_limit=20)
-def send_email(pk, event_type, template, context, email):
-    subject = SUBJECTS[event_type]
-    success = send_message(template, context, subject, email)
-    if success:
-        MODELS_SELECTOR[event_type].objects.get(pk=pk).delete()
+def send_mail_task(pk, subject, message, from_email, recepients, html_message):
+    send_mail(subject, message, from_email, recipient_list=recepients, html_message=html_message)
+    NotificationEvents.objects.get(pk=pk).delete()
 
 
 @celery_app.task(time_limit=300)
 def bulk_event_mailing():
-    subs = Subscribes.objects.filter(subscribe_type=REALTIME_C)
+    subject = 'Новые уведомнения на портале СУШИПОП'
+    messsage = 'Появились новые уведомления'
+    
+    subs = Subscribes.objects.filter(subscribe_type=EMAIL_C)
 
     for sub in subs.all():
         for event in sub.subscribe_events.all():
-            template = TEMPLATES_MAP[event.event_type]
-            context = SELECT_CONTEXT_MAP[event.event_type](event.event_id)
+            #раскоментировать и заполнить MAP когда надо будет кастомизировать шаблоны
+            #template = TEMPLATES_MAP[event.event_type]
+            #context = SELECT_CONTEXT_MAP[event.event_type](event.event_id)
+
+            template = TEMPLATES_MAP[MESSEGE_T]
+            context = {
+                'name' : sub.user_id.username
+            }
             email = event.subscribe.user_id.email
+            html = render_to_string(template, context)
             if email:
-                send_email.delay(vent.subscribe.user_id.id, 
-                                 event.event_type,
-                                 template, 
-                                 context,
-                                 email)
+                send_mail_task.delay(event.pk,
+                                     subject,
+                                     messsage, 
+                                     settings.EMAIL_HOST_USER, 
+                                     [email],
+                                     html)
     
     
