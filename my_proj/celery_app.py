@@ -16,13 +16,13 @@ app.conf.update(
         Queue('normal', normal_ex, routing_key='normal'),
         Queue('low', low_ex, routing_key='low'),
     ),
-    task_default_exchange = 'my_proj.normal',
-    task_default_queue = 'my_proj.normal'
+    task_default_exchange = 'normal',
+    task_default_queue = 'normal'
 )
 
 app.conf.update(
-    task_routes=  {
-        'plugin.email.tasks.bulk_event_mailing': {'queue': 'normal'},
+    task_routes = {
+        'sushi_app.tasks.bulk_event_mailing': {'queue': 'low'},
     }
 )
 
@@ -30,7 +30,5 @@ app.conf.beat_schedule = {
     'bulk-email-send': {
         'task': 'sushi_app.tasks.bulk_event_mailing',
         'schedule': 5,
-        'options': {'queue' : 'low', 'routing_key': 'low'}
     }
 }
-
