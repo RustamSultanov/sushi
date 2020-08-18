@@ -16,13 +16,18 @@
 
                     <a href="{% url 'employee_sign_shops' employee.id sign.id %}"
                        class="badge badge-primary badge-pill badge-w-icon">
-                        <img src="{{ sign.icon.url }}" height="18" width="18">
+                        {% if sign.icon %}
+                            <img src="{{ sign.icon.url }}" height="18" width="18">
+                        {% endif %}
                         {{ sign.title }}
                     </a>
                 {% else %}
                     <a href="#"
                        class="badge badge-secondary badge-pill badge-w-icon">
-                        <img src="{{ sign.icon.url }}" height="18" width="18">{{ sign.title }}
+                        {% if sign.icon %}
+                            <img src="{{ sign.icon.url }}" height="18" width="18">
+                        {% endif %}
+                        {{ sign.title }}
                     </a>
 
                 {% endif %}
