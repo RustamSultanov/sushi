@@ -1,4 +1,5 @@
-from mickroservices.models import IdeaModel, NewsPage
+from mickroservices.models import IdeaModel, NewsPage, DocumentSushi
+from mickroservices.utils import generate_doc_preview
 from .models import *
 
 
@@ -80,7 +81,7 @@ def handle_shop(instance, event_type, **kwargs):
 @receiver(post_save, sender=IdeaModel)
 @register_event_type(IDEA_T)
 def handle_idea(instance, event_type, **kwargs):
-    fin = [instance.recipient]
+    fin = [instance.recipient, instance.sender]
     subs = Subscribes.objects.filter(event_type=event_type, user_id__in=fin)
     if kwargs['created']:
         return
@@ -92,7 +93,7 @@ def handle_idea(instance, event_type, **kwargs):
         elif instance.status == IdeaModel.ST_REJECTED:
             status = 'rejected'
         else:
-            return
+            status = 'new'
 
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
@@ -145,3 +146,7 @@ def handle_materials(instance, event_type):
                                        subscribe=sub,
                                        value=status)
             event.save()
+
+@receiver(post_save, sender=DocumentSushi)
+def generate_preview(instance, **kwargs):
+    generate_doc_preview(instance)

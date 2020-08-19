@@ -24,6 +24,7 @@
 
                 $('#documents_wraper').load("{% url 'load_docs' %}" + path);
                 $('#pagination').load("{% url 'load_paginations_docs' %}" + path);
+                bindPreviewEvents() 
                 this.removeAllFiles();
             }        
         });
