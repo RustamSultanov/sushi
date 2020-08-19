@@ -37,6 +37,7 @@ from .signals import handle_materials
 
 import json
 import pandas as pd
+import secrets
 
 User = get_user_model()
 
@@ -471,58 +472,92 @@ def load_filtered_feedback(request):
     )
 
 
-@csrf_exempt
-def _load_docs(request):
+def _get_params_if_exists(request, *args, **kwargs):
+    ''' args ключи, kwargs ключи со значением по дефолту '''
+
+    params = {}
+    for arg in args:
+        if arg not in kwargs: 
+            kwargs[arg] = None
+
+    for k, default in kwargs.items():
+
+        added = False
+        if default:
+            params[k] = request.GET.get(k, default)
+            added = True
+        elif k in request.GET:
+            params[k] = request.GET[k]
+            added = True
+
+        if added and isinstance(params[k], str) and params[k].isdigit():
+            params[k] = int(params[k])
+
+    return params
+
+
+def _load_docs(request, current_page=1, doc_type=None, sub_type=None):
     count_objects = 9
-    current_page = int(request.GET.get('page', 1))
     offset = (current_page * count_objects) - count_objects
     limmit = (current_page * count_objects)
     print(offset, limmit)
-    if 'doc_type' in request.GET:
-        docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])[offset: limmit]
+    if doc_type:
+        docs = DocumentSushi.objects.filter(doc_type=doc_type)[offset: limmit]
     else:
         docs = []
 
-    if docs and 'sub_type' in request.GET:
-        docs = DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])[offset: limmit]
+    if sub_type:
+        docs = DocumentSushi.objects.filter(sub_type=sub_type)[offset: limmit]
 
     return docs
 
 
 @csrf_exempt
 def load_docs(request):
-    docs = _load_docs(request)
-    context = {'documents': docs}
-    with_preview = int(request.GET.get('with_preview', 0))
-
-    if with_preview:
-        urls = {doc.id: doc.url for doc in docs}
-
-        # сопоставляем каждому документу ссылку на выделенное превью в случае её наличия
-        preview_docs = DocumentPreview.objects.filter(base_document_id__in=(doc.id for doc in docs))
-        for pdoc in preview_docs:
-            urls[pdoc.base_document.id] = pdoc.preview_file.url
-
-        id_to_preview_type = dict()
-        for doc in docs:
-            ext = doc.file_extension.lower()
-            if ext in CONVERT_TO_PDF_EXTENSIONS:
-                id_to_preview_type[doc.id] = 'embed'
-
-            if ext == 'pdf':
-                id_to_preview_type[doc.id] = 'clear_pdf'
-
-            if ext in ('xls', 'xlsx'):
-                id_to_preview_type[doc.id] = 'excel'
-
-            if ext in IMAGE_TYPES:
-                id_to_preview_type[doc.id] = 'image'
-
-        context['js_map_keys'] = json.dumps([k for k in urls.keys()])
-        context['js_map_vals'] = json.dumps([j for i, j in urls.items()])
-        context['id_to_preview_type'] = json.dumps(id_to_preview_type)
-
+    args = ['doc_type', 'sub_type']
+    params = _get_params_if_exists(request, *args, current_page=1) 
+    docs = _load_docs(request, **params)
+    context = {
+        'documents': docs,
+        'refresh_token': secrets.token_hex(16)
+    }
     return render(request, 'partials/documents.html', context)
+
+
+@csrf_exempt
+def load_docs_info(request):
+    ''' принимиет json со спискос id документов '''
+
+    ids = [int(i) for i in json.loads(request.body)]
+    docs = DocumentSushi.objects.filter(pk__in=ids)
+    urls = {doc.id: doc.url for doc in docs}
+
+    # сопоставляем каждому документу ссылку на выделенное превью в случае её наличия
+    preview_docs = DocumentPreview.objects.filter(base_document_id__in=(doc.id for doc in docs))
+    for pdoc in preview_docs:
+        urls[pdoc.base_document.id] = pdoc.preview_file.url
+
+    id_to_preview_type = dict()
+    for doc in docs:
+        ext = doc.file_extension.lower()
+        if ext in CONVERT_TO_PDF_EXTENSIONS:
+            id_to_preview_type[doc.id] = 'embed'
+
+        if ext == 'pdf':
+            id_to_preview_type[doc.id] = 'clear_pdf'
+
+        if ext in ('xls', 'xlsx'):
+            id_to_preview_type[doc.id] = 'excel'
+
+        if ext in IMAGE_TYPES:
+            id_to_preview_type[doc.id] = 'image'
+    
+    res = {
+        'docs_id_to_url': urls,
+        'id_to_preview_type': id_to_preview_type
+    }
+
+    return JsonResponse(res)
 
 
 @csrf_exempt
