@@ -3,6 +3,8 @@ from django.core.mail import EmailMessage
 # from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
+from mickroservices.consts import CONVERT_TO_PDF_EXTENSIONS
+from mickroservices.models import DocumentPreview
 
 import logging
 from subprocess import call
@@ -86,4 +88,37 @@ class FileConverter:
     def convert_excel_to_pdf(self, source_path, output_path):
         return self._libre_convert('pdf', source_path, output_path)
 
+
+
+
+def generate_doc_preview(doc):
+    try:
+        _generate_doc_preview(doc)
+    except Exception as e:
+        pass
+
+        
+def _generate_doc_preview(doc):
+    filename = doc.file.name
+    media_preview_path = path.join(settings.MEDIA_ROOT, 'document_previews/')
+    source_path = path.join(settings.MEDIA_ROOT, filename)
+    ext = filename.split('.')[-1].lower()
+    
+    available_types = CONVERT_TO_PDF_EXTENSIONS
+
+    if ext == 'pdf':
+        return 
+
+    if ext in available_types:
+        target_filename = path.split(filename)[1]
+        target_filename = target_filename.split('.')[0] + '_preview.pdf'
+        target_path = path.join(media_preview_path, target_filename)
+        relative_target_path = path.join('document_previews/', target_filename)
+        converter = FileConverter()
+        if converter.convert(ext, 'pdf', source_path, target_path):
+            preview = DocumentPreview(preview_file=relative_target_path,
+                                      preview_title=target_filename,
+                                      base_document=doc)
+
+            preview.save()
 

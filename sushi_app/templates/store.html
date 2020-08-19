@@ -3,6 +3,7 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static "libs/dropzone/dropzone.css" %}">
+    <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
 {% endblock %}
 
 {% block title %}Личный кабинет{% endblock %}
@@ -46,6 +47,7 @@
         <dd class="col-md-9">{{ shop.file }}</dd>
         <dt class="col-md-3">Признак</dt>
     </dl>
+    <div class="preview-content"><button id="show-preview-button" class="btn btn-light">Скрыть</button></div>
     {#                    <div class="py-1 mb-2">#}
     {#                        <div class="input-group">#}
     {#                            <input type="text" class="form-control" placeholder="Введите запрос">#}
@@ -232,7 +234,14 @@
 
 {% block extrascripts %}
     <script src='{% static "libs/dropzone/dropzone.js" %}'></script>
+    <script src='{% static "js/file_previews.js" %}'></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+            $('#show-preview-button').hide().click(function(){
+                $(prKeySh(activePreviewId)).hide()
+                $('#show-preview-button').hide()
+            });
+        });
         $(function () {
             $('#dropzone-files').dropzone({});
 
@@ -254,6 +263,7 @@
                 success: function (file, response) {
                     $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}");
                     $('#documents_pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}");
+                    bindPreviewEvents()
                     this.removeAllFiles();
                 }
             });
