@@ -69,6 +69,21 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
 
             break
 
+        case 'request': 
+            title = 'Задача ' + eventEntityId
+            
+            switch (eventStatus) {
+                case eventStatusNew:
+                    messege = 'Вам назначена новая задачa !'
+                    break
+                
+                case eventStatyusUpdated:
+                    messege = 'Изменение по задаче!'
+                    break
+            }
+
+            break
+
         case 'feedback':
             title = 'Отзыв'
 
@@ -103,12 +118,35 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
             title = 'Идея'
 
             switch (eventStatus) {
+                case eventStatusNew: 
+                    messege = 'Новая идея!'
+                    break
+
                 case 'accepted':
                     messege = 'Идея одобрена!'
                     break
 
                 case 'rejected':
                     messege = 'Идея отклонена.'
+                    break
+            }
+
+            break
+
+        case 'question':
+            title = 'Вопрос'
+
+            switch (eventStatus) {
+                case eventStatusNew: 
+                    messege = 'Новый вопрос!'
+                    break
+                
+                case eventStatyusUpdated: 
+                    messege = 'Изменение ответа'
+                    break
+                    
+                case 'accepted':
+                    messege = 'Добавлен ответ!'
                     break
             }
 
@@ -153,7 +191,8 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
                     messege = 'Есть обновлённая новость!'
                     break
             }
-                break
+            
+            break
     }
 
     return {'messege': messege, 'title': title } 

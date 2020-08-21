@@ -353,10 +353,12 @@ def faq_list(request):
 @user_passes_test(manager_check)
 def faq_answer(request, faq_id):
     question = get_object_or_404(QuestionModel, id=faq_id)
+    old_answer = question.answer
     form = AnswerForm(request.POST or None, instance=question)
     if form.is_valid():
         new_q = form.save(commit=False)
         new_q.status = QuestionModel.ST_REJECTED if new_q.hide else QuestionModel.ST_OK
+        new_q._old_answer = old_answer
         new_q.save()
         Chat_Message.objects.create(
             sender=request.user,
@@ -1097,7 +1099,17 @@ def notification_settings_view(request):
         ],
     }
 
-    event_types = [j[0] for j in EVENT_TYPE_CHOICES]
+    is_manager = request.user.user_profile.is_manager
+    exclude_choices = [REQUEST_T]
+
+    if is_manager:
+        exclude_choices = [TASK_T, FEEDBACK_T]
+    
+    user_available_choices = list(filter(lambda x: x[0] not in exclude_choices,
+                                         EVENT_TYPE_CHOICES))
+
+    event_types = [j[0] for j in user_available_choices]
+
     site_rules = {i: False for i in event_types}
     email_rules = {i: False for i in event_types}
     site_rule_name = SUBSCRIBE_TYPE_CHOICES[0][0]
@@ -1112,8 +1124,7 @@ def notification_settings_view(request):
 
     sort_map = {j: i for i, j in enumerate(event_types)}
 
-    context['names'] = [i[1] for i in sorted(EVENT_TYPE_CHOICES, key=lambda x: sort_map[x[0]])]
-
+    context['names'] = [i[1] for i in sorted(user_available_choices, key=lambda x: sort_map[x[0]])]
     context['site_rules'] = _build_input_info(site_rules, site_rule_name, sort_map)
     context['email_rules'] = _build_input_info(email_rules, email_rule_name, sort_map)
 

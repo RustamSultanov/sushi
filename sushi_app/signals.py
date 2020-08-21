@@ -1,4 +1,4 @@
-from mickroservices.models import IdeaModel, NewsPage
+from mickroservices.models import IdeaModel, NewsPage, QuestionModel
 from .models import *
 
 
@@ -16,9 +16,6 @@ def register_event_type(event_type):
 @register_event_type(TASK_T)
 def handle_task(instance, event_type, **kwargs):
     fin = [instance.responsible]
-    if fin[0] != instance.manager.user:
-        fin.append(instance.manager.user)
-
     subs = Subscribes.objects.filter(event_type=event_type,
                                      user_id__in=fin)
     for sub in subs:
@@ -30,13 +27,27 @@ def handle_task(instance, event_type, **kwargs):
         event.save()
 
 
+@receiver(post_save, sender=Requests)
+@register_event_type(REQUEST_T)
+def handle_request(instance, event_type, **kwargs):
+    #в задаче от франчайзи получателем является менеджер
+    fin = [instance.manager.user]
+    subs = Subscribes.objects.filter(event_type=event_type,
+                                     user_id__in=fin)
+    for sub in subs:
+        status = 'new' if kwargs['created'] else 'updated'
+        event = NotificationEvents(event_id=instance.pk,
+                                   event_type=event_type,
+                                   subscribe=sub,
+                                   value=status)
+        event.save()
+
+
+
 @receiver(post_save, sender=Feedback)
 @register_event_type(FEEDBACK_T)
 def handle_feedback(instance, event_type, **kwargs):
     fin = [instance.responsible.user]
-    if fin[0] != instance.manager.user:
-        fin.append(instance.manager.user)
-
     subs = Subscribes.objects.filter(event_type=event_type,
                                      user_id__in=fin)
     for sub in subs:
@@ -77,23 +88,24 @@ def handle_shop(instance, event_type, **kwargs):
         event.save()
 
 
+IDEA_UPDATE_STATUSES = {
+    IdeaModel.ST_OK: 'accepted',
+    IdeaModel.ST_REJECTED: 'rejected'
+}
+
 @receiver(post_save, sender=IdeaModel)
 @register_event_type(IDEA_T)
 def handle_idea(instance, event_type, **kwargs):
-    fin = [instance.recipient]
-    subs = Subscribes.objects.filter(event_type=event_type, user_id__in=fin)
-    if kwargs['created']:
-        return
+    sub = Subscribes.objects.filter(event_type=event_type)
 
-    for sub in subs:
-        status = ''
-        if instance.status == IdeaModel.ST_OK:
-            status = 'accepted'
-        elif instance.status == IdeaModel.ST_REJECTED:
-            status = 'rejected'
-        else:
-            return
+    if instance.status in IDEA_UPDATE_STATUSES:
+        status = IDEA_UPDATE_STATUSES[instance.status]
+        sub = sub.filter(user_id=instance.sender).first()
+    else:
+        sub = sub.filter(user_id=instance.recipient).first()
+        status = 'new'
 
+    if sub:
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
                                    subscribe=sub,
@@ -145,3 +157,32 @@ def handle_materials(instance, event_type):
                                        subscribe=sub,
                                        value=status)
             event.save()
+
+
+QUESTION_UPDATE_STATUSES = {
+    QuestionModel.ST_OK: 'accepted',
+    QuestionModel.ST_REJECTED: 'rejected'
+}
+
+@receiver(post_save, sender=QuestionModel)
+@register_event_type(QUESTION_T)
+def handle_question(instance, event_type, **kwargs):
+    sub = Subscribes.objects.filter(event_type=event_type)
+
+    if instance.status in QUESTION_UPDATE_STATUSES:
+        if instance._old_answer != instance.answer and instance._old_answer:
+            status = 'updated'
+        else:
+            status = 'accepted'
+        sub = sub.filter(user_id=instance.user).first()
+    else:
+        manager = instance.user.user_profile.manager.user
+        sub = sub.filter(user_id=manager).first()
+        status = 'new'
+
+    if sub:
+        event = NotificationEvents(event_id=instance.pk,
+                                   event_type=event_type,
+                                   subscribe=sub,
+                                   value=status)
+        event.save()
