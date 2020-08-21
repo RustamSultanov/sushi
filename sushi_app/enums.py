@@ -8,13 +8,15 @@ STATUS_CHOICE = (
 # Типы сообытий регистрируемые для оповещений
 (TASK_T, MESSEGE_T, NEWS_T,
  FEEDBACK_T, SHOP_T, MATERIALS_T,
- IDEA_T) = ('task', 'messege', 'news',
+ IDEA_T, REQUEST_T, QUESTION_T) = ('task', 'messege', 'news',
             'feedback', 'shop', 'materials',
-            'idea',)
+            'idea','request', 'question')
 
 EVENT_TYPE_CHOICES = (
-    (TASK_T, 'Задачи'),
+    (TASK_T, 'Задачи от менеджера'),
+    (REQUEST_T, 'Задачи от франчайзи'),
     (MESSEGE_T, 'Сообщения'),
+    (QUESTION_T, 'Вопросы'),
     (NEWS_T, 'Новости'),
     (FEEDBACK_T, 'Отзывы'),
     (SHOP_T, 'Создание магазина'),

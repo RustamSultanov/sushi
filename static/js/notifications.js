@@ -49,7 +49,7 @@ const loadNotifications = (data, status, jqXHR) => {
 }
 
 let eventStatusNew = 'new'
-let eventStatyusUpdated = 'updated'
+let eventStatusUpdated = 'updated'
 
 const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
     let title, messege
@@ -62,7 +62,22 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
                     messege = 'Вам назначена новая задачa !'
                     break
                 
-                case eventStatyusUpdated:
+                case eventStatusUpdated:
+                    messege = 'Изменение по задаче!'
+                    break
+            }
+
+            break
+
+        case 'request': 
+            title = 'Задача ' + eventEntityId
+            
+            switch (eventStatus) {
+                case eventStatusNew:
+                    messege = 'Вам назначена новая задачa !'
+                    break
+                
+                case eventStatusUpdated:
                     messege = 'Изменение по задаче!'
                     break
             }
@@ -77,7 +92,7 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
                     messege = 'Новый отзыв!'
                     break
 
-                case eventStatyusUpdated:
+                case eventStatusUpdated:
                     messege = 'Изменение по отзыву!'
                     break
             }
@@ -92,7 +107,7 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
                     messege = 'Новое сообщение'
                     break
 
-                case eventStatyusUpdated:
+                case eventStatusUpdated:
                     messege = 'Сообщение обновлено!'
                     break
             }
@@ -103,12 +118,35 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
             title = 'Идея'
 
             switch (eventStatus) {
+                case eventStatusNew: 
+                    messege = 'Новая идея!'
+                    break
+
                 case 'accepted':
                     messege = 'Идея одобрена!'
                     break
 
                 case 'rejected':
                     messege = 'Идея отклонена.'
+                    break
+            }
+
+            break
+
+        case 'question':
+            title = 'Вопрос'
+
+            switch (eventStatus) {
+                case eventStatusNew: 
+                    messege = 'Новый вопрос!'
+                    break
+                
+                case eventStatusUpdated:
+                    messege = 'Изменение ответа'
+                    break
+                    
+                case 'accepted':
+                    messege = 'Добавлен ответ!'
                     break
             }
 
@@ -122,7 +160,7 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
                     messege = 'Создан новый магазин!'
                     break
 
-                case eventStatyusUpdated:
+                case eventStatusUpdated:
                     messege = 'Изменение в магазине'
                     break
             }
@@ -149,11 +187,12 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
                     messege = 'Создана новая новость!'
                     break
 
-                case eventStatyusUpdated:
+                case eventStatusUpdated:
                     messege = 'Есть обновлённая новость!'
                     break
             }
-                break
+            
+            break
     }
 
     return {'messege': messege, 'title': title } 
