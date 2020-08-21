@@ -1133,7 +1133,7 @@ def notification_settings_view(request):
 
 @csrf_exempt
 @login_required
-def update_notificaqton_rules(request):
+def update_notification_rules(request):
     subs = Subscribes.objects.filter(user_id=request.user.id)
     subs_d = {(x.event_type, x.subscribe_type): x for x in subs}
     models = []
