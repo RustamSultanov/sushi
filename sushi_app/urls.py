@@ -18,6 +18,7 @@ urlpatterns = [
         auth_view.LogoutView.as_view(next_page="login"),
         name='logout'),
     path('employee/<int:user_id>', views.employee_info, name='employee_info'),
+    path('employee/<int:user_id>/shops_by_sign/<int:sign_id>', views.EmployeeSignShopsView.as_view(), name='employee_sign_shops'),
     path('employee/all', views.employee_list, name='employee_list'),
     path('faq-all', views.faq_list, name='faq_list'),
     path('faq/<int:faq_id>', views.faq_answer, name='faq_answer'),
@@ -38,6 +39,7 @@ urlpatterns = [
         login_required(views.ShopListView.as_view()),
         name='shop'),
     path('shop_sign_detail/<int:pk>', login_required(views.ShopSignDetailView.as_view()), name='shop_sign_detail'),
+    path('shop_sign_edit/<int:pk>', login_required(views.ShopSignEditView.as_view()), name='shop_sign_edit'),
     path(
         'task/new/<int:partner_id>', views.form_task_view, name='form_task'),
     path(
@@ -53,6 +55,7 @@ urlpatterns = [
     path('load/idea', views.load_filtered_idea, name='load_filtered_ideas'),
     path('load_paginations_docs', views.load_paginations_docs, name='load_paginations_docs'),
     path('load_docs', views.load_docs, name='load_docs'),
+    path('load_docs_info/', views.load_docs_info, name='load_docs_info'),
     path('load_notifications/', views.load_notifcations, name='load_notifcations'),
     path('load_pdf_stream_preview/<int:doc_id>', views.load_pdf_stream_preview, name='load_pdf_stream_preview'),
     path('load_excel/<int:doc_id>', views.load_excel, name='load_excel'),

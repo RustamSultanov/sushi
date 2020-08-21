@@ -15,7 +15,7 @@ from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
 from django.http import (HttpResponse,
                          HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_text
 from wagtail.admin.forms.search import SearchForm
@@ -37,6 +37,7 @@ from .signals import handle_materials
 
 import json
 import pandas as pd
+import secrets
 
 User = get_user_model()
 
@@ -204,12 +205,35 @@ class ShopListView(ListView):
             )
 
 
-class ShopSignDetailView(UserPassesTestMixin, DetailView):
-    model = ShopSign
+class ShopSignDetailView(UserPassesTestMixin, ListView):
+    template_name = 'sushi_app/shopsign_detail.html'
+
+    def get_queryset(self):
+        emps = UserProfile.objects.filter(shop_partner__signs__id=self.kwargs['pk'])
+        return emps
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = set(context['object_list'])
+        context['sign'] = ShopSign.objects.get(pk=self.kwargs['pk'])
+        return context
+
 
     def test_func(self):
         return self.request.user.is_staff or self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head
 
+
+class ShopSignEditView(UserPassesTestMixin, UpdateView):
+    model = Shop
+    form_class = ShopSignEditForm
+    template_name = 'store_sign_edit.html'
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return HttpResponseRedirect(reverse_lazy("shop", args=[self.object.id]))
 
 # # Create your views here
 def manager_check(user):
@@ -254,8 +278,34 @@ def employee_list(request):
 @login_required
 def employee_info(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    return render(request, "employee.html", {"employee": user})
+    all_signs = {}
+    shop_sign = ShopSign.objects.all()
+    if hasattr(user, 'user_profile') and hasattr(user.user_profile, 'shop_partner'):
+        user_shops_signs_ids = set(user.user_profile.shop_partner.values_list('signs__id', flat=True))
+        if None in user_shops_signs_ids:
+            user_shops_signs_ids.remove(None)
+    for sign in shop_sign:
+        all_signs[sign.title] = {'title': sign.title, 'id': sign.id, 'icon': sign.icon}
+        if sign.id in user_shops_signs_ids:
+            all_signs[sign.title]['active'] = True
+        else:
+            all_signs[sign.title]['active'] = False
+    all_signs_sorted = sorted(all_signs.values(), key=lambda x: x['active'], reverse=True)
+    return render(request, "employee.html", {"employee": user, "shop_sign": all_signs_sorted})
 
+
+class EmployeeSignShopsView(ListView):
+    template_name = "sushi_app/shops_list_by_sign.html"
+
+    def get_queryset(self):
+        shops = Shop.objects.filter(partner__user_id=self.kwargs['user_id'], signs__id=self.kwargs['sign_id'])
+        return shops
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sign'] = ShopSign.objects.get(pk=self.kwargs['sign_id'])
+        context['employee'] = User.objects.get(pk=self.kwargs['user_id'])
+        return context
 
 @login_required
 def notification_view(request):
@@ -473,58 +523,92 @@ def load_filtered_feedback(request):
     )
 
 
-@csrf_exempt
-def _load_docs(request):
+def _get_params_if_exists(request, *args, **kwargs):
+    ''' args ключи, kwargs ключи со значением по дефолту '''
+
+    params = {}
+    for arg in args:
+        if arg not in kwargs: 
+            kwargs[arg] = None
+
+    for k, default in kwargs.items():
+
+        added = False
+        if default:
+            params[k] = request.GET.get(k, default)
+            added = True
+        elif k in request.GET:
+            params[k] = request.GET[k]
+            added = True
+
+        if added and isinstance(params[k], str) and params[k].isdigit():
+            params[k] = int(params[k])
+
+    return params
+
+
+def _load_docs(request, current_page=1, doc_type=None, sub_type=None):
     count_objects = 9
-    current_page = int(request.GET.get('page', 1))
     offset = (current_page * count_objects) - count_objects
     limmit = (current_page * count_objects)
     print(offset, limmit)
-    if 'doc_type' in request.GET:
-        docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])[offset: limmit]
+    if doc_type:
+        docs = DocumentSushi.objects.filter(doc_type=doc_type)[offset: limmit]
     else:
         docs = []
 
-    if docs and 'sub_type' in request.GET:
-        docs = DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])[offset: limmit]
+    if sub_type:
+        docs = DocumentSushi.objects.filter(sub_type=sub_type)[offset: limmit]
 
     return docs
 
 
 @csrf_exempt
 def load_docs(request):
-    docs = _load_docs(request)
-    context = {'documents': docs}
-    with_preview = int(request.GET.get('with_preview', 0))
-
-    if with_preview:
-        urls = {doc.id: doc.url for doc in docs}
-
-        # сопоставляем каждому документу ссылку на выделенное превью в случае её наличия
-        preview_docs = DocumentPreview.objects.filter(base_document_id__in=(doc.id for doc in docs))
-        for pdoc in preview_docs:
-            urls[pdoc.base_document.id] = pdoc.preview_file.url
-
-        id_to_preview_type = dict()
-        for doc in docs:
-            ext = doc.file_extension.lower()
-            if ext in CONVERT_TO_PDF_EXTENSIONS:
-                id_to_preview_type[doc.id] = 'embed'
-
-            if ext == 'pdf':
-                id_to_preview_type[doc.id] = 'clear_pdf'
-
-            if ext in ('xls', 'xlsx'):
-                id_to_preview_type[doc.id] = 'excel'
-
-            if ext in IMAGE_TYPES:
-                id_to_preview_type[doc.id] = 'image'
-
-        context['js_map_keys'] = json.dumps([k for k in urls.keys()])
-        context['js_map_vals'] = json.dumps([j for i, j in urls.items()])
-        context['id_to_preview_type'] = json.dumps(id_to_preview_type)
-
+    args = ['doc_type', 'sub_type']
+    params = _get_params_if_exists(request, *args, current_page=1) 
+    docs = _load_docs(request, **params)
+    context = {
+        'documents': docs,
+        'refresh_token': secrets.token_hex(16)
+    }
     return render(request, 'partials/documents.html', context)
+
+
+@csrf_exempt
+def load_docs_info(request):
+    ''' принимиет json со спискос id документов '''
+
+    ids = [int(i) for i in json.loads(request.body)]
+    docs = DocumentSushi.objects.filter(pk__in=ids)
+    urls = {doc.id: doc.url for doc in docs}
+
+    # сопоставляем каждому документу ссылку на выделенное превью в случае её наличия
+    preview_docs = DocumentPreview.objects.filter(base_document_id__in=(doc.id for doc in docs))
+    for pdoc in preview_docs:
+        urls[pdoc.base_document.id] = pdoc.preview_file.url
+
+    id_to_preview_type = dict()
+    for doc in docs:
+        ext = doc.file_extension.lower()
+        if ext in CONVERT_TO_PDF_EXTENSIONS:
+            id_to_preview_type[doc.id] = 'embed'
+
+        if ext == 'pdf':
+            id_to_preview_type[doc.id] = 'clear_pdf'
+
+        if ext in ('xls', 'xlsx'):
+            id_to_preview_type[doc.id] = 'excel'
+
+        if ext in IMAGE_TYPES:
+            id_to_preview_type[doc.id] = 'image'
+    
+    res = {
+        'docs_id_to_url': urls,
+        'id_to_preview_type': id_to_preview_type
+    }
+
+    return JsonResponse(res)
 
 
 @csrf_exempt
@@ -874,9 +958,10 @@ def edit_employee_view(request, user_id):
 def shop_form_view(request):
     form = ShopForm(request.POST or None)
     if form.is_valid():
-        form = form.save(commit=False)
-        form.save()
-        return HttpResponseRedirect(reverse_lazy("shop", args=[form.id]))
+        shop = form.save()
+        sign = ShopSign.objects.filter(pk__in=request.POST.getlist('signs'))
+        shop.signs.add(*sign)
+        return HttpResponseRedirect(reverse_lazy("shop", args=[shop.id]))
     context = {
         "form": form,
         "breadcrumb": [

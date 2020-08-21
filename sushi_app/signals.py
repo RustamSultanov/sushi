@@ -1,3 +1,5 @@
+from mickroservices.models import IdeaModel, NewsPage, DocumentSushi
+from mickroservices.utils import generate_doc_preview
 from mickroservices.models import IdeaModel, NewsPage, QuestionModel
 from .models import *
 
@@ -48,6 +50,9 @@ def handle_request(instance, event_type, **kwargs):
 @register_event_type(FEEDBACK_T)
 def handle_feedback(instance, event_type, **kwargs):
     fin = [instance.responsible.user]
+    if fin[0] != instance.manager.user:
+        fin.append(instance.manager.user)
+
     subs = Subscribes.objects.filter(event_type=event_type,
                                      user_id__in=fin)
     for sub in subs:
@@ -186,3 +191,7 @@ def handle_question(instance, event_type, **kwargs):
                                    subscribe=sub,
                                    value=status)
         event.save()
+
+@receiver(post_save, sender=DocumentSushi)
+def generate_preview(instance, **kwargs):
+    generate_doc_preview(instance)

@@ -3,6 +3,7 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static "libs/dropzone/dropzone.css" %}">
+    <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
 {% endblock %}
 
 {% block title %}Личный кабинет{% endblock %}
@@ -28,7 +29,7 @@
                 {% endif %}
                 <div class="small ml-3">
                     {% if shop.partner %}
-                        <div class="text-primary">{{ shop.partner }}</div>{% else %}
+                        <a href="{% url 'employee_info' shop.partner.user.id %}" class="text-primary">{{ shop.partner }}</a>{% else %}
                     {% endif %}
                     {# <a href="#" class="btn btn-xs btn-round btn-outline-dark">Написать в чат</a>#}
                 </div>
@@ -46,6 +47,7 @@
         <dd class="col-md-9">{{ shop.file }}</dd>
         <dt class="col-md-3">Признак</dt>
     </dl>
+    <div class="preview-content"><button id="show-preview-button" class="btn btn-light">Скрыть</button></div>
     {#                    <div class="py-1 mb-2">#}
     {#                        <div class="input-group">#}
     {#                            <input type="text" class="form-control" placeholder="Введите запрос">#}
@@ -198,28 +200,16 @@
                         </div>
                     </div>
                     <div class="tab-pane fade" id="signs">
+                        {% for sign in shop_sign %}
+                            <a href="{% url 'shop_sign_detail' sign.id %}"
+                               class="badge {% if sign in shop.signs.all %}badge-primary{% else %}badge-secondary{% endif %} badge-pill badge-w-icon">
+                                {% if sign.icon %}
+                                <img src="{{ sign.icon.url }}" height="18" width="18">
+                                {% endif %}
+                                {{ sign.title }}
+                            </a>
 
-                        <div id="feedback_manager" class="my-4 row">
-                            {% for sign in shop_sign %}
-                                <div class="col-md-6 col-lg-4 mb-4">
-                                    <div class="card hoverable"
-                                         {% if sign in shop.signs.all %}style="background-color: red"
-                                         {% else %}style="background-color: gray"{% endif %}>
-                                        <div class="card-body">
-                                            <div class="media align-items-center mb-3">
-                                                {% if sign.icon %}
-                                                    <img src="{{ sign.icon.url }}" alt=""
-                                                         class="ui-w-60 rounded-circle">
-                                                {% endif %}
-                                                <div class="ml-3">
-                                                    <a href="{% url 'shop_sign_detail' sign.id %}">{{ sign.title }}</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -232,7 +222,14 @@
 
 {% block extrascripts %}
     <script src='{% static "libs/dropzone/dropzone.js" %}'></script>
+    <script src='{% static "js/file_previews.js" %}'></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+            $('#show-preview-button').hide().click(function(){
+                $(prKeySh(activePreviewId)).hide()
+                $('#show-preview-button').hide()
+            });
+        });
         $(function () {
             $('#dropzone-files').dropzone({});
 
@@ -254,6 +251,7 @@
                 success: function (file, response) {
                     $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}");
                     $('#documents_pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}");
+                    bindPreviewEvents()
                     this.removeAllFiles();
                 }
             });

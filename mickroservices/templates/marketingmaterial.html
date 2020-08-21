@@ -82,11 +82,12 @@
 
 {% block css %}
     <link rel="stylesheet" href='{% static "libs/dropzone/dropzone.css" %}'>
-    <link rel="stylesheet" href='{% static "css/widgets/marketing-file-preview.css" %}'>
+    <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
 {% endblock %}
 
 {% block extrascripts %}
     <script src='{% static "libs/dropzone/dropzone.js" %}'></script>
+    <script src='{% static "js/file_previews.js" %}'></script>
     <script type="text/javascript">
         $(document).ready(function(){
                     $('#documents_wraper').load("{% url 'load_docs' %}?page=1&doc_type=4&with_preview=1");
@@ -144,6 +145,7 @@
             $('#documents_wraper').load("{% url 'load_docs' %}?page="+current_page+"&doc_type=" + element.data("id"))
             $('#pagination').load("{% url 'load_paginations_docs' %}?page="+current_page+"&doc_type="+ element.data("id"));
             console.log($('.text-dark'))
+            bindPreviewEvents()
             return false;
         }
     </script>

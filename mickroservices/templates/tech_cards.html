@@ -15,6 +15,7 @@
 
 {% block content %} 
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div class="preview-content"><button id="show-preview-button" class="btn btn-light">Скрыть</button></div>                
                     <div class="nav">
                         {% for item in subjects %}
                             <li class="nav-item">
@@ -76,13 +77,18 @@
 
 {% block css %}
     <link rel="stylesheet" href='{% static "libs/dropzone/dropzone.css" %}'>
+    <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
 {% endblock %}
 
 {% block extrascripts %}
     {% include 'partials/dropezone_script.html' %}
+    <script src='{% static "js/file_previews.js" %}'></script>
     <script type="text/javascript">
         $(document).ready(function(){
-
+                $('#show-preview-button').hide().click(function(){
+                        $(prKeySh(activePreviewId)).hide()
+                        $('#show-preview-button').hide()
+                });
                 let current_page = 1
                 let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
 
@@ -97,6 +103,7 @@
 
                 $('#documents_wraper').load("{% url 'load_docs' %}" + path);
                 $('#pagination').load("{% url 'load_paginations_docs' %}" + path);
+                bindPreviewEvents() 
         });
 
         function load_tech_cards_docs(element){           
@@ -106,6 +113,7 @@
             $('input[name="sub_type"').val(element.data("id"));
             $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}&sub_type=" + element.data("id"))
             $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}&sub_type="+ element.data("id"));
+            bindPreviewEvents()
             return false;
         }
     </script>
