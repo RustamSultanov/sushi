@@ -1,7 +1,12 @@
-from mickroservices.models import IdeaModel, NewsPage, DocumentSushi
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from mickroservices.models import IdeaModel, NewsPage, DocumentSushi, QuestionModel
 from mickroservices.utils import generate_doc_preview
-from mickroservices.models import IdeaModel, NewsPage, QuestionModel
-from .models import *
+
+from sushi_app.enums import MATERIALS_T, NEWS_T, IDEA_T, SHOP_T, MESSEGE_T, FEEDBACK_T, TASK_T
+from sushi_app.models import NotificationEvents, Subscribes, Shop, Messeges, Feedback, Task, Requests, REQUEST_T, \
+    QUESTION_T
 
 
 def register_event_type(event_type):
@@ -32,7 +37,7 @@ def handle_task(instance, event_type, **kwargs):
 @receiver(post_save, sender=Requests)
 @register_event_type(REQUEST_T)
 def handle_request(instance, event_type, **kwargs):
-    #в задаче от франчайзи получателем является менеджер
+    # в задаче от франчайзи получателем является менеджер
     fin = [instance.manager.user]
     subs = Subscribes.objects.filter(event_type=event_type,
                                      user_id__in=fin)
@@ -43,7 +48,6 @@ def handle_request(instance, event_type, **kwargs):
                                    subscribe=sub,
                                    value=status)
         event.save()
-
 
 
 @receiver(post_save, sender=Feedback)
@@ -97,6 +101,7 @@ IDEA_UPDATE_STATUSES = {
     IdeaModel.ST_OK: 'accepted',
     IdeaModel.ST_REJECTED: 'rejected'
 }
+
 
 @receiver(post_save, sender=IdeaModel)
 @register_event_type(IDEA_T)
@@ -169,6 +174,7 @@ QUESTION_UPDATE_STATUSES = {
     QuestionModel.ST_REJECTED: 'rejected'
 }
 
+
 @receiver(post_save, sender=QuestionModel)
 @register_event_type(QUESTION_T)
 def handle_question(instance, event_type, **kwargs):
@@ -191,6 +197,7 @@ def handle_question(instance, event_type, **kwargs):
                                    subscribe=sub,
                                    value=status)
         event.save()
+
 
 @receiver(post_save, sender=DocumentSushi)
 def generate_preview(instance, **kwargs):
