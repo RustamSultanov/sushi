@@ -110,6 +110,14 @@ const buildNotificationInfo = (eventType, eventStatus, eventEntityId) => {
                 case eventStatusUpdated:
                     messege = 'Сообщение обновлено!'
                     break
+
+                case 'feedback_updated':
+                    messege = 'Новый комментарий в отзыве'
+                    break
+
+                case 'request_updated':
+                    messege = 'Новый комментарий по задаче'
+                    break
             }
 
             break
