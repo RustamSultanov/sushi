@@ -1108,6 +1108,7 @@ def requests_view(request, requests_id, user_id):
 @login_required
 def feedback_view(request, feedback_id, user_id):
     feedback = get_object_or_404(Feedback, id=feedback_id)
+    feedback._request_user = request.user
     if feedback.responsible != request.user.user_profile:
         if feedback.manager != request.user.user_profile:
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -1185,14 +1186,18 @@ def notification_settings_view(request):
     }
 
     is_manager = request.user.user_profile.is_manager
-    exclude_choices = [REQUEST_T]
-
+    exclude_choices = []
     if is_manager:
-        exclude_choices = [TASK_T, FEEDBACK_T]
+        exclude_choices = [TASK_T]
     
     user_available_choices = list(filter(lambda x: x[0] not in exclude_choices,
                                          EVENT_TYPE_CHOICES))
-
+    if not is_manager:
+        request_key = list(filter(lambda a: a[0] == REQUEST_T, 
+                                  user_available_choices))[0]
+        index = user_available_choices.index(request_key)
+        user_available_choices[index] = (REQUEST_T, 'Задачи менеджеру')
+        
     event_types = [j[0] for j in user_available_choices]
 
     site_rules = {i: False for i in event_types}
