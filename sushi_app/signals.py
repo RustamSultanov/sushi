@@ -37,12 +37,16 @@ def handle_task(instance, event_type, **kwargs):
 @receiver(post_save, sender=Requests)
 @register_event_type(REQUEST_T)
 def handle_request(instance, event_type, **kwargs):
-    # в задаче от франчайзи получателем является менеджер
-    fin = [instance.manager.user]
+    status = 'new' if kwargs['created'] else 'updated'
+    if status == 'new':
+        recepient = instance.manager.user
+    else:
+        recepient = instance.responsible
+        
     subs = Subscribes.objects.filter(event_type=event_type,
-                                     user_id__in=fin)
+                                     user_id=recepient)
     for sub in subs:
-        status = 'new' if kwargs['created'] else 'updated'
+        
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
                                    subscribe=sub,
@@ -53,14 +57,16 @@ def handle_request(instance, event_type, **kwargs):
 @receiver(post_save, sender=Feedback)
 @register_event_type(FEEDBACK_T)
 def handle_feedback(instance, event_type, **kwargs):
-    fin = [instance.responsible.user]
-    if fin[0] != instance.manager.user:
-        fin.append(instance.manager.user)
+    is_responsible_request = instance._request_user == instance.responsible.user 
+    recepient = instance.responsible.user 
+    if is_responsible_request:
+        recepient =  instance.manager.user
 
     subs = Subscribes.objects.filter(event_type=event_type,
-                                     user_id__in=fin)
+                                     user_id=recepient)
     for sub in subs:
         status = 'new' if kwargs['created'] else 'updated'
+            
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
                                    subscribe=sub,
@@ -76,6 +82,12 @@ def handle_messeges(instance, event_type, **kwargs):
                                      user_id__in=fin)
     for sub in subs:
         status = 'new' if kwargs['created'] else 'updated'
+        if instance.feedback:
+            status = 'feedback_updated'
+
+        if instance.requests:
+            status = 'request_updated'
+
         event = NotificationEvents(event_id=instance.pk,
                                    event_type=event_type,
                                    subscribe=sub,
