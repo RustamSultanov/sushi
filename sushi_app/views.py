@@ -209,12 +209,11 @@ class ShopSignDetailView(UserPassesTestMixin, ListView):
     template_name = 'sushi_app/shopsign_detail.html'
 
     def get_queryset(self):
-        emps = UserProfile.objects.filter(shop_partner__signs__id=self.kwargs['pk'])
-        return emps
+        shops = Shop.objects.filter(signs__id=self.kwargs['pk'])
+        return shops
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['object_list'] = set(context['object_list'])
         context['sign'] = ShopSign.objects.get(pk=self.kwargs['pk'])
         return context
 

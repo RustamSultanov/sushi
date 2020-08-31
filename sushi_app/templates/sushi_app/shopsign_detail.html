@@ -3,27 +3,27 @@
 
 {% block title %}Личный кабинет{% endblock %}
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Список Франчайзи по признаку {{ sign.title }}</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Список Магазинов по признаку {{ sign.title }}</h2>
 {% endblock %}
 
 {% block content %}
     <div class="my-4 row">
 
-        {% for employee in object_list %}
+        {% for shop in object_list %}
             <div class="col-md-6 mb-4">
                 <div class="card hoverable h-100">
                     <div class="card-header d-flex justify-content-between  align-items-start">
                         <div>
                             <div class="h5 mb-0 font-weight-semibold"><a
-                                    href="{% url 'employee_info' employee.user.id %}"
-                                    class="text-primary">{{ employee.user.first_name }} {{ employee.user.last_name }}</a>
+                                    href="{% url 'shop' shop.id %}"
+                                    class="text-primary">{{ shop }}</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         {% empty %}
-            <br><h4>Признак не относится ни к одному Франчайзи</h4>
+            <br><h4>Признак не относится ни к одному магазину</h4>
         {% endfor %}
     </div>
 {% endblock %}
