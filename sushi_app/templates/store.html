@@ -202,7 +202,7 @@
                     <div class="tab-pane fade" id="signs">
                         {% for sign in shop_sign %}
                             <a href="{% url 'shop_sign_detail' sign.id %}"
-                               class="badge {% if sign in shop.signs.all %}badge-primary{% else %}badge-secondary{% endif %} badge-pill badge-w-icon">
+                               class="badge {% if sign in shop.signs.all %}badge-active{% else %}badge-disabled{% endif %} badge-pill badge-w-icon">
                                 {% if sign.icon %}
                                 <img src="{{ sign.icon.url }}" height="18" width="18">
                                 {% endif %}
