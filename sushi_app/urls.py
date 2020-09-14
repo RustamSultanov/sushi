@@ -59,6 +59,7 @@ urlpatterns = [
     path('load_notifications/', views.load_notifcations, name='load_notifcations'),
     path('load_pdf_stream_preview/<int:doc_id>', views.load_pdf_stream_preview, name='load_pdf_stream_preview'),
     path('load_excel/<int:doc_id>', views.load_excel, name='load_excel'),
+    path('preview/<doc_type>/<int:doc_id>', views.preview, name='preview'),
     path('notification-settings/', views.notification_settings_view, name='notification_settings'),
     path('notification-rules', views.update_notification_rules, name='notification_rules'),
     path('notification-events', views.notifcation_events, name='notification_events'),

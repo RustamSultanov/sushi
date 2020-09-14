@@ -1,47 +1,29 @@
 let activePreviewId;
 
+const openPreview = (docType, docId) => {
+    window.open(getBaseUrl() + `preview/${docType}/${docId}`); 
+}
+
 const showPreview = function()  {
     let docId = parseInt(($(this).attr('doc-id')))
     if (previewsMap.has(docId)) {
-        if (activePreviewId !== undefined){
-            $(prKeySh(activePreviewId)).hide()
-            activePreviewId = docId
-            $('#show-preview-button').show()
-        }
         if (!existing_preview.has(docId) && id_to_preview_type.has(docId)){
 
             if (id_to_preview_type.get(docId) == 'embed'){
-                let element_template =  `<embed class="preview-internal" id="${prKey(docId)}" src="${previewsMap.get(docId)}" type="application/pdf">`
-                $(".preview-content").append(element_template);
-                existing_preview.add(docId)
+                openPreview(id_to_preview_type.get(docId), docId)
             }
 
             if (id_to_preview_type.get(docId) == 'image'){
-                let element_template =  `<img class="preview-img" id="${prKey(docId)}" src="${previewsMap.get(docId)}">`
-                existing_preview.add(docId)
-                $(".preview-content").append(element_template);
+                openPreview(id_to_preview_type.get(docId), docId)
             }
 
             if (id_to_preview_type.get(docId) == 'excel'){
-                let element_template = `<div id="${prKey(docId)}" class="table-wrapper table-responsive"></div>`
-                existing_preview.add(docId)
-                
-                //устанавливаем bootstrap стили в таблицу загруженную через api
-                $(".preview-content").append(element_template);
-                $(prKeySh(docId)).load('/load_excel/'+ docId, function(){
-                    $('table').attr('class', 'table')
-                    $('table thead th').attr('scope', 'col')
-                    $('table tbody tr th').attr('scope', 'row')
-                })
+                openPreview(id_to_preview_type.get(docId), docId)
             }
 
             if (id_to_preview_type.get(docId) == 'clear_pdf'){
-                let element_template = `<embed class="preview-internal" id="${prKey(docId)}" src="/load_pdf_stream_preview/${docId}" type="application/pdf">`
-                existing_preview.add(docId)
-                $(".preview-content").append(element_template);
+                openPreview(id_to_preview_type.get(docId), docId)
             }
-            activePreviewId = docId
-            $('#show-preview-button').show()
         } else {
             activePreviewId = docId
             $(prKeySh(activePreviewId)).show()
