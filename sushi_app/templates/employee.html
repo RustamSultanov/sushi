@@ -15,7 +15,7 @@
                 {% if sign.active %}
 
                     <a href="{% url 'shop_sign_detail' sign.id %}"
-                       class="badge badge-primary badge-pill badge-w-icon">
+                       class="badge badge-active badge-pill badge-w-icon">
                         {% if sign.icon %}
                             <img src="{{ sign.icon.url }}" height="18" width="18">
                         {% endif %}
@@ -23,7 +23,7 @@
                     </a>
                 {% else %}
                     <a href="{% url 'shop_sign_detail' sign.id %}"
-                       class="badge badge-secondary badge-pill badge-w-icon">
+                       class="badge badge-disabled badge-pill badge-w-icon">
                         {% if sign.icon %}
                             <img src="{{ sign.icon.url }}" height="18" width="18">
                         {% endif %}
