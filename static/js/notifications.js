@@ -4,6 +4,18 @@ const [toastrType, successStatus] = ["success", "success"]
 let [notifToShow, showingNotif] = [new Map(), new Set()]
 let buildedNotifInfo = new Map()
 let notifData
+
+ion.sound({
+    sounds: [
+        {
+            name: 'door_bell',
+            volume: 0.2,
+            preload: false,
+            path: 'static/sounds/',
+        }
+    ],
+});
+
 const notIn = (setA, setB) => {
     let rSet = new Set()
     for(let key of setA) 
@@ -236,7 +248,8 @@ const showNotifications = () => {
             extendedTimeOut: 0,
             rtl: $('body').attr('dir') === 'rtl' || $('html').attr('dir') === 'rtl'
         })
-        
+
+        ion.sound.play('door_bell');
         evData = {
             'json_data': [key],
             'key': key

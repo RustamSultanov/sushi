@@ -1,7 +1,7 @@
 let activePreviewId;
 
 const openPreview = (docType, docId) => {
-    window.open(getBaseUrl() + `preview/${docType}/${docId}`); 
+    window.open(getBaseUrl() + `preview-deprecated/${docType}/${docId}`);
 }
 
 const showPreview = function()  {
