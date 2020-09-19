@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+
+{% block title %}Предпросмотр{% endblock %}
+
+{% block page_title %}
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Предпросмотр</h2>
+{% endblock %}
+
+{% block  breadcrumb%}
+        {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+
+{% block content %} 
+<div class="preview-content">
+    {% if doc_type == 'embed' %}
+        <embed class="preview-internal" id="{{ doc_id }}" src="{{ doc_url }}" type="application/pdf">
+    {% elif doc_type == 'image'%}
+        <img class="preview-img" id="{{ doc_id }}" src="{{ doc_url }}">
+    {% elif doc_type == 'excel'%}
+        <div class="table-wrapper table-responsive" id="{{ doc_id }}" ></div>
+    {% elif doc_type == 'clear_pdf'%}
+        <embed class="preview-internal"  id="{{ doc_id }}" src="/load_pdf_stream_preview/{{ doc_id }}" type="application/pdf">
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
+{% endblock %}
+
+{% block extrascripts %}
+    <script src='{% static "js/file_previews.js" %}'></script>
+    <script type="text/javascript">
+        let docType = '{{ doc_type }}'
+        let docId = '{{ doc_id }}'
+
+        if (docType === 'excel'){
+            $(`#${docId}`).load('/load_excel/'+ docId, function(){
+                    $('table').attr('class', 'table')
+                    $('table thead th').attr('scope', 'col')
+                    $('table tbody tr th').attr('scope', 'row')
+                })
+        }
+    </script>
+{% endblock %}

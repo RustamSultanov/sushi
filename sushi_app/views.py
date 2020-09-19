@@ -627,6 +627,21 @@ def load_excel(request, doc_id):
 
 
 @csrf_exempt
+def preview_deprecated(request, doc_type, doc_id):
+    doc = DocumentSushi.objects.filter(pk=doc_id).first()
+    doc_url = doc.url
+    preview_doc = DocumentPreview.objects.filter(base_document_id=doc_id).first()
+    if preview_doc:
+        doc_url = preview_doc.preview_file.url
+
+    context = {
+        'doc_type': doc_type,
+        'doc_id': doc_id,
+        'doc_url': doc_url
+    }
+    return render(request, 'file_preview_deprecated.html', context)
+
+@csrf_exempt
 def preview(request, doc_type, doc_id):
     doc = DocumentSushi.objects.filter(pk=doc_id).first()
     doc_url = doc.url
