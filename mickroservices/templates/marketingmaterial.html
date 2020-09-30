@@ -17,6 +17,7 @@
 
 {% block content %} 
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div class="preview-content"><button id="show-preview-button" class="btn btn-light">Скрыть</button></div>
     <div class="my-5">
         <div class="nav">
             {% for item in types_marketing %}
@@ -50,12 +51,8 @@
                 <a href="?ordering=file_size" class="text-muted">По размеру</a>
             </div>
             <div class="row" id="documents_wraper">
-                {% include 'partials/documents.html' with documents=documents %}
             </div>
             <div id="pagination">
-            {% if is_paginated %}
-                {% include 'partials/pagination.html' with posts=page_obj %}
-            {% endif %}
             </div>
         </div>        
 {#        <div class="row mt-3">#}
@@ -85,20 +82,39 @@
 
 {% block css %}
     <link rel="stylesheet" href='{% static "libs/dropzone/dropzone.css" %}'>
+    <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
 {% endblock %}
 
 {% block extrascripts %}
     <script src='{% static "libs/dropzone/dropzone.js" %}'></script>
+    <script src='{% static "js/file_previews.js" %}'></script>
     <script type="text/javascript">
+        $(document).ready(function(){
+                    $('#documents_wraper').load("{% url 'load_docs' %}?page=1&doc_type=4&with_preview=1");
+                    $('#pagination').load("{% url 'load_paginations_docs' %}?page=1&doc_type=4");
+                    $('#show-preview-button').hide().click(function(){
+                        $(prKeySh(activePreviewId)).hide()
+                        $('#show-preview-button').hide()
+                    });
+        });
         $(function() {
             $('#dropzone-files').dropzone({
                 parallelUploads: 10,
                 maxFilesize:     50000,
                 filesizeBase:    3000,
                 addRemoveLinks:  true,
+                acceptedFiles: 'image/*,application/pdf,.cdr,.ai,.doc,.docx,.csv,.xls,.xlsx,.ppt,.pptx',
                 success : function(file, response){
-                    $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + $('.current_doc_type').data("id"));
-                    $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type=" + $('.current_doc_type').data("id"));
+                    let current_page = 1
+                    let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
+
+                    if(page_param){
+                        current_page = decodeURIComponent(page_param[2]);
+                        console.log(page_param, current_page);
+                    }
+
+                    $('#documents_wraper').load("{% url 'load_docs' %}?page="+current_page+"&doc_type=" + element.data("id"))
+                    $('#pagination').load("{% url 'load_paginations_docs' %}?page="+current_page+"&doc_type="+ element.data("id"));
                     this.removeAllFiles();
                 }        
             });
@@ -111,14 +127,25 @@
             dictResponseError: 'Server not Configured',
           };
         });
-        function load_marketing_docs(element){           
+
+        function load_marketing_docs(element){ 
             event.preventDefault();
+
+            let current_page = 1
+            let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
+
+            if(page_param){
+                current_page = decodeURIComponent(page_param[2]);
+                console.log(page_param, current_page);
+            }
+
             $('.nav-mm').removeClass('text-dark current_doc_type');
             element.addClass('text-dark current_doc_type');
             $('input[name="type"').val(element.data("id"));
-            $('#documents_wraper').load("{% url 'load_docs' %}?doc_type=" + element.data("id"))
-            $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type="+ element.data("id"));
+            $('#documents_wraper').load("{% url 'load_docs' %}?page="+current_page+"&doc_type=" + element.data("id"))
+            $('#pagination').load("{% url 'load_paginations_docs' %}?page="+current_page+"&doc_type="+ element.data("id"));
             console.log($('.text-dark'))
+            bindPreviewEvents()
             return false;
         }
     </script>

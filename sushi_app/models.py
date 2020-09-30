@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from wagtail.documents.models import Document, AbstractDocument
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
@@ -8,13 +10,9 @@ from wagtail.documents.models import get_document_model
 import wagtail.users.models
 
 from mickroservices.models import DocumentSushi
-
-ST_SOLVED, ST_IN_PROGRESS, ST_NOT_SOLVED = range(3)
-STATUS_CHOICE = (
-    (ST_SOLVED, "Решен"),
-    (ST_IN_PROGRESS, "Обрабатывается"),
-    (ST_NOT_SOLVED, "Не решен"),
-)
+from sushi_app.utils import create_dict_from_choices
+from datetime import datetime
+from .enums import * 
 
 
 class Department(models.Model):
@@ -50,6 +48,7 @@ class UserProfile(models.Model):
                                    null=True, blank=True)
     scan = models.FileField(upload_to='images',blank=True)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
+    ddk_number = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.user.get_full_name()
@@ -66,7 +65,11 @@ class Task(models.Model):
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
 
     def __str__(self):
-        return f"{self.date_create}, {self.status}"
+        return '{0} | {1} | {2}'.format(
+            self.id,
+            self.date_create,
+            create_dict_from_choices(STATUS_CHOICE)[self.status]
+        )
 
 
 class Requests(models.Model):
@@ -78,11 +81,30 @@ class Requests(models.Model):
     description = models.TextField()
     date_create = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
-    file = models.FileField(blank=True)
 
     def __str__(self):
-        return f"{self.date_create}, {self.status}"
+        return '{0} | {1} | {2}'.format(
+            self.id,
+            self.date_create,
+            create_dict_from_choices(STATUS_CHOICE)[self.status]
+        )
 
+
+class RequestFile(models.Model):
+    request = models.ForeignKey(Requests, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='requests', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class ShopSign(models.Model):
+    title = models.CharField(max_length=255, verbose_name='Наименование')
+    icon = models.ImageField('Иконка', blank=True, null=True)
+    def __str__(self):
+        return f"{self.title}"
+
+    class Meta:
+        verbose_name = 'Признак магазин'
+        verbose_name_plural = 'Признаки магазинов'
 
 class Shop(models.Model):
     address = models.CharField(max_length=255, blank=False, null=False,
@@ -106,6 +128,8 @@ class Shop(models.Model):
     date_create = models.DateTimeField(auto_now_add=True)
     file = models.FileField(blank=True)
     details = models.TextField(blank=True)
+    signs = models.ManyToManyField(ShopSign, blank=True,
+                             related_name='shop_sings')
 
     def __str__(self):
         return f"{self.city} {self.address}"
@@ -160,8 +184,11 @@ class Feedback(models.Model):
     source = models.CharField(max_length=256)
 
     def __str__(self):
-        return f"{self.date_create}, {self.status}"
-
+        return '{0} | {1} | {2}'.format(
+            self.id,
+            self.date_create,
+            create_dict_from_choices(STATUS_CHOICE)[self.status]
+        )
 
 class Messeges(models.Model):
     from_user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='user_messeges')
@@ -179,3 +206,29 @@ class Messeges(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+
+
+class Subscribes(models.Model):
+    user_id = models.ForeignKey(on_delete=models.CASCADE, 
+                                to=settings.AUTH_USER_MODEL, 
+                                related_name='user_subscribes')
+
+    event_type = models.CharField(choices=EVENT_TYPE_CHOICES, 
+                                  max_length=10)
+
+    subscribe_type = models.CharField(choices=EVENT_TYPE_CHOICES, 
+                                      max_length=10)
+
+class NotificationEvents(models.Model):
+    #ForeginKey для интересующей модели 
+    event_id = models.IntegerField()
+    event_type = models.CharField(choices=EVENT_TYPE_CHOICES,  
+                                  max_length=10)
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+    subscribe = models.ForeignKey(on_delete=models.CASCADE, 
+                                  to=Subscribes, 
+                                  related_name='subscribe_events')
+    value = models.CharField(max_length=50, null=True)
+
+
+from .signals import *

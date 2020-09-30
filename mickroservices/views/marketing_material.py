@@ -6,7 +6,12 @@ from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 
 from mickroservices.models import MarketingMaterial
-from mickroservices.models import DocumentSushi
+from mickroservices.models import DocumentSushi, DocumentPreview
+from mickroservices.utils import FileConverter
+
+from os import path
+from django.conf import settings
+
 
 
 def get_marketing_documents(doc_type=4):
@@ -24,7 +29,7 @@ class MarketingView(ListView):
 
         context['types_marketing'] =MarketingMaterial.TYPE_CHOICE
         context['breadcrumb'] = [{'title': 'Маркетинговые материалы'}]
-        context['documents'] = get_marketing_documents()
+        #context['documents'] = get_marketing_documents()
         context['active_tab'] = MarketingMaterial.T_PROMOTIONS
         return context
 
@@ -58,6 +63,7 @@ class MarketingView(ListView):
         doc._set_file_hash(doc.file.read())
         doc.file.seek(0)
         doc.save()
+
 
     @vary_on_headers("X-Requested-With")
     def post(self, request, *args, **kwargs):

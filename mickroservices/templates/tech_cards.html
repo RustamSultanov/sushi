@@ -15,6 +15,7 @@
 
 {% block content %} 
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div class="preview-content"><button id="show-preview-button" class="btn btn-light">Скрыть</button></div>                
                     <div class="nav">
                         {% for item in subjects %}
                             <li class="nav-item">
@@ -62,45 +63,49 @@
                             <a href="?ordering=file_size" class="text-muted">По размеру</a>
                         </div>
                         <div class="row" id="documents_wraper">
-                            {% include 'partials/documents.html' with documents=documents %}
+                          <!--  {% include 'partials/documents.html' with documents=documents %} -->
                         </div>
                         <div id="pagination">
+                        <!--
                         {% if is_paginated %}
                             {% include 'partials/pagination.html' with posts=page_obj %}
                         {% endif %}
+                        -->
                         </div>
                     </div>
 {% endblock %}
 
 {% block css %}
     <link rel="stylesheet" href='{% static "libs/dropzone/dropzone.css" %}'>
+    <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
 {% endblock %}
 
 {% block extrascripts %}
-    <script src='{% static "libs/dropzone/dropzone.js" %}'></script>
+    {% include 'partials/dropezone_script.html' %}
+    <script src='{% static "js/file_previews.js" %}'></script>
     <script type="text/javascript">
-        $(function() {
-            $('#dropzone-files').dropzone({
-                parallelUploads: 10,
-                maxFilesize:     50000,
-                filesizeBase:    3000,
-                addRemoveLinks:  true,
-                success : function(file, response){
-                    console.log(response.documents.length)
-                    $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}&sub_type=" + $('.text-dark').data("id"));
-                    $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}&sub_type=" + $('.text-dark').data("id"));
-                    this.removeAllFiles();
-                }        
-            });
+        $(document).ready(function(){
+                $('#show-preview-button').hide().click(function(){
+                        $(prKeySh(activePreviewId)).hide()
+                        $('#show-preview-button').hide()
+                });
+                let current_page = 1
+                let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
 
-            // Mock the file upload progress (only for the demo)
-            //
-        Dropzone.options.myAwesomeDropzone = {
-            maxFilesize: 5,
-            addRemoveLinks: true,
-            dictResponseError: 'Server not Configured',
-          };
+                if(page_param){
+                    current_page = decodeURIComponent(page_param[2]);
+                }
+
+                var path = "?page="+current_page+"&doc_type={{doc_type}}"
+                if($('.text-dark').length > 0 && $('.text-dark').data('id')){
+                    path += "&sub_type=" + $('.text-dark').data("id")
+                }
+
+                $('#documents_wraper').load("{% url 'load_docs' %}" + path);
+                $('#pagination').load("{% url 'load_paginations_docs' %}" + path);
+                bindPreviewEvents() 
         });
+
         function load_tech_cards_docs(element){           
             event.preventDefault();
             $('.nav-mm').removeClass('text-dark');
@@ -108,6 +113,7 @@
             $('input[name="sub_type"').val(element.data("id"));
             $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}&sub_type=" + element.data("id"))
             $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}&sub_type="+ element.data("id"));
+            bindPreviewEvents()
             return false;
         }
     </script>

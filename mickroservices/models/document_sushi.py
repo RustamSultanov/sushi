@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+
 from wagtail.search import index
 from wagtail.documents.models import Document
 
@@ -63,4 +65,25 @@ class DocumentSushi(Document):
         index.FilterField('sub_type_id')
     ]
 
+    @property
+    def preview(self):
+        path ='/media/icons_documents/'
+        file_extension = self.file_extension.lower()
 
+        if file_extension in('jpg', 'svg', 'png', 'bmp'):
+            return self.url
+
+        if file_extension in ('doc', 'docx'):
+            return f'{path}word.svg'
+        elif file_extension in ('xls', 'xlsx'):
+            return f'{path}excel.svg'
+        else:
+            return f'{path}{file_extension}.svg'
+
+
+class DocumentPreview(models.Model):
+    base_document = models.ForeignKey(DocumentSushi,
+                                      on_delete=models.CASCADE)
+
+    preview_title = models.CharField(max_length=255, verbose_name=_('preview_title'), default=None)
+    preview_file = models.FileField(upload_to='document_previews', verbose_name=_('preview_file'), default=None)

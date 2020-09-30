@@ -1,10 +1,14 @@
 {% load static %}
 {% load wagtailcore_tags %}
+
+<!-- этот элемент нужен для индикации перезагрузки информационного блока --> 
+<div id="refresh-container" refresh-token="{{ refresh_token }}"></div>
+
 {% for document in documents %}
     <div class="col-md-6 col-lg-4 p-1">
         <div class="project-attachment ui-bordered p-2">
 
-            <div class="project-attachment-img" style="background-image: url({{ document.url }})"></div>
+            <div class="project-attachment-img" style="background-image: url({{ document.preview }})" doc-id="{{ document.id }}"></div>
             <div class="media-body ml-3">
                 <strong class="project-attachment-filename">{{document.title}}</strong>
                 <div class="text-muted small"  >{{document.file_size|filesizeformat}}</div>

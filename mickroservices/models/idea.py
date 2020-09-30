@@ -2,7 +2,6 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 
-
 class IdeaModel(models.Model):
     """docstring for IdeaModel"""
 
@@ -30,7 +29,6 @@ class IdeaModel(models.Model):
                               verbose_name='Ответ')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     date_answer = models.DateTimeField(auto_now_add=True, verbose_name='Дата оповещения автора')
-    file = models.FileField(upload_to='ideas', blank=True)
 
     class Meta:
         verbose_name = 'Идея от пользователя'
@@ -39,3 +37,9 @@ class IdeaModel(models.Model):
 
     def __str__(self):
         return f'{self.body} от {self.email}'
+
+
+class IdeaFile(models.Model):
+    idea = models.ForeignKey(IdeaModel, on_delete=models.CASCADE, related_name='files')
+    file = models.FileField(upload_to='ideas', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)

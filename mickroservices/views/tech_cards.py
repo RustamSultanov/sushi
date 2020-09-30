@@ -4,7 +4,10 @@ from django.views.decorators.vary import vary_on_headers
 from django.utils.encoding import force_text
 
 from wagtail.admin.forms.search import SearchForm
-from wagtail.admin.utils import PermissionPolicyChecker
+try:
+    from wagtail.admin.utils import PermissionPolicyChecker
+except ImportError:
+    from wagtail.admin.auth import PermissionPolicyChecker
 from wagtail.core.models import Collection
 
 from wagtail.documents.forms import get_document_form
@@ -95,7 +98,7 @@ class SushiDocListView(ListView):
             # Save it
             doc = form.save(commit=False)
             doc.doc_type = self.doc_type
-            if 'sub_type' in request.POST:
+            if 'sub_type' in request.POST and request.POST['sub_type']:
                 print('sub_type:',request.POST['sub_type'])
                 doc.sub_type = Subjects.objects.get(pk=request.POST['sub_type'])
             doc.uploaded_by_user = request.user

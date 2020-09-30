@@ -1,0 +1,41 @@
+{% load static %}
+<script src='{% static "libs/dropzone/dropzone.js" %}'></script>
+
+<script type="text/javascript">
+    $(function() {
+        $('#dropzone-files').dropzone({
+            parallelUploads: 10,
+            maxFilesize:     50000,
+            filesizeBase:    3000,
+            addRemoveLinks:  true,
+            acceptedFiles: 'image/*,application/pdf,.cdr,.ai,.doc,.docx,.csv,.xls,.xlsx,.ppt,.pptx',
+            success : function(file, response){
+                let current_page = 1
+                let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
+
+                if(page_param){
+                    current_page = decodeURIComponent(page_param[2]);
+                }
+
+                var path = "?page="+current_page+"&doc_type={{doc_type}}"
+                if($('.text-dark').length > 0 && $('.text-dark').data('id')){
+                    path += "&sub_type=" + $('.text-dark').data("id")
+                }
+
+                $('#documents_wraper').load("{% url 'load_docs' %}" + path);
+                $('#pagination').load("{% url 'load_paginations_docs' %}" + path);
+                bindPreviewEvents() 
+                this.removeAllFiles();
+            }        
+        });
+
+        // Mock the file upload progress (only for the demo)
+        //
+    Dropzone.options.myAwesomeDropzone = {
+        maxFilesize: 5,
+        addRemoveLinks: true,
+        dictResponseError: 'Server not Configured',
+      };
+    });
+
+</script>
