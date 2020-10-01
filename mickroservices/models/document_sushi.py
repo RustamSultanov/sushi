@@ -67,7 +67,7 @@ class DocumentSushi(Document):
 
     @property
     def preview(self):
-        path ='/media/icons_documents/'
+        path ='/static/icons_documents/'
         file_extension = self.file_extension.lower()
 
         if file_extension in('jpg', 'svg', 'png', 'bmp'):
