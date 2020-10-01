@@ -7,7 +7,7 @@ class IdeaForm(forms.ModelForm):
     # email = forms.CharField(validators=[EmailValidator])
     class Meta:
         model = IdeaModel
-        exclude = ['status', 'answer', 'date_answer', 'date_created', ]
+        exclude = ['status', 'answer', 'date_answer', 'date_created', 'file',]
         widgets = {
             'body': forms.Textarea(attrs={'rows': 2}),
         }

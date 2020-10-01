@@ -16,15 +16,13 @@ $(function() {
     form.onsubmit = function() {
         // Populate hidden form on submit
         var body = document.querySelector('input[name=body]');
-        var content = document.querySelector('input[name=content]');
-        body.value = $('div.ql-editor').html();
-        content.value = $('div.ql-editor').html();
+        body.value = JSON.stringify(editor.getContents());
 
         console.log("Submitted", $(form).serialize(), $(form).serializeArray());
 
         // No back end to actually submit to!
-        //alert('Для production варианта нужно изменить функцию сабмита формы!')
-        //return false;
+        alert('Для production варианта нужно изменить функцию сабмита формы!')
+        return false;
     };
 
     var okText = "Ок";

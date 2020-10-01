@@ -1,0 +1,17 @@
+.checkbox-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 2em;
+}
+
+.checkbox-container > div{
+    margin-right: 40px;
+}
+
+.names-notif p + p{
+    margin: 0;
+}
+
+.toast-cont {
+    background-color: coral;
+}

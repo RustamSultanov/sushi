@@ -25,8 +25,8 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <div>Описание идеи: {{ idea.body }}</div>
-                                                        {% if idea.file %}<div>Файл: <a href="{{ idea.file.url }}" class="text-primary" download="">{{ idea.file }}</a></div>
-                                                            {% else %}{% endif %}
+                                                        {% for file in idea.files.all %}<div>Файл: <a href="{{ file.file.url }}" class="text-primary" download="">{{ file.file }}</a></div>
+                                                            {% empty %}{% endfor %}
                                                     </div>
                                                 </div>
                                             </div>

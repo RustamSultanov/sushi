@@ -1,0 +1,11 @@
+<div class="preview-content">
+    {% if doc_type == 'embed' %}
+        <embed class="preview-internal" id="{{ doc_id }}" src="{{ doc_url }}" type="application/pdf">
+    {% elif doc_type == 'image'%}
+        <img class="preview-img" id="{{ doc_id }}" src="{{ doc_url }}">
+    {% elif doc_type == 'excel'%}
+        <div class="table-wrapper table-responsive" id="{{ doc_id }}" ></div>
+    {% elif doc_type == 'clear_pdf'%}
+        <embed class="preview-internal"  id="{{ doc_id }}" src="/load_pdf_stream_preview/{{ doc_id }}" type="application/pdf">
+    {% endif %}
+</div>

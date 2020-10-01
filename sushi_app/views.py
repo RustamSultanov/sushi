@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -5,12 +6,16 @@ from django.views.decorators.vary import vary_on_headers
 from django.urls import reverse, reverse_lazy
 from django.forms.models import model_to_dict
 from django.contrib.auth import get_user_model
-from wagtail.admin.utils import user_passes_test
+
+try:
+    from wagtail.admin.utils import user_passes_test
+except ImportError:
+    from wagtail.admin.auth import user_passes_test
 from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
-from django.http import (
-    HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
-from django.views.generic import ListView
+from django.http import (HttpResponse,
+                         HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
+from django.views.generic import ListView, UpdateView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_text
 from wagtail.admin.forms.search import SearchForm
@@ -21,11 +26,18 @@ from django.contrib.auth.models import Group
 from django.forms import modelformset_factory
 
 from chat.models import Message as Chat_Message
-from mickroservices.models import DocumentSushi
+from mickroservices.models import DocumentSushi, DocumentPreview
 from mickroservices.models import NewsPage, QuestionModel, IdeaModel
 from mickroservices.forms import AnswerForm, IdeaStatusForm
+from mickroservices.consts import *
 from .forms import *
 from .models import *
+from .enums import *
+from .signals import handle_materials
+
+import json
+import pandas as pd
+import secrets
 
 User = get_user_model()
 
@@ -63,6 +75,7 @@ class ShopListView(ListView):
         context = super().get_context_data(**kwargs)
         context["invoices"] = self.get_invoices()
         context["shop"] = shop
+        context["shop_sign"] = ShopSign.objects.all()
         context["feedback_list"] = get_filtered_shop_feedback(self.request, self.kwargs["shop_id"])
         context["doc_type"] = DocumentSushi.T_PERSONAL
         context["type_invoice"] = DocumentSushi.T_PERSONAL_INVOICES
@@ -173,6 +186,7 @@ class ShopListView(ListView):
 
             if request.POST.get("type") == "doc":
                 shop.docs.add(doc)
+                handle_materials(doc)
             elif request.POST.get("type") == "invoice":
                 shop.checks.add(doc)
             return JsonResponse({"success": True})
@@ -190,6 +204,35 @@ class ShopListView(ListView):
                 }
             )
 
+
+class ShopSignDetailView(UserPassesTestMixin, ListView):
+    template_name = 'sushi_app/shopsign_detail.html'
+
+    def get_queryset(self):
+        shops = Shop.objects.filter(signs__id=self.kwargs['pk'])
+        return shops
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sign'] = ShopSign.objects.get(pk=self.kwargs['pk'])
+        return context
+
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head
+
+
+class ShopSignEditView(UserPassesTestMixin, UpdateView):
+    model = Shop
+    form_class = ShopSignEditForm
+    template_name = 'store_sign_edit.html'
+
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return HttpResponseRedirect(reverse_lazy("shop", args=[self.object.id]))
 
 # # Create your views here
 def manager_check(user):
@@ -211,7 +254,7 @@ def base(request):
     ).filter(head=request.user.user_profile)
     news_all = NewsPage.objects.all().order_by(
         'first_published_at')
-    if len(news_all) == 0 or len(news_all) == 1 or len(news_all) == 2 or len(news_all) == 3:
+    if len(news_all) == 0 or len(news_all) <= 3:
         news = news_all
     else:
         news = news_all[len(news_all) - 3:]
@@ -234,8 +277,34 @@ def employee_list(request):
 @login_required
 def employee_info(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    return render(request, "employee.html", {"employee": user})
+    all_signs = {}
+    shop_sign = ShopSign.objects.all()
+    if hasattr(user, 'user_profile') and hasattr(user.user_profile, 'shop_partner'):
+        user_shops_signs_ids = set(user.user_profile.shop_partner.values_list('signs__id', flat=True))
+        if None in user_shops_signs_ids:
+            user_shops_signs_ids.remove(None)
+    for sign in shop_sign:
+        all_signs[sign.title] = {'title': sign.title, 'id': sign.id, 'icon': sign.icon}
+        if sign.id in user_shops_signs_ids:
+            all_signs[sign.title]['active'] = True
+        else:
+            all_signs[sign.title]['active'] = False
+    all_signs_sorted = sorted(all_signs.values(), key=lambda x: x['active'], reverse=True)
+    return render(request, "employee.html", {"employee": user, "shop_sign": all_signs_sorted})
 
+
+class EmployeeSignShopsView(ListView):
+    template_name = "sushi_app/shops_list_by_sign.html"
+
+    def get_queryset(self):
+        shops = Shop.objects.filter(partner__user_id=self.kwargs['user_id'], signs__id=self.kwargs['sign_id'])
+        return shops
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sign'] = ShopSign.objects.get(pk=self.kwargs['sign_id'])
+        context['employee'] = User.objects.get(pk=self.kwargs['user_id'])
+        return context
 
 @login_required
 def notification_view(request):
@@ -333,10 +402,12 @@ def faq_list(request):
 @user_passes_test(manager_check)
 def faq_answer(request, faq_id):
     question = get_object_or_404(QuestionModel, id=faq_id)
+    old_answer = question.answer
     form = AnswerForm(request.POST or None, instance=question)
     if form.is_valid():
         new_q = form.save(commit=False)
         new_q.status = QuestionModel.ST_REJECTED if new_q.hide else QuestionModel.ST_OK
+        new_q._old_answer = old_answer
         new_q.save()
         Chat_Message.objects.create(
             sender=request.user,
@@ -370,7 +441,7 @@ def manager_lk_view(request):
     requests_not_solved = Requests.objects.filter(status=ST_IN_PROGRESS,
                                                   manager=request.user.user_profile).count()
     ideas_not_solved = IdeaModel.objects.filter(status=IdeaModel.ST_CONSIDERATION,
-                                                  recipient=request.user).count()
+                                                recipient=request.user).count()
     feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
                                                   manager=request.user.user_profile).count()
     request_list = get_filtered_request(request)
@@ -396,7 +467,7 @@ def manager_lk_view(request):
             "request_list": request_list,
             "task_list": task_list,
             "task_not_solved": task_not_solved,
-            "ideas_not_solved":ideas_not_solved,
+            "ideas_not_solved": ideas_not_solved,
             "requests_not_solved": requests_not_solved,
             "feedback_not_solved": feedback_not_solved,
             "feedback_list": feedback_list,
@@ -451,24 +522,144 @@ def load_filtered_feedback(request):
     )
 
 
-@csrf_exempt
-def load_docs(request):
-    if 'doc_type' in request.GET:
-        docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
+def _get_params_if_exists(request, *args, **kwargs):
+    ''' args ключи, kwargs ключи со значением по дефолту '''
+
+    params = {}
+    for arg in args:
+        if arg not in kwargs: 
+            kwargs[arg] = None
+
+    for k, default in kwargs.items():
+
+        added = False
+        if default:
+            params[k] = request.GET.get(k, default)
+            added = True
+        elif k in request.GET:
+            params[k] = request.GET[k]
+            added = True
+
+        if added and isinstance(params[k], str) and params[k].isdigit():
+            params[k] = int(params[k])
+
+    return params
+
+
+def _load_docs(request, current_page=1, doc_type=None, sub_type=None):
+    count_objects = 9
+    offset = (current_page * count_objects) - count_objects
+    limmit = (current_page * count_objects)
+    print(offset, limmit)
+    if doc_type:
+        docs = DocumentSushi.objects.filter(doc_type=doc_type)[offset: limmit]
     else:
         docs = []
 
-    if docs and 'sub_type' in request.GET:
-        docs = DocumentSushi.objects.filter(sub_type=request.GET['sub_type'])
-    return render(
-        request,
-        'partials/documents.html',
-        {'documents': docs}
-    )
+    if sub_type:
+        docs = DocumentSushi.objects.filter(sub_type=sub_type)[offset: limmit]
+
+    return docs
+
+
+@csrf_exempt
+def load_docs(request):
+    args = ['doc_type', 'sub_type']
+    params = _get_params_if_exists(request, *args, current_page=1) 
+    docs = _load_docs(request, **params)
+    context = {
+        'documents': docs,
+        'refresh_token': secrets.token_hex(16)
+    }
+    return render(request, 'partials/documents.html', context)
+
+
+@csrf_exempt
+def load_docs_info(request):
+    ''' принимиет json со спискос id документов '''
+
+    ids = [int(i) for i in json.loads(request.body)]
+    docs = DocumentSushi.objects.filter(pk__in=ids)
+    urls = {doc.id: doc.url for doc in docs}
+
+    # сопоставляем каждому документу ссылку на выделенное превью в случае её наличия
+    preview_docs = DocumentPreview.objects.filter(base_document_id__in=(doc.id for doc in docs))
+    for pdoc in preview_docs:
+        urls[pdoc.base_document.id] = pdoc.preview_file.url
+
+    id_to_preview_type = dict()
+    for doc in docs:
+        ext = doc.file_extension.lower()
+        if ext in CONVERT_TO_PDF_EXTENSIONS:
+            id_to_preview_type[doc.id] = 'embed'
+
+        if ext == 'pdf':
+            id_to_preview_type[doc.id] = 'clear_pdf'
+
+        if ext in ('xls', 'xlsx'):
+            id_to_preview_type[doc.id] = 'excel'
+
+        if ext in IMAGE_TYPES:
+            id_to_preview_type[doc.id] = 'image'
+    
+    res = {
+        'docs_id_to_url': urls,
+        'id_to_preview_type': id_to_preview_type
+    }
+
+    return JsonResponse(res)
+
+
+@csrf_exempt
+def load_pdf_stream_preview(request, doc_id):
+    with DocumentSushi.objects.get(pk=doc_id).file.open('rb') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'filename=some_file.pdf'
+        return response
+
+
+@csrf_exempt
+def load_excel(request, doc_id):
+    with DocumentSushi.objects.get(pk=doc_id).file.open('rb') as f:
+        excel_df = pd.read_excel(f);
+        response = HttpResponse(excel_df.to_html())
+        return response
+
+
+@csrf_exempt
+def preview_deprecated(request, doc_type, doc_id):
+    doc = DocumentSushi.objects.filter(pk=doc_id).first()
+    doc_url = doc.url
+    preview_doc = DocumentPreview.objects.filter(base_document_id=doc_id).first()
+    if preview_doc:
+        doc_url = preview_doc.preview_file.url
+
+    context = {
+        'doc_type': doc_type,
+        'doc_id': doc_id,
+        'doc_url': doc_url
+    }
+    return render(request, 'file_preview_deprecated.html', context)
+
+@csrf_exempt
+def preview(request, doc_type, doc_id):
+    doc = DocumentSushi.objects.filter(pk=doc_id).first()
+    doc_url = doc.url
+    preview_doc = DocumentPreview.objects.filter(base_document_id=doc_id).first()
+    if preview_doc:
+        doc_url = preview_doc.preview_file.url
+
+    context = {
+        'doc_type': doc_type,
+        'doc_id': doc_id,
+        'doc_url': doc_url
+    }
+    return render(request, 'file_preview.html', context)
 
 
 @csrf_exempt
 def load_paginations_docs(request):
+    current_page = int(request.GET.get('page', 1))
     if 'doc_type' in request.GET:
         docs = DocumentSushi.objects.filter(doc_type=request.GET['doc_type'])
     else:
@@ -476,14 +667,12 @@ def load_paginations_docs(request):
 
     if docs and 'sub_type' in request.GET:
         docs = docs.filter(sub_type=request.GET['sub_type'])
-        print("=====================================================")
-        print(docs[0], docs[0].sub_type)
 
     page_object = Paginator(docs, 9)
     return render(
         request,
         'partials/pagination.html',
-        {'posts': page_object.get_page(1)}
+        {'posts': page_object.get_page(current_page)}
     )
 
 
@@ -534,17 +723,20 @@ def partner_lk_view(request):
 @login_required
 @user_passes_test(partner_check)
 def form_request_view(request):
-    form = RequestsForm(request.POST or None,request.FILES or None)
+    form = RequestsForm(request.POST or None, request.FILES or None)
     if form.is_valid():
-        form = form.save(commit=False)
-        form.responsible = request.user
-        form.manager = request.user.user_profile.manager
-        form.save()
+        req = form.save(commit=False)
+        req.responsible = request.user
+        req.manager = request.user.user_profile.manager
+        req.save()
+        if 'file' in request.FILES:
+            for f in request.FILES.getlist('file'):
+                RequestFile.objects.create(file=f, request=req)
         Chat_Message.objects.create(
             sender=request.user,
             recipient=request.user.user_profile.manager.user,
             body="Создан запрос",
-            requests=form
+            requests=req
         )
         return HttpResponseRedirect(reverse_lazy("partner_lk"))
     return render(
@@ -796,9 +988,10 @@ def edit_employee_view(request, user_id):
 def shop_form_view(request):
     form = ShopForm(request.POST or None)
     if form.is_valid():
-        form = form.save(commit=False)
-        form.save()
-        return HttpResponseRedirect(reverse_lazy("shop", args=[form.id]))
+        shop = form.save()
+        sign = ShopSign.objects.filter(pk__in=request.POST.getlist('signs'))
+        shop.signs.add(*sign)
+        return HttpResponseRedirect(reverse_lazy("shop", args=[shop.id]))
     context = {
         "form": form,
         "breadcrumb": [
@@ -945,6 +1138,7 @@ def requests_view(request, requests_id, user_id):
 @login_required
 def feedback_view(request, feedback_id, user_id):
     feedback = get_object_or_404(Feedback, id=feedback_id)
+    feedback._request_user = request.user
     if feedback.responsible != request.user.user_profile:
         if feedback.manager != request.user.user_profile:
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -997,3 +1191,120 @@ def feedback_view(request, feedback_id, user_id):
             ],
         },
     )
+
+
+@login_required
+def notification_settings_view(request):
+    def _build_input_info(dict_, name_prefix, sort_map):
+        return [{
+            'name': f'{name_prefix}_{key}',
+            'val': key,
+            'checked': 'checked' if dict_[key] else ''
+        } for key in sorted(dict_.keys(),
+                            key=lambda x: sort_map[x])]
+
+    context = {
+        "breadcrumb": [
+            {
+                "title": "Личный кабинет",
+                "url": reverse_lazy("partner_lk")
+                if request.user.user_profile.is_partner
+                else reverse_lazy("manager_lk"),
+            },
+            {"title": "Настройки уведомлений"},
+        ],
+    }
+
+    is_manager = request.user.user_profile.is_manager
+    exclude_choices = []
+    if is_manager:
+        exclude_choices = [TASK_T]
+    
+    user_available_choices = list(filter(lambda x: x[0] not in exclude_choices,
+                                         EVENT_TYPE_CHOICES))
+    if not is_manager:
+        request_key = list(filter(lambda a: a[0] == REQUEST_T, 
+                                  user_available_choices))[0]
+        index = user_available_choices.index(request_key)
+        user_available_choices[index] = (REQUEST_T, 'Задачи менеджеру')
+        
+    event_types = [j[0] for j in user_available_choices]
+
+    site_rules = {i: False for i in event_types}
+    email_rules = {i: False for i in event_types}
+    site_rule_name = SUBSCRIBE_TYPE_CHOICES[0][0]
+    email_rule_name = SUBSCRIBE_TYPE_CHOICES[1][0]
+
+    for event in Subscribes.objects.filter(user_id=request.user.id):
+        if event.subscribe_type == email_rule_name:
+            email_rules[event.event_type] = True
+
+        if event.subscribe_type == site_rule_name:
+            site_rules[event.event_type] = True
+
+    sort_map = {j: i for i, j in enumerate(event_types)}
+
+    context['names'] = [i[1] for i in sorted(user_available_choices, key=lambda x: sort_map[x[0]])]
+    context['site_rules'] = _build_input_info(site_rules, site_rule_name, sort_map)
+    context['email_rules'] = _build_input_info(email_rules, email_rule_name, sort_map)
+
+    return render(request, 'notification_settings.html', context)
+
+
+@csrf_exempt
+@login_required
+def update_notification_rules(request):
+    subs = Subscribes.objects.filter(user_id=request.user.id)
+    subs_d = {(x.event_type, x.subscribe_type): x for x in subs}
+    models = []
+    for k, v in request.POST.items():
+        prefix, event_type = k.split('_')
+
+        key = (prefix, event_type)
+
+        if key in subs_d:
+            del subs_d[key]
+            continue
+
+        sub = Subscribes(user_id=request.user,
+                         event_type=event_type,
+                         subscribe_type=prefix)
+
+        models.append(sub)
+
+    Subscribes.objects.bulk_create(models)
+    for _, v in subs_d.items():
+        v.delete()
+
+    return HttpResponseRedirect(reverse_lazy('notification'))
+
+
+@login_required
+def load_notifcations(request):
+    subs = Subscribes.objects.filter(subscribe_type=REALTIME_C,
+                                     user_id=request.user.id)
+
+    res = {}
+
+    for sub in subs.all():
+        for event in sub.subscribe_events.order_by('date_of_creation').all():
+            res[event.pk] = {
+                'type': event.event_type,
+                'status': event.value,
+                'entityId': event.event_id
+            }
+
+    return JsonResponse(res)
+
+
+@login_required
+@csrf_exempt
+def notifcation_events(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            events = [int(i) for i in json.loads(request.body)]
+            NotificationEvents.objects.filter(pk__in=events).delete()
+
+    return JsonResponse({})
+
+

@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 
 from mickroservices.models import IdeaModel
 from mickroservices.forms import IdeaForm
+from mickroservices.models.idea import IdeaFile
 from mickroservices.utils import send_message
 from chat.models import Message as Chat_Message
 
@@ -29,6 +30,9 @@ class IdeaView(FormView):
             idea.sender = self.request.user
             idea.recipient = self.request.user.user_profile.manager.user
             idea.save()
+            if 'file' in request.FILES:
+                for f in request.FILES.getlist('file'):
+                    IdeaFile.objects.create(file=f, idea=idea)
             Chat_Message.objects.create(
                 sender=self.request.user,
                 recipient=self.request.user.user_profile.manager.user,

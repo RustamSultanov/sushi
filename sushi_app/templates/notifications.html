@@ -4,34 +4,45 @@
 
 {% block title %}Оповещения{% endblock %}
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Оповещения</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Оповещения
+         <a href="{% url 'notification_settings' %}" class="btn btn-round btn-outline-primary btn-sm">Настройка уведомлений</a>
+    </h2>
 {% endblock %}
 
-{% block  breadcrumb%}
+{% block  breadcrumb %}
     {% include 'partials/breadcrumb.html' %}
 {% endblock %}
 
- {% block content %}
+{% block content %}
 
-            {% for notification in notifications %}
-                <div class="card my-4">
-                <div class="card-body">
-                {% if notification.task %}<a class="h5 text-dark" href="{% url 'task' notification.task.id notification.sender.id %}">По задаче</a>
-                {% elif notification.feedback %}<a class="h5 text-dark" href="{% url 'feedback' notification.feedback.id notification.sender.id %}">По отзыву</a>
-                {% elif notification.requests %}<a class="h5 text-dark" href="{% url 'request' notification.requests.id notification.sender.id %} ">По запросу</a>
-                    {% elif notification.question %}<a class="h5 text-dark" href="{% url 'faq_list' %} ">По вопросу</a>
+    {% for notification in notifications %}
+        <div class="card my-4">
+            <div class="card-body">
+                {% if notification.task %}
+                    <a class="h5 text-dark" href="{% url 'task' notification.task.id notification.sender.id %}">По
+                        задаче</a>
+                {% elif notification.feedback %}<a class="h5 text-dark"
+                                                   href="{% url 'feedback' notification.feedback.id notification.sender.id %}">По
+                    отзыву</a>
+                {% elif notification.requests %}<a class="h5 text-dark"
+                                                   href="{% url 'request' notification.requests.id notification.sender.id %} ">По
+                    запросу</a>
+                {% elif notification.question %}
+                    <a class="h5 text-dark" href="{% url 'faq_list' %} ">По вопросу</a>
 
 
                 {% endif %}
 
-                            <div class="small text-muted">{{ notification.created_at }} | {{ notification.sender.get_full_name }}</div>
-                            <div class="text-muted">{{ notification.body }}</div>
-                        </div>
-                    </div>
-            {% endfor %}
-     {% if is_paginated %}
-                {% include 'partials/pagination.html' with posts=notifications %}
-            {% endif %}
+                <div class="small text-muted">{{ notification.created_at }} | <a
+                        href="{% url 'employee_info' notification.sender.id %}">{{ notification.sender.get_full_name }}</a>
+                </div>
+                <div class="text-muted">{{ notification.body }}</div>
+            </div>
+        </div>
+    {% endfor %}
+    {% if is_paginated %}
+        {% include 'partials/pagination.html' with posts=notifications %}
+    {% endif %}
 
- {% endblock %}
+{% endblock %}
 

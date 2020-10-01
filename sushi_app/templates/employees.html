@@ -19,7 +19,7 @@
                     <div class="card-body">
                         <div class="media align-items-center mb-3">
                             {% if employee.wagtail_profile.avatar %}
-                          <img src="{{ employee.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle">
+                                <a href="{% url 'employee_info' employee.user.id %}"> <img src="{{ employee.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>
                         {% else %}
                         {% endif %}
                             <div class="small ml-3">
@@ -47,6 +47,9 @@
                             {% else %}
                         {% endif %}
                             <br>{{ employee.user.email }}
+                        {% if employee.user_profile.ddk_number %}
+                            <br>{{ employee.user_profile.ddk_number }}
+                        {% else %}{% endif %}
                         </div>
 {#                        <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>#}
                     </div>
