@@ -24,9 +24,10 @@ from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 from django.contrib.auth.models import Group
 from django.forms import modelformset_factory
+from django.db.models import Q
 
 from chat.models import Message as Chat_Message
-from mickroservices.models import DocumentSushi, DocumentPreview
+from mickroservices.models import DocumentSushi, DocumentPreview, Subjects
 from mickroservices.models import NewsPage, QuestionModel, IdeaModel
 from mickroservices.forms import AnswerForm, IdeaStatusForm
 from mickroservices.consts import *
@@ -260,6 +261,25 @@ def base(request):
         news = news_all[len(news_all) - 3:]
     return render(request, "index.html", {"employee_list": employees_list, "news": news})
 
+@login_required
+def search(request):
+    search_phrase = request.GET.get('search_phrase')
+    if request.user.user_profile.is_manager:
+        employees_list = UserProfile.objects.prefetch_related(
+            "user", "wagtail_profile", "department"
+        ).filter(Q(head=request.user.user_profile), Q(user__first_name__contains=search_phrase) | Q(user__last_name__contains=search_phrase))[:20]
+    else:
+        employees_list = dict()
+    news_all = NewsPage.objects.filter(title__contains=search_phrase).order_by(
+        'first_published_at')[:20]
+    if len(news_all) == 0 or len(news_all) <= 3:
+        news = news_all
+    else:
+        news = news_all[len(news_all) - 3:]
+    documents_all = DocumentSushi.objects.filter(Q(title__contains=search_phrase))[:20]
+    dir_all = Subjects.objects.filter(name__contains=search_phrase)[:20]
+    return render(request, "search.html", {"employee_list": employees_list, "news": news, "dirs": dir_all,
+                                           "documents": documents_all, "is_manager": request.user.user_profile.is_manager})
 
 @login_required
 def employee_list(request):
