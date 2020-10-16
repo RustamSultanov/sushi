@@ -1,7 +1,6 @@
 from django.contrib.auth import views as auth_view
 from django.contrib.auth.decorators import login_required
 from django.urls import path
-
 from . import views
 from .forms import LoginForm
 
@@ -17,6 +16,8 @@ urlpatterns = [
         'logout',
         auth_view.LogoutView.as_view(next_page="login"),
         name='logout'),
+    path(
+        'search', views.search, name='search'),
     path('employee/<int:user_id>', views.employee_info, name='employee_info'),
     path('employee/<int:user_id>/shops_by_sign/<int:sign_id>', views.EmployeeSignShopsView.as_view(), name='employee_sign_shops'),
     path('employee/all', views.employee_list, name='employee_list'),
