@@ -267,19 +267,20 @@ def search(request):
     if request.user.user_profile.is_manager:
         employees_list = UserProfile.objects.prefetch_related(
             "user", "wagtail_profile", "department"
-        ).filter(Q(head=request.user.user_profile), Q(user__first_name__contains=search_phrase) | Q(user__last_name__contains=search_phrase))[:20]
+        ).filter(Q(head=request.user.user_profile), Q(user__first_name__icontains=search_phrase) | Q(user__last_name__icontains=search_phrase))[:20]
     else:
         employees_list = dict()
-    news_all = NewsPage.objects.filter(title__contains=search_phrase).order_by(
+    news_all = NewsPage.objects.filter(title__icontains=search_phrase).order_by(
         'first_published_at')[:20]
     if len(news_all) == 0 or len(news_all) <= 3:
         news = news_all
     else:
         news = news_all[len(news_all) - 3:]
-    documents_all = DocumentSushi.objects.filter(Q(title__contains=search_phrase))[:20]
-    dir_all = Subjects.objects.filter(name__contains=search_phrase)[:20]
+    documents_all = DocumentSushi.objects.filter(Q(title__icontains=search_phrase))[:20]
+    dir_all = Subjects.objects.filter(name__icontains=search_phrase)[:20]
     return render(request, "search.html", {"employee_list": employees_list, "news": news, "dirs": dir_all,
-                                           "documents": documents_all, "is_manager": request.user.user_profile.is_manager})
+                                           "documents": documents_all, "is_manager": request.user.user_profile.is_manager,
+                                           "search_phrase": search_phrase})
 
 @login_required
 def employee_list(request):
