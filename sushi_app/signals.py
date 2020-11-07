@@ -137,7 +137,7 @@ def handle_idea(instance, event_type, **kwargs):
 
 @receiver(post_save, sender=NewsPage)
 @register_event_type(NEWS_T)
-def handle_news(instance, event_type):
+def handle_news(instance, event_type,**kwargs):
     first = NotificationEvents.objects.filter(event_type=event_type,
                                               event_id=instance.pk) \
         .order_by('date_of_creation').first()
@@ -160,7 +160,7 @@ def handle_news(instance, event_type):
 
 
 @register_event_type(MATERIALS_T)
-def handle_materials(instance, event_type):
+def handle_materials(instance, event_type,**kwargs):
     shops = Shop.objects.filter(docs__id=instance.pk)
     if shops:
         subscribers = set()
