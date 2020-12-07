@@ -48,8 +48,14 @@
             {% else %}
                 <a class="btn btn-round btn-outline-primary btn-sm"
                    href="{% url 'form_task' employee.user_profile.id %}">Добавить задачу</a>
-                <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'edit_partner' employee.id %}">Редактировать
-                    франчайзи</a>
+
+                {% if employee.user_profile.is_manager and user.user_profile.is_head and not employee.user_profile.is_head %}
+                    <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'edit_employee' employee.id %}">Редактировать
+                        сотрудника</a>
+                {% elif employee.user_profile.is_partner %}
+                    <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'edit_partner' employee.id %}">Редактировать
+                        франчайзи</a>
+                {% endif %}
                 <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'form_review' %}">Добавить отзыв</a>
             {% endif %}
         </div>

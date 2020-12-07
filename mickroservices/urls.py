@@ -30,7 +30,11 @@ urlpatterns = [
     path('news/edit/<int:pk>',
          login_required(views.NewsEditView.as_view()),
          name='news_edit'),
-
+    path(
+        'news/delete/<int:pk>',
+        login_required(views.NewsDeleteView.as_view()),
+        name='news_delete'
+    ),
     path('marketing/',
          login_required(views.MarketingView.as_view()),
          name='marketing'),

@@ -22,8 +22,7 @@
                             <div class="media align-items-center mb-3">
                                 {% if manager.wagtail_profile.avatar %}
                                     <a href="{% url 'employee_info' manager.user.id %}" >  <img src="{{ manager.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>
-                                  {% else %}
-                                    {% endif %}
+                                {% endif %}
                                 <div class="small ml-3">
                                     <div class="text-muted">Ваш менеджер</div>
                                     <a href="{% url 'employee_info' manager.user.id %}" class="text-primary">{{ manager.user.get_full_name }}</a>
@@ -74,21 +73,26 @@
                                                         </div>
 
                                                         <div class="btn-group project-actions">
-                                                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                                            <button type="button"
+                                                                    class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow"
+                                                                    data-toggle="dropdown">
                                                                 <i class="ion ion-ios-more"></i>
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                <a class="dropdown-item" href="{% url 'shop' shop.id %}">Просмотр</a>
-{#                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
-{#                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
+                                                                <a class="dropdown-item"
+                                                                   href="{% url 'shop' shop.id %}">Просмотр</a>
+                                                                <a class="dropdown-item"
+                                                                   href="{% url 'shop_delete' shop.id %}">Удалить</a>
+                                                                {#                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
+                                                                {#                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="card-body">
                                                         <div class="font-weight-semibold">Файлы</div>
                                                         {% for doc in shop.docs.all %}
-                                                        <div class="mb-1 d-inline-block mr-3">
-                                                            <span class="small text-muted">{{ doc.title }}</span>
+                                                            <div class="mb-1 d-inline-block mr-3">
+                                                                <span class="small text-muted">{{ doc.title }}</span>
                                                             <a href="{{ doc.url }}" class="text-primary"><span class="ion-ios-search"></span></a>
                                                             <a href="{{ doc.url }}" class="text-primary"><span class="ion-md-cloud-download"></span></a>
                                                         </div>

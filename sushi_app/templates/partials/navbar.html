@@ -31,11 +31,12 @@
 
                             </div>
 
-                            <a href="{% url 'notification' %}" class="d-block text-center text-light small p-2 my-1">Показать все оповещения</a>
+                            <a href="{% url 'notification' %}" class="d-block text-center text-light small p-2 my-1">Показать
+                                все оповещения</a>
                         </div>
                     </div>
-                    <div class="demo-navbar-user nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+    <div class="demo-navbar-user nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                     <span class="d-inline-flex align-items-center align-middle">
                       <img src="{{ user.wagtail_userprofile.avatar.url }}" alt class="d-block ui-w-30 rounded-circle">
                       <div class="ml-3 text-right d-none d-md-block">
@@ -43,20 +44,22 @@
 {#                          <div class="text-primary small">Партнер 3 уровня</div>#}
                       </div>
                     </span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                {% if user.user_profile.is_manager %} <a href="{% url 'manager_lk' %}" class="dropdown-item">Личный кабинет</a>
-                {% elif user.user_profile.is_partner %}<a href="{% url 'partner_lk' %}" class="dropdown-item">Личный кабинет</a>
-                {% else %}
-                {% endif %}
-                <a href="{% url 'notification' %}" class="dropdown-item">Оповещения</a>
-                <a href="{% url 'edit_employee' user.id %}" class="dropdown-item">Настройки</a>
-                <div class="dropdown-divider"></div>
-                <a href="{% url 'logout' %}" class="dropdown-item">
-                    <i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
-            </div>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right">
+            {% if user.user_profile.user_is_manager %}
+                <a href="{% url 'manager_lk' %}" class="dropdown-item">Личный кабинет</a>
+            {% elif user.user_profile.is_partner %}
+                <a href="{% url 'partner_lk' %}" class="dropdown-item">Личный кабинет</a>
+            {% else %}
+            {% endif %}
+            <a href="{% url 'notification' %}" class="dropdown-item">Оповещения</a>
+            <a href="{% url 'edit_employee' user.id %}" class="dropdown-item">Настройки</a>
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'logout' %}" class="dropdown-item">
+                <i class="ion ion-ios-log-out text-danger"></i> &nbsp; Выйти</a>
         </div>
     </div>
+</div>
     </div>
 
 
@@ -65,13 +68,13 @@
         <hr class="d-lg-none w-100 my-2">
 
         <div class="navbar-nav align-items-lg-center mr-auto ml-xl-4">
-{#        {% if user.user_profile.is_head %}#}
+            {#        {% if user.user_profile.is_head %}#}
 
             <div class="nav-item">
-               <a href="{% url 'employee_list' %}" class="nav-link nav-link__icon">
-{#                {% elif user.user_profile.is_partner %}<a href="{% url 'partner_lk' %}" class="nav-link nav-link__icon">#}
-{#                {% else %}#}
-{#                {% endif %}#}
+                <a href="{% url 'employee_list' %}" class="nav-link nav-link__icon">
+                    {#                {% elif user.user_profile.is_partner %}<a href="{% url 'partner_lk' %}" class="nav-link nav-link__icon">#}
+                    {#                {% else %}#}
+                    {#                {% endif %}#}
                     <i class="icon-user"></i>
                     <span>Сотрудники</span>
                 </a>

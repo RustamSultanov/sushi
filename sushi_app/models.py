@@ -1,18 +1,14 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from wagtail.documents.models import Document, AbstractDocument
-from phonenumber_field.modelfields import PhoneNumberField
-from django.conf import settings
-from wagtail.core.fields import RichTextField
-from wagtail.documents.models import get_document_model
 import wagtail.users.models
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
+from wagtail.core.fields import RichTextField
+from wagtail.documents.models import Document, AbstractDocument
 
 from mickroservices.models import DocumentSushi
 from sushi_app.utils import create_dict_from_choices
-from datetime import datetime
-from .enums import * 
+from .enums import *
 
 
 class Department(models.Model):
@@ -46,12 +42,17 @@ class UserProfile(models.Model):
                              null=True, blank=True, limit_choices_to={'is_head': True})
     department = models.ForeignKey(on_delete=models.SET_NULL, to=Department, related_name='member',
                                    null=True, blank=True)
-    scan = models.FileField(upload_to='images',blank=True)
+    scan = models.FileField(upload_to='images', blank=True)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     ddk_number = models.CharField(max_length=200, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True, verbose_name="Комментарий к пользователю")
 
     def __str__(self):
         return self.user.get_full_name()
+
+    @property
+    def user_is_manager(self):
+        return self.is_manager or self.is_head
 
 
 class Task(models.Model):
@@ -105,6 +106,7 @@ class ShopSign(models.Model):
     class Meta:
         verbose_name = 'Признак магазин'
         verbose_name_plural = 'Признаки магазинов'
+
 
 class Shop(models.Model):
     address = models.CharField(max_length=255, blank=False, null=False,
