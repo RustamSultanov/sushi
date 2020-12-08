@@ -76,6 +76,12 @@
                 {{ form_user_profile.ddk_number }}
             </div>
         {% else %}{% endif %}
+        {% if form_user_profile.comment and is_visible_comment %}
+            <div class="form-group">
+                <label class="form-label">Комментарий</label>
+                {{ form_user_profile.comment }}
+            </div>
+        {% endif %}
         {% block create %}
             <div class="form-group">
                 <label class="form-label">Логин</label>
