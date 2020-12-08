@@ -528,6 +528,7 @@ class EditPartnerAdditionForm(forms.ModelForm):
             'instagram': forms.URLInput(attrs={'placeholder': "Instagram", 'class': 'form-control', }),
             'middle_name': forms.TextInput(attrs={'placeholder': "Отчество", 'class': 'form-control', }),
             'ddk_number': forms.TextInput(attrs={'placeholder': "Номер ДКК", 'class': 'form-control', }),
+            'comment': forms.Textarea(attrs={'placeholder': "Коммент", 'class': 'form-control', 'rows': 5}),
         }
 
 

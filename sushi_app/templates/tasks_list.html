@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Список задач{% endblock %}
+
+{% block page_title %}
+    <h2 class="text-light font-weight-normal mt-4 mb-1">Список задач</h2>
+{% endblock %}
+
+{% block  breadcrumb %}
+    {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="tab-pane fade" id="tasks">
+            <div class="my-4 small text-right">
+                <span class="text-muted">Фильтровать:</span>
+                <a href="{% url 'load_filtered_tasks' %}" class="text-muted active"
+                   onclick="load_tasks($(this))">Все</a>
+                <a href="{% url 'load_filtered_tasks' %}?filter_task=0" class="text-muted"
+                   onclick="load_tasks($(this))">Решен</a>
+                <a href="{% url 'load_filtered_tasks' %}?filter_task=1" class="text-muted"
+                   onclick="load_tasks($(this))">Обрабатывается</a>
+                <a href="{% url 'load_filtered_tasks' %}?filter_task=2" class="text-muted"
+                   onclick="load_tasks($(this))">Отклонен</a>
+            </div>
+            <div id="tasks_manager" class="my-4 row">
+                {% include 'partials/tasks_manager.html' %}
+            </div>
+        </div>
+{% endblock content %}
