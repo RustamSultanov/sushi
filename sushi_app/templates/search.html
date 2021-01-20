@@ -1,0 +1,115 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block slider %}
+    {% include 'partials/slider.html'%}
+{% endblock %}
+
+{% block content %}
+        <div class="my-5">
+            <h3 class=" font-weight-normal mb-5">Вы искали: {{search_phrase}}</h3>
+        </div>
+    {% if news %}
+        <div class="my-5">
+            <h2 class="text-light font-weight-normal mb-5">Новости</h2>
+            <div class="row">
+                {% for new in news reversed %}
+                <div class="col-md-4 mb-5">
+                {% image new.image fill-283x188 class="card-img-top" %}
+                     <h4 class="card-title mb-1">{{new.title}}</h4>
+                    <div class="small text-muted mb-4">{{new.first_published_at}}</div>
+                    <a href="{{new.url}}" class="text-dark">{{ new.announcement }}</a>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'mickroservices:news' %}" class="text-dark small">ВСЕ НОВОСТИ</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block  additional_content %}
+
+    {% if documents %}
+        <div class="my-5">
+            <div class="container my-5">
+                <h2 class="text-light font-weight-normal mb-5">Документы для работы</h2>
+                <div class="row">
+                     {% for document in documents %}
+                    <div class="col-md-4 mb-5">
+                        <div class="project-attachment-img" style="background-image: url({{ document.preview }})" doc-id="{{ document.id }}"></div>
+                        <div class="media-body ml-3">
+                            <strong class="project-attachment-filename">{{document.title}}</strong>
+                            <div class="text-muted small"  >{{document.file_size|filesizeformat}}</div>
+                            <div>
+                                <a href="{{ document.url }}" download="">Загрузить</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if dirs %}
+        <div class="my-5">
+            <div class="container my-5">
+                <h2 class="text-light font-weight-normal mb-5">Папки</h2>
+                <div class="row">
+                     {% for dir in dirs %}
+                    <div class="col-md-4 mb-5">
+                         <h4 class="card-title mb-1">{{dir.name}}</h4>
+                        <a href="{{dir.url}}" class="text-dark">Просмотреть</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+ {% if is_manager %}
+    {% if employee_list %}
+        <div class="container my-5">
+            <h2 class="text-light font-weight-normal mb-5">Сотрудники</h2>
+            <div class="row">
+                {% for employee in employee_list %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card hoverable">
+                        <div class="card-body">
+                          {% if employee.department %}  <h4>{{ employee.department }}</h4>
+                            {% else %}
+                            {% endif %}
+                            <div class="media align-items-center mb-3">
+                                {% if employee.wagtail_profile.avatar %}
+                                    <a href="{% url 'employee_info' employee.user.id %}"><img src="{{ employee.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>
+                            {% else %}
+                            {% endif %}
+                                <div class="small ml-3">
+                                    <a href="{% url 'employee_info' employee.user.id %}" class="text-primary">{{ employee.user.get_full_name }}</a>
+                                    <div class="small text-muted">{{ employee.position }}</div>
+                                </div>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                    <i class="ion ion-ios-more"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-left">
+                                    <a class="dropdown-item" href="{% url 'form_task' employee.id %}">Добавить задачу</a>
+                                    <a class="dropdown-item" href="{% url 'edit_employee' employee.user.id %}">Редактировать сотрудника</a>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="small text-muted mb-3">
+                                {{ employee.phone_number }}
+                                <br>Whatsapp {{ employee.whatsapp }}
+                                <br>{{ employee.user.email }}
+                            </div>
+    {#                        <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>#}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+ {% endif %}
+{% endblock %}

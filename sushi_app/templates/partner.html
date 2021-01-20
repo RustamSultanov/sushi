@@ -1,0 +1,205 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load wagtailcore_tags %}
+{% block content %}
+    <!-- Page content -->
+    <div class="media align-items-center py-3 mb-3">
+        {% if partner_user.wagtail_userprofile.avatar %}
+            <img src="{{ partner_user.wagtail_userprofile.avatar.url }}" alt="" class="d-block ui-w-100 rounded-circle">
+        {% else %}{% endif %}
+        <div class="media-body ml-4">
+            <h4 class="font-weight-bold mb-0" style="display: inline-block">
+                {{ partner_user.first_name }} {{ partner_user.last_name }}
+            </h4>
+            {% for sign in shop_sign %}
+                {% if sign.active %}
+
+                    <a href="{% url 'shop_sign_detail' sign.id %}"
+                       class="badge badge-active badge-pill badge-w-icon">
+                        {% if sign.icon %}
+                            <img src="{{ sign.icon.url }}" height="18" width="18">
+                        {% endif %}
+                        {{ sign.title }}
+                    </a>
+                {% else %}
+                    <a href="{% url 'shop_sign_detail' sign.id %}"
+                       class="badge badge-disabled badge-pill badge-w-icon">
+                        {% if sign.icon %}
+                            <img src="{{ sign.icon.url }}" height="18" width="18">
+                        {% endif %}
+                        {{ sign.title }}
+                    </a>
+
+                {% endif %}
+            {% endfor %}
+            {% if partner_user.user_profile.is_partner %}
+                <div class="text-muted mb-2"></div>
+            {% else %}
+                {% if partner_user.user_profile.position %}
+                    <div class="text-muted mb-2">{{ partner_user.user_profile.position }}</div>{% else %}
+                {% endif %}
+            {% endif %}
+            <a href="mailto:{{ partner_user.email }}" class="btn btn-default btn-sm">
+                <i class="fas fa-envelope"></i>&nbsp;Написать письмо
+            </a>
+            {% if user.user_profile.is_partner %}
+                <a href="{% url 'form_request' %}" class="btn btn-round btn-outline-primary btn-sm">Поставить задачу
+                    менеджеру</a>
+            {% else %}
+                <a class="btn btn-round btn-outline-primary btn-sm"
+                   href="{% url 'form_task' partner_user.user_profile.id %}">Добавить задачу</a>
+                <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'edit_partner' partner_user.id %}">Редактировать
+                    франчайзи</a>
+
+                <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'form_review' %}">Добавить отзыв</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="my-4 row">
+        {% for shop in partner_user.user_profile.shop_partner_user.all %}
+            <div class="col-md-6 mb-4">
+                <div class="card hoverable h-100">
+                    <div class="card-header d-flex justify-content-between  align-items-start">
+                        <div>
+                            <div class="h5 mb-0 font-weight-semibold"><a href="{% url 'shop' shop.id %}"
+                                                                         class="text-primary">{{ shop.address }}</a>
+                            </div>
+                        </div>
+                        <div class="btn-group project-actions">
+                            <button type="button"
+                                    class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow"
+                                    data-toggle="dropdown">
+                                <i class="ion ion-ios-more"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'shop' shop.id %}">Просмотр</a>
+                                <a class="dropdown-item" href="{% url 'shop_sign_edit' shop.id %}">Редактировать
+                                    признаки</a>
+                                {#                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
+                                {#                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="card my-4">
+        <div class="card-body">
+            {% if partner_user.user_profile.key_responsibilities %}
+                <h6 class="mb-3">Ключевые обязанности</h6>
+                {{ partner_user.user_profile.key_responsibilities | richtext }}
+            {% else %}{% endif %}
+            {% if partner_user.user_profile.ddk_number %}
+                <h6 class="mb-3">Номер ДДК</h6>
+                {{ partner_user.user_profile.ddk_number }}
+            {% else %}{% endif %}
+            {% if is_visible_comment and partner_user.user_profile.comment %}
+                <h6 class="mt-4 mb-3">Комментарий</h6>
+                {{ partner_user.user_profile.comment }}
+            {% else %}{% endif %}
+            {% if partner_user.user_profile.twitter or partner_user.user_profile.facebook or partner_user.user_profile.instagram %}
+                <h6 class="mt-4 mb-3">Социальные сети</h6>
+                <table class="table user-view-table m-0">
+                    <tbody>
+                    {% if partner_user.user_profile.twitter %}
+                        <tr>
+                            <td>Twitter:</td>
+                            <td>
+                                <a href="{{ partner_user.user_profile.twitter }}">{{ partner_user.user_profile.twitter }}</a>
+
+                            </td>
+                        </tr>{% else %}{% endif %}
+                    {% if partner_user.user_profile.facebook %}
+                        <tr>
+                            <td>Facebook:</td>
+                            <td>
+                                <a href="{{ partner_user.user_profile.facebook }}">{{ partner_user.user_profile.facebook }}</a>
+
+                            </td>
+                        </tr> {% else %}{% endif %}
+                    {% if partner_user.user_profile.instagram %}
+                        <tr>
+                            <td>Instagram:</td>
+                            <td>
+
+                                <a href="{{ partner_user.user_profile.instagram }}">{{ partner_user.user_profile.instagram }}</a>
+
+                            </td>
+                        </tr> {% else %}{% endif %}
+                    </tbody>
+                </table>{% else %}{% endif %}
+            <h6 class="mt-4 mb-3">Контакты</h6>
+            <table class="table user-view-table m-0">
+                <tbody>
+                {% if partner_user.user_profile.phone_number %}
+                    <tr>
+                        <td>Телефон:</td>
+                        <td>{{ partner_user.user_profile.phone_number }}
+                        </td>
+                    </tr>{% else %}{% endif %}
+                {% if partner_user.user_profile.whatsapp %}
+                    <tr>
+                        <td>Watsapp:</td>
+                        <td>{{ partner_user.user_profile.whatsapp }}
+                        </td>
+                    </tr>{% else %}{% endif %}
+                {% if partner_user.email %}
+                    <tr>
+                        <td>E-mail:</td>
+                        <td>{{ partner_user.email }}</td>
+                    </tr>{% else %}{% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="my-4 row">
+        {% for shop in shop_list %}
+            <div class="col-md-6 mb-4">
+                <div class="card hoverable h-100">
+                    <div class="card-header d-flex justify-content-between  align-items-start">
+                        <div>
+                            <div class="h5 mb-0 font-weight-semibold">{{ shop.address }}</div>
+                        </div>
+
+                        <div class="btn-group project-actions">
+                            <button type="button"
+                                    class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow"
+                                    data-toggle="dropdown">
+                                <i class="ion ion-ios-more"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'shop' shop.id %}">Просмотр</a>
+                                <a class="dropdown-item" href="{% url 'shop_delete' shop.id %}">Удалить</a>
+                                {#                                                                <a class="dropdown-item" href="javascript:void(0)">Edit</a>#}
+                                {#                                                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>#}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="font-weight-semibold">Файлы</div>
+                        {% for doc in shop.docs.all %}
+                            <div class="mb-1 d-inline-block mr-3">
+                                <span class="small text-muted">{{ doc.title }}</span>
+                                <a href="{{ doc.url }}" class="text-primary"><span class="ion-ios-search"></span></a>
+                                <a href="{{ doc.url }}" class="text-primary"><span class="ion-md-cloud-download"></span></a>
+                            </div>
+                        {% endfor %}
+                        <div class="font-weight-semibold">Последние проверки</div>
+                        {% for check in shop.checks.all %}
+                            <div class="mb-1 d-inline-block mr-3">
+                                <span class="small text-muted">{{ check.title }}</span>
+                                <a href="{{ check.url }}" class="text-primary"><span class="ion-ios-search"></span></a>
+                                <a href="{{ check.url }}" class="text-primary" download=""><span
+                                        class="ion-md-cloud-download"></span></a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    <!-- / Page content -->
+{% endblock %}

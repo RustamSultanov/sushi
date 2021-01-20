@@ -6,9 +6,12 @@
     <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
 {% endblock %}
 
-{% block title %}Личный кабинет{% endblock %}
+{% block title %}Магазин{% endblock %}
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">Личный кабинет</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">
+        Магазин
+        <a href="{% url 'shop_edit' shop.pk %}" class="btn btn-round btn-outline-primary btn-sm">Редактировать</a>
+    </h2>
 {% endblock %}
 
 {% block  breadcrumb %}
@@ -22,14 +25,15 @@
 
             <div class="media align-items-center mb-3">
                 {% if shop.partner.wagtail_profile.avatar %}
-                    <a href="{% url 'employee_info' shop.partner.user.id %}"> <img
+                    <a href="{% url 'partner_info' shop.partner.user.id %}"> <img
                             src="{{ shop.partner.wagtail_profile.avatar.url }}" alt=""
                             class="ui-w-60 rounded-circle"></a>
                 {% else %}
                 {% endif %}
                 <div class="small ml-3">
                     {% if shop.partner %}
-                        <a href="{% url 'employee_info' shop.partner.user.id %}" class="text-primary">{{ shop.partner }}</a>{% else %}
+                        <a href="{% url 'partner_info' shop.partner.user.id %}"
+                           class="text-primary">{{ shop.partner }}</a>{% else %}
                     {% endif %}
                     {# <a href="#" class="btn btn-xs btn-round btn-outline-dark">Написать в чат</a>#}
                 </div>
@@ -288,4 +292,5 @@
         });
     </script>
     <script src="{% static "js/dashboard.js" %}"></script>
+
 {% endblock %}

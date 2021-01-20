@@ -12,7 +12,7 @@ $(function() {
     });
 
 
-    var form = document.querySelector('form');
+    var form = document.getElementById('news-form');
     form.onsubmit = function() {
         // Populate hidden form on submit
         var body = document.querySelector('input[name=body]');
