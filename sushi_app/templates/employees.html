@@ -55,7 +55,7 @@
                             {% if employee.whatsapp %}<br>Whatsapp {{ employee.whatsapp }}
                             {% else %}
                             {% endif %}
-                            <br>{{ employee.user.email }}
+                            <br><a href="mailto:{{ employee.user.email }}">{{ employee.user.email }} </a>
                             {% if employee.user_profile.ddk_number %}
                                 <br>{{ employee.user_profile.ddk_number }}
                             {% else %}{% endif %}

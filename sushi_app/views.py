@@ -578,7 +578,6 @@ def _load_docs(request, current_page=1, doc_type=None, sub_type=None):
     count_objects = 9
     offset = (current_page * count_objects) - count_objects
     limmit = (current_page * count_objects)
-    print(offset, limmit)
     if doc_type:
         docs = DocumentSushi.objects.filter(doc_type=doc_type)[offset: limmit]
     else:
@@ -1325,7 +1324,6 @@ def notification_settings_view(request):
             site_rules[event.event_type] = True
 
     sort_map = {j: i for i, j in enumerate(event_types)}
-
     context['names'] = [i[1] for i in sorted(user_available_choices, key=lambda x: sort_map[x[0]])]
     context['site_rules'] = _build_input_info(site_rules, site_rule_name, sort_map)
     context['email_rules'] = _build_input_info(email_rules, email_rule_name, sort_map)
@@ -1341,7 +1339,6 @@ def update_notification_rules(request):
     models = []
     for k, v in request.POST.items():
         prefix, event_type = k.split('_')
-
         key = (prefix, event_type)
 
         if key in subs_d:

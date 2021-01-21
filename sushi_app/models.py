@@ -54,6 +54,30 @@ class UserProfile(models.Model):
     def user_is_manager(self):
         return self.is_manager or self.is_head
 
+    def save(self, *args, **kwargs):
+        models = []
+        ll = {
+            'request',
+            'messege',
+            'question',
+            'news',
+            'feedback',
+            'shop',
+            'idea',
+            'materials',
+        }
+        for ls in ll:
+            sub = Subscribes(user_id=self.user,
+                             event_type=ls,
+                             subscribe_type='site')
+            models.append(sub)
+            sub = Subscribes(user_id=self.user,
+                             event_type=ls,
+                             subscribe_type='email')
+            models.append(sub)
+        Subscribes.objects.bulk_create(models)
+        super().save(*args, **kwargs)
+
 
 class Task(models.Model):
     responsible = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL,

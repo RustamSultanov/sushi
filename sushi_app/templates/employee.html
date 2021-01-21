@@ -141,7 +141,7 @@
                 {% if employee.user_profile.phone_number %}
                     <tr>
                         <td>Телефон:</td>
-                        <td>{{ employee.user_profile.phone_number }}
+                        <td><a href="tel:{{ employee.user_profile.phone_number }}">{{ employee.user_profile.phone_number }}</a>
                         </td>
                     </tr>{% else %}{% endif %}
                 {% if employee.user_profile.whatsapp %}
@@ -153,7 +153,7 @@
                 {% if employee.email %}
                     <tr>
                         <td>E-mail:</td>
-                        <td>{{ employee.email }}</td>
+                        <td><a href="mailto:{{ employee.email }}" >{{ employee.email }}</a></td>
                     </tr>{% else %}{% endif %}
                 </tbody>
             </table>
