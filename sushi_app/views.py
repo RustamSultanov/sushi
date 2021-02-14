@@ -1,5 +1,3 @@
-from itertools import chain
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -375,17 +373,17 @@ def get_filtered_tasks(request):
 
 def get_filtered_request(request):
     if request.user.user_profile.is_manager:
-        request_list = list(chain(Requests.objects.prefetch_related("responsible").filter(
+        request_list = Requests.objects.prefetch_related("responsible").filter(
             manager=request.user.user_profile
-        ), Task.objects.prefetch_related("responsible").filter(
+        ) | Requests.objects.prefetch_related("responsible").filter(
             responsible=request.user
-        )))
+        )
     else:
         request_list = Requests.objects.prefetch_related("responsible") \
             .filter(responsible=request.user)
     if "filter_request" in request.GET:
-        return request_list.filter(status=request.GET['filter_request']).order_by("-date_create")
-    return request_list
+        return request_list.filter(status=request.GET['filter_request'])
+    return request_list.order_by("-date_create")
 
 
 def get_filtered_feedback(request):
@@ -796,16 +794,28 @@ def form_task_view(request, partner_id):
     partner = get_object_or_404(UserProfile, id=partner_id)
     form = TaskForm(request.POST or None)
     if form.is_valid():
-        form = form.save(commit=False)
-        form.responsible = partner.user
-        form.manager = request.user.user_profile
-        form.save()
-        Chat_Message.objects.create(
-            sender=request.user,
-            recipient=partner.user,
-            body=f"Создана задача от {request.user.get_full_name()}",
-            task=form
-        )
+        task = form.save(commit=False)
+        if partner.is_partner:
+            task.responsible = partner.user
+            task.manager = request.user.user_profile
+            task.save()
+            Chat_Message.objects.create(
+                sender=request.user,
+                recipient=partner.user,
+                body=f"Создана задача от {request.user.get_full_name()}",
+                task=task
+            )
+        else:
+            req = Requests.objects.create(title=task.title,
+                                    description=task.description,
+                                    responsible=partner.user,
+                                    manager=request.user.user_profile)
+            Chat_Message.objects.create(
+                sender=request.user,
+                recipient=partner.user,
+                body=f"Создана задача от {request.user.get_full_name()}",
+                requests=req
+            )
         return HttpResponseRedirect(reverse_lazy("manager_lk"))
     return render(
         request,
