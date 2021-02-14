@@ -375,7 +375,7 @@ def get_filtered_request(request):
     if request.user.user_profile.is_manager:
         request_list = Requests.objects.prefetch_related("responsible").filter(
             manager=request.user.user_profile
-        ) + Task.objects.prefetch_related("responsible").filter(
+        ) | Task.objects.prefetch_related("responsible").filter(
             responsible=request.user
         )
     else:
