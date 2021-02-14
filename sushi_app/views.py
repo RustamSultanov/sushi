@@ -384,8 +384,8 @@ def get_filtered_request(request):
         request_list = Requests.objects.prefetch_related("responsible") \
             .filter(responsible=request.user)
     if "filter_request" in request.GET:
-        return request_list.filter(status=request.GET['filter_request'])
-    return request_list.order_by("-date_create")
+        return request_list.filter(status=request.GET['filter_request']).order_by("-date_create")
+    return request_list
 
 
 def get_filtered_feedback(request):
