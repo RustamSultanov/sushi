@@ -30,7 +30,7 @@
                         <i class="ion ion-ios-more"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        {% if task|get_class == 'Requests' %}
+                        {% if task|get_class == 'Task' %}
                             <a class="dropdown-item" href="{% url 'request' task.id user.id %}">Просмотр</a>
                         {% else %}
                             <a class="dropdown-item" href="{% url 'task' task.id user.id %}">Просмотр</a>
