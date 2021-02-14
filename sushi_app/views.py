@@ -477,7 +477,10 @@ def manager_lk_view(request):
     task_not_solved = Task.objects.filter(status=ST_IN_PROGRESS,
                                           manager=request.user.user_profile).count()
     requests_not_solved = Requests.objects.filter(status=ST_IN_PROGRESS,
-                                                  manager=request.user.user_profile).count()
+                                                  manager=request.user.user_profile).count() + \
+                          Task.objects.filter(
+                              status=ST_IN_PROGRESS,
+                              responsible=request.user).count()
     ideas_not_solved = IdeaModel.objects.filter(status=IdeaModel.ST_CONSIDERATION,
                                                 recipient=request.user).count()
     feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
