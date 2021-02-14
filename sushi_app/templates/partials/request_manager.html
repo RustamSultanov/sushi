@@ -20,7 +20,11 @@
                         <span class="text-muted">{{ task.date_create.date }}</span>
                     </div>
                     <div class="small">
-                        <a href="{% url 'request' task.id user.id %}" class="text-primary">Подробнее</a>
+                        {% if task|get_class == 'Requests' %}
+                            <a href="{% url 'request' task.id user.id %}" class="text-primary">Подробнее</a>
+                        {% else %}
+                            <a href="{% url 'task' task.id user.id %}" class="text-primary">Подробнее</a>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="btn-group project-actions">
@@ -30,13 +34,12 @@
                         <i class="ion ion-ios-more"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                    Плохо
-                        {% if task|get_class == 'Task' %}
-                            <a class="dropdown-item" href="{% url 'request' task.id user.id %}">ПросмотрE</a>
-                        {% elif task|get_class == 'Requests' %}
-                            <a class="dropdown-item" href="{% url 'task' task.id user.id %}">ПросмотрG</a>
+                        {% if task|get_class == 'Requests' %}
+                            <a class="dropdown-item" href="{% url 'request' task.id user.id %}">Просмотр</a>
+                        {% else %}
+                            <a class="dropdown-item" href="{% url 'task' task.id user.id %}">Просмотр</a>
                         {% endif %}
-                        <a class="dropdown-item" href="javascript:void(0)">Удаление</a>
+                        {#<a class="dropdown-item" href="javascript:void(0)">Удаление</a>#}
                     </div>
                 </div>
             </div>
