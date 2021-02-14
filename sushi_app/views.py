@@ -832,7 +832,7 @@ def form_task_view(request, partner_id):
 def feedback_form_view(request, partner_id):
     partner = get_object_or_404(User, id=partner_id)
     form = FeedbackForm(request.POST or None)
-    form.shop.queryset = partner.user_profile.shop_partner.all()
+    form.fields["shop"].queryset = partner.user_profile.shop_partner.all()
     if form.is_valid():
         form = form.save(commit=False)
         form.responsible = form.shop.partner
