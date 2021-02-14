@@ -30,12 +30,13 @@
                         <i class="ion ion-ios-more"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
+                    Плохо
                         {% if task|get_class == 'Task' %}
                             <a class="dropdown-item" href="{% url 'request' task.id user.id %}">ПросмотрE</a>
                         {% elif task|get_class == 'Requests' %}
                             <a class="dropdown-item" href="{% url 'task' task.id user.id %}">ПросмотрG</a>
                         {% endif %}
-                        {#<a class="dropdown-item" href="javascript:void(0)">Удаление</a>#}
+                        <a class="dropdown-item" href="javascript:void(0)">Удаление</a>
                     </div>
                 </div>
             </div>
