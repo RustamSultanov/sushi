@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -373,11 +375,11 @@ def get_filtered_tasks(request):
 
 def get_filtered_request(request):
     if request.user.user_profile.is_manager:
-        request_list = Requests.objects.prefetch_related("responsible").filter(
+        request_list = list(chain(Requests.objects.prefetch_related("responsible").filter(
             manager=request.user.user_profile
-        ) | Task.objects.prefetch_related("responsible").filter(
+        ), Task.objects.prefetch_related("responsible").filter(
             responsible=request.user
-        )
+        )))
     else:
         request_list = Requests.objects.prefetch_related("responsible") \
             .filter(responsible=request.user)
@@ -824,7 +826,7 @@ def form_task_view(request, partner_id):
 
 @login_required
 @user_passes_test(manager_check)
-def feedback_form_view(request,partner_id):
+def feedback_form_view(request, partner_id):
     partner = get_object_or_404(User, id=partner_id)
     form = FeedbackForm(request.POST or None)
     form.shop.queryset = partner.user_profile.shop_partner.all()
