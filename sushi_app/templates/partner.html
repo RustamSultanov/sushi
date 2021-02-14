@@ -51,7 +51,7 @@
                 <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'edit_partner' partner_user.id %}">Редактировать
                     франчайзи</a>
 
-                <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'form_review' %}">Добавить отзыв</a>
+                <a class="btn btn-round btn-outline-primary btn-sm" href="{% url 'form_review' partner_user.id %}">Добавить отзыв</a>
             {% endif %}
         </div>
     </div>

@@ -82,7 +82,7 @@
                                                             <a class="dropdown-item"
                                                                href="{% url 'edit_partner' partner.user.id %}">Редактировать
                                                                 франчайзи</a>
-                                                            <a class="dropdown-item" href="{% url 'form_review' %}">Добавить
+                                                            <a class="dropdown-item" href="{% url 'form_review' partner.user.id %}">Добавить
                                                                 отзыв</a>
                                                             <a class="dropdown-item"
                                                                href="{% url 'delete_partner' partner.user.id %}">Удалить</a>

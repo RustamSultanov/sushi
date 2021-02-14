@@ -18,7 +18,7 @@
                         {% endif %}
                     </div>
                     <div class="small">
-                        <span class="text-muted">{{ review.date_create }}</span>
+                        <span class="text-muted">{{ review.date_create|date:'d.m.Y' }}</span>
                         <br>
                         <span class="text-muted">Магазин: {{ review.shop.address }}</span>
                     </div>

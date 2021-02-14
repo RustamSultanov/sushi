@@ -82,7 +82,9 @@ class ShopListView(ListView):
         context["doc_type"] = DocumentSushi.T_PERSONAL
         context["type_invoice"] = DocumentSushi.T_PERSONAL_INVOICES
         context["breadcrumb"] = [
-            {"title": "Личный кабинет", "url": reverse_lazy("partner_lk")},
+            {"title": "Личный кабинет", "url": reverse_lazy("partner_lk")
+            if self.request.user.user_profile.is_partner
+            else reverse_lazy("manager_lk")},
             {"title": f"Магазин #{shop.id}"},
         ]
         return context
@@ -262,13 +264,15 @@ def base(request):
         news = news_all[len(news_all) - 3:]
     return render(request, "index.html", {"employee_list": employees_list, "news": news})
 
+
 @login_required
 def search(request):
     search_phrase = request.GET.get('search_phrase')
     if request.user.user_profile.is_manager:
         employees_list = UserProfile.objects.prefetch_related(
             "user", "wagtail_profile", "department"
-        ).filter(Q(head=request.user.user_profile), Q(user__first_name__icontains=search_phrase) | Q(user__last_name__icontains=search_phrase))[:20]
+        ).filter(Q(head=request.user.user_profile),
+                 Q(user__first_name__icontains=search_phrase) | Q(user__last_name__icontains=search_phrase))[:20]
     else:
         employees_list = dict()
     news_all = NewsPage.objects.filter(title__icontains=search_phrase).order_by(
@@ -280,8 +284,10 @@ def search(request):
     documents_all = DocumentSushi.objects.filter(Q(title__icontains=search_phrase))[:20]
     dir_all = Subjects.objects.filter(name__icontains=search_phrase)[:20]
     return render(request, "search.html", {"employee_list": employees_list, "news": news, "dirs": dir_all,
-                                           "documents": documents_all, "is_manager": request.user.user_profile.is_manager,
+                                           "documents": documents_all,
+                                           "is_manager": request.user.user_profile.is_manager,
                                            "search_phrase": search_phrase})
+
 
 @login_required
 def employee_list(request):
@@ -369,6 +375,8 @@ def get_filtered_request(request):
     if request.user.user_profile.is_manager:
         request_list = Requests.objects.prefetch_related("responsible").filter(
             manager=request.user.user_profile
+        ) + Task.objects.prefetch_related("responsible").filter(
+            responsible=request.user
         )
     else:
         request_list = Requests.objects.prefetch_related("responsible") \
@@ -816,8 +824,10 @@ def form_task_view(request, partner_id):
 
 @login_required
 @user_passes_test(manager_check)
-def feedback_form_view(request):
+def feedback_form_view(request,partner_id):
+    partner = get_object_or_404(User, id=partner_id)
     form = FeedbackForm(request.POST or None)
+    form.shop.queryset = partner.user_profile.shop_partner.all()
     if form.is_valid():
         form = form.save(commit=False)
         form.responsible = form.shop.partner

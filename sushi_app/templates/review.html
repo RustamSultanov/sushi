@@ -27,7 +27,7 @@
                     <a href="{% url 'employee_info' feedback.responsible.user.id %}"
                        class="text-dark">{{ feedback.responsible.user.get_full_name }} <span
                             class="text-muted">{{ feedback.responsible.phone_number }}</span></a>
-                    <div class="text-muted">{{ feedback.date_create }}
+                    <div class="text-muted">{{ feedback.date_create|date:'d.m.Y' }}
                     </div>
                     <!--   Вариант для партнера   -->
                     {% if user == feedback.responsible %}

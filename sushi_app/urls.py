@@ -36,7 +36,7 @@ urlpatterns = [
     path(
         'request/new', views.form_request_view, name='form_request'),
     path(
-        'review/new', views.feedback_form_view, name='form_review'),
+        'review/<int:partner_id>/new', views.feedback_form_view, name='form_review'),
     path('notification', views.notification_view, name='notification'),
     path('shop/new', views.shop_form_view, name='shop_form'),
     path(
