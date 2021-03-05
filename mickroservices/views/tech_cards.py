@@ -14,6 +14,7 @@ from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 
 from mickroservices.models import DocumentSushi, Subjects
+from sushi_app.models import Directory
 
 permission_checker = PermissionPolicyChecker(permission_policy)
 
@@ -157,4 +158,6 @@ class RegulationsListView(SushiDocListView):
         context['breadcrumb'] = [{'title': context['title']}]
         context['doc_type'] = DocumentSushi.T_REGULATIONS
         context['subjects'] = subjects
+        nodes = Directory.objects.all()
+        print(nodes)
         return context

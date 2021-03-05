@@ -73,11 +73,19 @@
                         -->
                         </div>
                     </div>
+{% load node_tags %}
+<div id="directories">
+{% make_node %}
+</div>
+{% include 'add-directory.html' %}
+{% include 'add-file.html' %}
+
 {% endblock %}
 
 {% block css %}
     <link rel="stylesheet" href='{% static "libs/dropzone/dropzone.css" %}'>
     <link rel="stylesheet" href='{% static "css/widgets/file-preview.css" %}'>
+    <link rel="stylesheet" href="/static/css/directory.css">
 {% endblock %}
 
 {% block extrascripts %}
@@ -117,4 +125,5 @@
             return false;
         }
     </script>
+    <script src="/static/js/directory.js"></script>
 {% endblock %}
