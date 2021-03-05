@@ -24,8 +24,6 @@ from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 from django.contrib.auth.models import Group
 from django.forms import modelformset_factory
-from django.http import JsonResponse
-from django.template.loader import render_to_string
 
 from chat.models import Message as Chat_Message
 from mickroservices.models import DocumentSushi, DocumentPreview
@@ -42,49 +40,6 @@ import pandas as pd
 import secrets
 
 User = get_user_model()
-
-@csrf_exempt
-def delete_directory(request):
-    directory = Directory.objects.get(id=request.POST["DIR_ID"])
-    directory.delete()
-    return JsonResponse({'success': True})
-
-
-@csrf_exempt
-def delete_directory_file(request):
-    dir_file = DirectoryFile.objects.get(id=request.POST["FILE_ID"])
-    dir_file.delete()
-    return JsonResponse({'success': True})
-
-
-@csrf_exempt
-def show_directories(request):
-    node = Directory.objects.get(id=request.POST["PARENT_ID"])
-    user = UserProfile.objects.get(user=request.user)
-    response = render_to_string('directories.html', {'node': node, 'user': user})
-    return JsonResponse({'success': True, 'response': response})
-
-
-@csrf_exempt
-def add_directory_file(request):
-    directory = Directory.objects.get(id=request.POST["PARENT_ID"])
-    dir_file = DirectoryFile.objects.create(directory=directory, dir_file=request.FILES["file"])
-    is_manager = False
-    user = UserProfile.objects.get(user=request.user)
-    if user.is_manager:
-        is_manager=True
-    return JsonResponse({'success': True, 'dir_file_url': dir_file.dir_file.url, 'dir_file_name': dir_file.filename(), 'is_manager': is_manager, 'dir_file_id': dir_file.id})
-
-@csrf_exempt
-def add_directory(request):
-    title = request.POST.get('TITLE', '')
-    parent_id = request.POST.get('PARENT_ID', '')
-    dir = Directory.objects.create(parent_id=parent_id, title=title)
-    is_manager = False
-    user = UserProfile.objects.get(user=request.user)
-    if user.is_manager:
-        is_manager=True
-    return JsonResponse({'success': True, 'dir_title': dir.title, 'dir_id': dir.id, 'is_manager': is_manager})
 
 
 def get_filtered_shop_feedback(request, shop_id):

@@ -7,36 +7,12 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from wagtail.core.fields import RichTextField
 from wagtail.documents.models import get_document_model
-from mptt.models import MPTTModel, TreeForeignKey
 import wagtail.users.models
 
 from mickroservices.models import DocumentSushi
 from sushi_app.utils import create_dict_from_choices
 from datetime import datetime
 from .enums import * 
-
-import os
-
-class Directory(MPTTModel):
-	title = models.CharField("Название", max_length=100)
-	parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-
-	class Meta:
-		verbose_name="Папка"
-		verbose_name_plural = "Папки"
-
-	def __str__(self):
-		return self.title
-
-def get_upload_path(instance, filename):
-	return os.path.join('directory_files', instance.directory.title, filename)
-
-class DirectoryFile(models.Model):
-	directory = models.ForeignKey(Directory, related_name='directory_files', on_delete=models.CASCADE)
-	dir_file = models.FileField("Файл", upload_to=get_upload_path)
-
-	def filename(self):
-		return os.path.basename(self.dir_file.name)
 
 
 class Department(models.Model):

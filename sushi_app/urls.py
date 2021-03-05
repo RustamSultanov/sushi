@@ -6,11 +6,6 @@ from . import views
 from .forms import LoginForm
 
 urlpatterns = [
-    path('delete-directory', views.delete_directory),
-    path('delete-directory-file', views.delete_directory_file),
-    path('show-directories', views.show_directories),
-    path('add-directory-file', views.add_directory_file),
-    path('add-directory', views.add_directory),
     path(
         '', views.base, name='base'),
     path(
