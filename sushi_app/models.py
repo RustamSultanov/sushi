@@ -13,30 +13,33 @@ import wagtail.users.models
 from mickroservices.models import DocumentSushi
 from sushi_app.utils import create_dict_from_choices
 from datetime import datetime
-from .enums import * 
+from .enums import *
 
 import os
 
+
 class Directory(MPTTModel):
-	title = models.CharField("Название", max_length=100)
-	parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    title = models.CharField("Название", max_length=100)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
-	class Meta:
-		verbose_name="Папка"
-		verbose_name_plural = "Папки"
+    class Meta:
+        verbose_name = "Папка"
+        verbose_name_plural = "Папки"
 
-	def __str__(self):
-		return self.title
+    def __str__(self):
+        return self.title
+
 
 def get_upload_path(instance, filename):
-	return os.path.join('directory_files', instance.directory.title, filename)
+    return os.path.join('directory_files', instance.directory.title, filename)
+
 
 class DirectoryFile(models.Model):
-	directory = models.ForeignKey(Directory, related_name='directory_files', on_delete=models.CASCADE)
-	dir_file = models.FileField("Файл", upload_to=get_upload_path)
+    directory = models.ForeignKey(Directory, related_name='directory_files', on_delete=models.CASCADE)
+    dir_file = models.FileField("Файл", upload_to=get_upload_path)
 
-	def filename(self):
-		return os.path.basename(self.dir_file.name)
+    def filename(self):
+        return os.path.basename(self.dir_file.name)
 
 
 class Department(models.Model):
@@ -70,7 +73,7 @@ class UserProfile(models.Model):
                              null=True, blank=True, limit_choices_to={'is_head': True})
     department = models.ForeignKey(on_delete=models.SET_NULL, to=Department, related_name='member',
                                    null=True, blank=True)
-    scan = models.FileField(upload_to='images',blank=True)
+    scan = models.FileField(upload_to='images', blank=True)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     ddk_number = models.CharField(max_length=200, null=True, blank=True)
 
@@ -123,12 +126,14 @@ class RequestFile(models.Model):
 class ShopSign(models.Model):
     title = models.CharField(max_length=255, verbose_name='Наименование')
     icon = models.ImageField('Иконка', blank=True, null=True)
+
     def __str__(self):
         return f"{self.title}"
 
     class Meta:
         verbose_name = 'Признак магазин'
         verbose_name_plural = 'Признаки магазинов'
+
 
 class Shop(models.Model):
     address = models.CharField(max_length=255, blank=False, null=False,
@@ -153,7 +158,7 @@ class Shop(models.Model):
     file = models.FileField(blank=True)
     details = models.TextField(blank=True)
     signs = models.ManyToManyField(ShopSign, blank=True,
-                             related_name='shop_sings')
+                                   related_name='shop_sings')
 
     def __str__(self):
         return f"{self.city} {self.address}"
@@ -214,6 +219,7 @@ class Feedback(models.Model):
             create_dict_from_choices(STATUS_CHOICE)[self.status]
         )
 
+
 class Messeges(models.Model):
     from_user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='user_messeges')
     to_user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='to_user')
@@ -233,24 +239,25 @@ class Messeges(models.Model):
 
 
 class Subscribes(models.Model):
-    user_id = models.ForeignKey(on_delete=models.CASCADE, 
-                                to=settings.AUTH_USER_MODEL, 
+    user_id = models.ForeignKey(on_delete=models.CASCADE,
+                                to=settings.AUTH_USER_MODEL,
                                 related_name='user_subscribes')
 
-    event_type = models.CharField(choices=EVENT_TYPE_CHOICES, 
+    event_type = models.CharField(choices=EVENT_TYPE_CHOICES,
                                   max_length=10)
 
-    subscribe_type = models.CharField(choices=EVENT_TYPE_CHOICES, 
+    subscribe_type = models.CharField(choices=EVENT_TYPE_CHOICES,
                                       max_length=10)
 
+
 class NotificationEvents(models.Model):
-    #ForeginKey для интересующей модели 
+    # ForeginKey для интересующей модели
     event_id = models.IntegerField()
-    event_type = models.CharField(choices=EVENT_TYPE_CHOICES,  
+    event_type = models.CharField(choices=EVENT_TYPE_CHOICES,
                                   max_length=10)
     date_of_creation = models.DateTimeField(auto_now_add=True)
-    subscribe = models.ForeignKey(on_delete=models.CASCADE, 
-                                  to=Subscribes, 
+    subscribe = models.ForeignKey(on_delete=models.CASCADE,
+                                  to=Subscribes,
                                   related_name='subscribe_events')
     value = models.CharField(max_length=50, null=True)
 

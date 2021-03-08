@@ -7,6 +7,7 @@ import wagtail.users.models
 from django.template.defaultfilters import truncatewords
 from feincms.admin import tree_editor
 
+
 # Now register the new UserAdmin# ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 
@@ -27,20 +28,25 @@ class WagtailUserProfileInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     inlines = (UserProfileInline, WagtailUserProfileInline)
 
+
 @admin.register(Messeges)
 class MessegesAdmin(admin.ModelAdmin):
 
     def get_text(self, obj):
         return obj.text[:10]
+
     get_text.short_term = "text"
     list_display = ('from_user', 'to_user', 'date_create', 'get_text', 'task')
 
+
 class InlineFiles(admin.TabularInline):
-	model = DirectoryFile
-	extra = 1
+    model = DirectoryFile
+    extra = 1
+
 
 class DirectoryAdmin(tree_editor.TreeEditor):
-	inlines = [InlineFiles, ]
+    inlines = [InlineFiles, ]
+
 
 # Re-register UserAdmin
 admin.site.register(ShopSign)

@@ -1,11 +1,10 @@
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.views.decorators.vary import vary_on_headers
-from django.urls import reverse, reverse_lazy
 from django.forms.models import model_to_dict
-from django.contrib.auth import get_user_model
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.views.decorators.vary import vary_on_headers
 
 try:
     from wagtail.admin.utils import user_passes_test
@@ -24,12 +23,10 @@ from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 from django.contrib.auth.models import Group
 from django.forms import modelformset_factory
-from django.http import JsonResponse
 from django.template.loader import render_to_string
 
 from chat.models import Message as Chat_Message
-from mickroservices.models import DocumentSushi, DocumentPreview
-from mickroservices.models import NewsPage, QuestionModel, IdeaModel
+from mickroservices.models import DocumentPreview
 from mickroservices.forms import AnswerForm, IdeaStatusForm
 from mickroservices.consts import *
 from .forms import *
@@ -42,6 +39,7 @@ import pandas as pd
 import secrets
 
 User = get_user_model()
+
 
 @csrf_exempt
 def delete_directory(request):
@@ -72,8 +70,10 @@ def add_directory_file(request):
     is_manager = False
     user = UserProfile.objects.get(user=request.user)
     if user.is_manager:
-        is_manager=True
-    return JsonResponse({'success': True, 'dir_file_url': dir_file.dir_file.url, 'dir_file_name': dir_file.filename(), 'is_manager': is_manager, 'dir_file_id': dir_file.id})
+        is_manager = True
+    return JsonResponse({'success': True, 'dir_file_url': dir_file.dir_file.url, 'dir_file_name': dir_file.filename(),
+                         'is_manager': is_manager, 'dir_file_id': dir_file.id})
+
 
 @csrf_exempt
 def add_directory(request):
@@ -83,7 +83,7 @@ def add_directory(request):
     is_manager = False
     user = UserProfile.objects.get(user=request.user)
     if user.is_manager:
-        is_manager=True
+        is_manager = True
     return JsonResponse({'success': True, 'dir_title': dir.title, 'dir_id': dir.id, 'is_manager': is_manager})
 
 
@@ -262,7 +262,6 @@ class ShopSignDetailView(UserPassesTestMixin, ListView):
         context['sign'] = ShopSign.objects.get(pk=self.kwargs['pk'])
         return context
 
-
     def test_func(self):
         return self.request.user.is_staff or self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head
 
@@ -278,6 +277,7 @@ class ShopSignEditView(UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         self.object = form.save()
         return HttpResponseRedirect(reverse_lazy("shop", args=[self.object.id]))
+
 
 # # Create your views here
 def manager_check(user):
@@ -350,6 +350,7 @@ class EmployeeSignShopsView(ListView):
         context['sign'] = ShopSign.objects.get(pk=self.kwargs['sign_id'])
         context['employee'] = User.objects.get(pk=self.kwargs['user_id'])
         return context
+
 
 @login_required
 def notification_view(request):
@@ -572,7 +573,7 @@ def _get_params_if_exists(request, *args, **kwargs):
 
     params = {}
     for arg in args:
-        if arg not in kwargs: 
+        if arg not in kwargs:
             kwargs[arg] = None
 
     for k, default in kwargs.items():
@@ -610,7 +611,7 @@ def _load_docs(request, current_page=1, doc_type=None, sub_type=None):
 @csrf_exempt
 def load_docs(request):
     args = ['doc_type', 'sub_type']
-    params = _get_params_if_exists(request, *args, current_page=1) 
+    params = _get_params_if_exists(request, *args, current_page=1)
     docs = _load_docs(request, **params)
     context = {
         'documents': docs,
@@ -646,7 +647,7 @@ def load_docs_info(request):
 
         if ext in IMAGE_TYPES:
             id_to_preview_type[doc.id] = 'image'
-    
+
     res = {
         'docs_id_to_url': urls,
         'id_to_preview_type': id_to_preview_type
@@ -685,6 +686,7 @@ def preview_deprecated(request, doc_type, doc_id):
         'doc_url': doc_url
     }
     return render(request, 'file_preview_deprecated.html', context)
+
 
 @csrf_exempt
 def preview(request, doc_type, doc_id):
@@ -1264,15 +1266,15 @@ def notification_settings_view(request):
     exclude_choices = []
     if is_manager:
         exclude_choices = [TASK_T]
-    
+
     user_available_choices = list(filter(lambda x: x[0] not in exclude_choices,
                                          EVENT_TYPE_CHOICES))
     if not is_manager:
-        request_key = list(filter(lambda a: a[0] == REQUEST_T, 
+        request_key = list(filter(lambda a: a[0] == REQUEST_T,
                                   user_available_choices))[0]
         index = user_available_choices.index(request_key)
         user_available_choices[index] = (REQUEST_T, 'Задачи менеджеру')
-        
+
     event_types = [j[0] for j in user_available_choices]
 
     site_rules = {i: False for i in event_types}
@@ -1351,5 +1353,3 @@ def notifcation_events(request):
             NotificationEvents.objects.filter(pk__in=events).delete()
 
     return JsonResponse({})
-
-
