@@ -28,21 +28,6 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Папки',
             },
         ),
-        migrations.AlterField(
-            model_name='notificationevents',
-            name='event_type',
-            field=models.CharField(choices=[('task', 'Задачи от менеджера'), ('request', 'Задачи от франчайзи'), ('messege', 'Сообщения'), ('question', 'Вопросы'), ('news', 'Новости'), ('feedback', 'Отзывы'), ('shop', 'Создание магазина'), ('idea', 'Идеи'), ('materials', 'Материалы')], max_length=10),
-        ),
-        migrations.AlterField(
-            model_name='subscribes',
-            name='event_type',
-            field=models.CharField(choices=[('task', 'Задачи от менеджера'), ('request', 'Задачи от франчайзи'), ('messege', 'Сообщения'), ('question', 'Вопросы'), ('news', 'Новости'), ('feedback', 'Отзывы'), ('shop', 'Создание магазина'), ('idea', 'Идеи'), ('materials', 'Материалы')], max_length=10),
-        ),
-        migrations.AlterField(
-            model_name='subscribes',
-            name='subscribe_type',
-            field=models.CharField(choices=[('task', 'Задачи от менеджера'), ('request', 'Задачи от франчайзи'), ('messege', 'Сообщения'), ('question', 'Вопросы'), ('news', 'Новости'), ('feedback', 'Отзывы'), ('shop', 'Создание магазина'), ('idea', 'Идеи'), ('materials', 'Материалы')], max_length=10),
-        ),
         migrations.CreateModel(
             name='DirectoryFile',
             fields=[
