@@ -125,7 +125,7 @@
             event.preventDefault();
             $('.nav-mm').removeClass('text-dark');
             element.addClass('text-dark');
-            $('input[name="sub_type"').val(element.data("id"));
+            $('input[name="sub_type"]').val(element.data("id"));
             $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}&sub_type=" + element.data("id"))
             $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}&sub_type=" + element.data("id"));
             bindPreviewEvents()
