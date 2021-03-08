@@ -1,21 +1,19 @@
+import os
+
+import wagtail.users.models
 import wagtail.users.models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 from phonenumber_field.modelfields import PhoneNumberField
 from wagtail.core.fields import RichTextField
-from wagtail.documents.models import get_document_model
-from mptt.models import MPTTModel, TreeForeignKey
-import wagtail.users.models
 from wagtail.documents.models import Document, AbstractDocument
 
 from mickroservices.models import DocumentSushi
 from sushi_app.utils import create_dict_from_choices
-from datetime import datetime
 from .enums import *
 from .enums import *
-
-import os
 
 
 class Directory(MPTTModel):

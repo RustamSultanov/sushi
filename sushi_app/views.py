@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -29,7 +31,7 @@ from django.db.models import Q
 from django.template.loader import render_to_string
 
 from chat.models import Message as Chat_Message
-from mickroservices.models import DocumentPreview, Subjects
+from mickroservices.models import Subjects
 from .sevices import PartnerService, ShopService
 from mickroservices.models import DocumentPreview
 from mickroservices.forms import AnswerForm, IdeaStatusForm
