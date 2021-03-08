@@ -1,18 +1,18 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from wagtail.documents.models import Document, AbstractDocument
-from phonenumber_field.modelfields import PhoneNumberField
+import wagtail.users.models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 from wagtail.core.fields import RichTextField
 from wagtail.documents.models import get_document_model
 from mptt.models import MPTTModel, TreeForeignKey
 import wagtail.users.models
+from wagtail.documents.models import Document, AbstractDocument
 
 from mickroservices.models import DocumentSushi
 from sushi_app.utils import create_dict_from_choices
 from datetime import datetime
+from .enums import *
 from .enums import *
 
 import os
@@ -76,9 +76,38 @@ class UserProfile(models.Model):
     scan = models.FileField(upload_to='images', blank=True)
     middle_name = models.CharField(max_length=100, null=True, blank=True)
     ddk_number = models.CharField(max_length=200, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True, verbose_name="Комментарий к пользователю")
 
     def __str__(self):
         return self.user.get_full_name()
+
+    @property
+    def user_is_manager(self):
+        return self.is_manager or self.is_head
+
+    def save(self, *args, **kwargs):
+        models = []
+        ll = {
+            'request',
+            'messege',
+            'question',
+            'news',
+            'feedback',
+            'shop',
+            'idea',
+            'materials',
+        }
+        for ls in ll:
+            sub = Subscribes(user_id=self.user,
+                             event_type=ls,
+                             subscribe_type='site')
+            models.append(sub)
+            sub = Subscribes(user_id=self.user,
+                             event_type=ls,
+                             subscribe_type='email')
+            models.append(sub)
+        Subscribes.objects.bulk_create(models)
+        super().save(*args, **kwargs)
 
 
 class Task(models.Model):

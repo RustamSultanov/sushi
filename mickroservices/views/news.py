@@ -1,13 +1,14 @@
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
-from django.views.generic import ListView
-from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.utils.text import slugify
-from django.http import HttpResponseRedirect
-
-from mickroservices.models import NewsPage
-from mickroservices.forms import NewsForm
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from wagtail.core.models import Page
+
+from mickroservices.forms import NewsForm
+from mickroservices.models import NewsPage
 
 
 class NewsView(ListView):
@@ -28,6 +29,11 @@ class NewsCreateView(CreateView):
     form_class = NewsForm
     success_url = reverse_lazy('mickroservices:news')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not (self.request.user.user_profile.is_manager or self.request.user.user_profile.is_head):
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(NewsCreateView, self).get_context_data(**kwargs)
         context['title'] = 'Создание новости'
@@ -37,6 +43,7 @@ class NewsCreateView(CreateView):
             {'title': context['title']}
         ]
         return context
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.slug = slugify(self.object.title, allow_unicode=True)
@@ -62,6 +69,11 @@ class NewsEditView(UpdateView):
     model = NewsPage
     success_url = reverse_lazy('mickroservices:news')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.user_profile.user_is_manager:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(NewsEditView, self).get_context_data(**kwargs)
         context['title'] = 'Редактирование новости'
@@ -71,6 +83,7 @@ class NewsEditView(UpdateView):
             {'title': context['title']}
         ]
         return context
+
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.slug = slugify(self.object.title, allow_unicode=True)
@@ -86,3 +99,24 @@ class NewsEditView(UpdateView):
                                 {'form': form,
                                  'status_ms': True,
                                  'message': ms})
+
+
+class NewsDeleteView(DeleteView):
+    model = NewsPage
+    template_name = 'delete_news.html'
+    success_url = reverse_lazy('mickroservices:news')
+
+    def get_success_url(self):
+        return self.success_url
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.user_profile.user_is_manager:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if "cancel" in request.POST:
+            url = self.get_success_url()
+            return HttpResponseRedirect(url)
+        else:
+            return super(NewsDeleteView, self).post(request, *args, **kwargs)

@@ -54,17 +54,17 @@
                         <div class="row my-4">
                             {% for partner in partner_list %}
                                 <div class="col-md-6 col-lg-4 mb-4">
-                                    <div href="{% url 'employee_info' partner.id %}" class="card hoverable">
+                                    <div href="{% url 'partner_info' partner.id %}" class="card hoverable">
                                         <div class="card-body">
                                             <div class="media align-items-center mb-3">
                                                 {% if partner.wagtail_profile.avatar %}
-                                                    <a href="{% url 'employee_info' partner.user.id %}"> <img
+                                                    <a href="{% url 'partner_info' partner.user.id %}"> <img
                                                             src="{{ partner.wagtail_profile.avatar.url }}" alt=""
                                                             class="ui-w-60 rounded-circle"></a>
                                                 {% else %}
                                                 {% endif %}
                                                 <div class="small ml-3">
-                                                    <a href="{% url 'employee_info' partner.user.id %}"
+                                                    <a href="{% url 'partner_info' partner.user.id %}"
                                                        class="text-primary">{{ partner.user.first_name }} {{ partner.user.last_name }}</a>
                                                     {% if partner.position %}
                                                         <div class="small text-muted">{{ partner.position }}</div>{% else %}
@@ -82,8 +82,11 @@
                                                             <a class="dropdown-item"
                                                                href="{% url 'edit_partner' partner.user.id %}">Редактировать
                                                                 франчайзи</a>
-                                                            <a class="dropdown-item" href="{% url 'form_review' %}">Добавить
+                                                            <a class="dropdown-item" href="{% url 'form_review' partner.user.id %}">Добавить
                                                                 отзыв</a>
+                                                            <a class="dropdown-item"
+                                                               href="{% url 'delete_partner' partner.user.id %}">Удалить</a>
+
                                                         </div>
                                                     </div>
                                                 </div>

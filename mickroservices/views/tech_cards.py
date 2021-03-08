@@ -1,9 +1,10 @@
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.views.generic import ListView
-from django.views.decorators.vary import vary_on_headers
 from django.utils.encoding import force_text
-
+from django.views.decorators.vary import vary_on_headers
+from django.views.generic import ListView
 from wagtail.admin.forms.search import SearchForm
+
 try:
     from wagtail.admin.utils import PermissionPolicyChecker
 except ImportError:
@@ -77,6 +78,8 @@ class SushiDocListView(ListView):
 
     @vary_on_headers('X-Requested-With')
     def post(self, request, *args, **kwargs):
+        if not self.request.user.user_profile.user_is_manager:
+            raise PermissionDenied
         try:
             DocumentForm = get_document_form(self.model)
         except AttributeError:
@@ -100,7 +103,6 @@ class SushiDocListView(ListView):
             doc = form.save(commit=False)
             doc.doc_type = self.doc_type
             if 'sub_type' in request.POST and request.POST['sub_type']:
-                print('sub_type:',request.POST['sub_type'])
                 doc.sub_type = Subjects.objects.get(pk=request.POST['sub_type'])
             doc.uploaded_by_user = request.user
             doc.file_size = doc.file.size
@@ -110,7 +112,6 @@ class SushiDocListView(ListView):
             doc._set_file_hash(doc.file.read())
             doc.file.seek(0)
             doc.save()
-            print(doc, doc.sub_type)
 
             collections = permission_policy.collections_user_has_any_permission_for(
                 request.user, ['add', 'change']

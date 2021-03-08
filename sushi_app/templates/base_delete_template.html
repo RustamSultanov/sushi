@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block  breadcrumb %}
+    {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        {% block message %}
+            <p>{{ delete_message }}</p>
+        {% endblock message %}
+
+        <input type="submit" value="ДА" class="btn btn-round btn-outline-primary">
+        <input type="submit" name="cancel" value="Нет" class="btn btn-round btn-outline-primary"/>
+    </form>
+{% endblock %}

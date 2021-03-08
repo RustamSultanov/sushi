@@ -12,9 +12,11 @@ except ImportError:
     from wagtail.admin.auth import user_passes_test
 from wagtail.users.forms import AvatarPreferencesForm
 import wagtail.users.models
-from django.http import (HttpResponse,
-                         HttpResponseBadRequest, JsonResponse, HttpResponseRedirect)
-from django.views.generic import ListView, UpdateView
+from django.core.exceptions import PermissionDenied
+from django.http import (
+    HttpResponse, HttpResponseBadRequest, JsonResponse, HttpResponseRedirect
+)
+from django.views.generic import ListView, UpdateView, DeleteView, DetailView
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_text
 from wagtail.admin.forms.search import SearchForm
@@ -23,9 +25,12 @@ from wagtail.documents.forms import get_document_form
 from wagtail.documents.permissions import permission_policy
 from django.contrib.auth.models import Group
 from django.forms import modelformset_factory
+from django.db.models import Q
 from django.template.loader import render_to_string
 
 from chat.models import Message as Chat_Message
+from mickroservices.models import DocumentPreview, Subjects
+from .sevices import PartnerService, ShopService
 from mickroservices.models import DocumentPreview
 from mickroservices.forms import AnswerForm, IdeaStatusForm
 from mickroservices.consts import *
@@ -125,7 +130,9 @@ class ShopListView(ListView):
         context["doc_type"] = DocumentSushi.T_PERSONAL
         context["type_invoice"] = DocumentSushi.T_PERSONAL_INVOICES
         context["breadcrumb"] = [
-            {"title": "Личный кабинет", "url": reverse_lazy("partner_lk")},
+            {"title": "Личный кабинет", "url": reverse_lazy("partner_lk")
+            if self.request.user.user_profile.is_partner
+            else reverse_lazy("manager_lk")},
             {"title": f"Магазин #{shop.id}"},
         ]
         return context
@@ -281,7 +288,7 @@ class ShopSignEditView(UserPassesTestMixin, UpdateView):
 
 # # Create your views here
 def manager_check(user):
-    return user.user_profile.is_manager
+    return user.user_profile.user_is_manager
 
 
 def partner_check(user):
@@ -304,6 +311,30 @@ def base(request):
     else:
         news = news_all[len(news_all) - 3:]
     return render(request, "index.html", {"employee_list": employees_list, "news": news})
+
+
+@login_required
+def search(request):
+    search_phrase = request.GET.get('search_phrase')
+    if request.user.user_profile.is_manager:
+        employees_list = UserProfile.objects.prefetch_related(
+            "user", "wagtail_profile", "department"
+        ).filter(Q(head=request.user.user_profile),
+                 Q(user__first_name__icontains=search_phrase) | Q(user__last_name__icontains=search_phrase))[:20]
+    else:
+        employees_list = dict()
+    news_all = NewsPage.objects.filter(title__icontains=search_phrase).order_by(
+        'first_published_at')[:20]
+    if len(news_all) == 0 or len(news_all) <= 3:
+        news = news_all
+    else:
+        news = news_all[len(news_all) - 3:]
+    documents_all = DocumentSushi.objects.filter(Q(title__icontains=search_phrase))[:20]
+    dir_all = Subjects.objects.filter(name__icontains=search_phrase)[:20]
+    return render(request, "search.html", {"employee_list": employees_list, "news": news, "dirs": dir_all,
+                                           "documents": documents_all,
+                                           "is_manager": request.user.user_profile.is_manager,
+                                           "search_phrase": search_phrase})
 
 
 @login_required
@@ -390,15 +421,17 @@ def get_filtered_tasks(request):
 
 def get_filtered_request(request):
     if request.user.user_profile.is_manager:
-        request_list = Requests.objects.prefetch_related("responsible").filter(
+        request_list = list(chain(Requests.objects.prefetch_related("responsible").filter(
             manager=request.user.user_profile
-        )
+        ), Task.objects.prefetch_related("responsible").filter(
+            responsible=request.user
+        )))
     else:
         request_list = Requests.objects.prefetch_related("responsible") \
             .filter(responsible=request.user)
     if "filter_request" in request.GET:
-        return request_list.filter(status=request.GET['filter_request'])
-    return request_list.order_by("-date_create")
+        return request_list.filter(status=request.GET['filter_request']).order_by("-date_create")
+    return request_list
 
 
 def get_filtered_feedback(request):
@@ -479,13 +512,21 @@ def faq_answer(request, faq_id):
 @login_required
 @user_passes_test(manager_check)
 def manager_lk_view(request):
-    partner_list = UserProfile.objects.prefetch_related(
+    filter_kwargs = {}
+    profile = request.user.user_profile
+    if not profile.is_head:
+        filter_kwargs = {'manager': request.user.user_profile}
+
+    partner_list = UserProfile.objects.filter(is_partner=True, **filter_kwargs).prefetch_related(
         "user", "wagtail_profile"
-    ).filter(manager=request.user.user_profile)
+    )
     task_not_solved = Task.objects.filter(status=ST_IN_PROGRESS,
                                           manager=request.user.user_profile).count()
     requests_not_solved = Requests.objects.filter(status=ST_IN_PROGRESS,
-                                                  manager=request.user.user_profile).count()
+                                                  manager=request.user.user_profile).count() + \
+                          Task.objects.filter(
+                              status=ST_IN_PROGRESS,
+                              responsible=request.user).count()
     ideas_not_solved = IdeaModel.objects.filter(status=IdeaModel.ST_CONSIDERATION,
                                                 recipient=request.user).count()
     feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
@@ -596,7 +637,6 @@ def _load_docs(request, current_page=1, doc_type=None, sub_type=None):
     count_objects = 9
     offset = (current_page * count_objects) - count_objects
     limmit = (current_page * count_objects)
-    print(offset, limmit)
     if doc_type:
         docs = DocumentSushi.objects.filter(doc_type=doc_type)[offset: limmit]
     else:
@@ -746,7 +786,6 @@ def partner_lk_view(request):
         is_paginated = True
         page = request.GET['page'] if 'page' in request.GET else 1
         page_obj = documents = page_object.get_page(page)
-
     return render(
         request,
         "dashboard_partner.html",
@@ -836,8 +875,10 @@ def form_task_view(request, partner_id):
 
 @login_required
 @user_passes_test(manager_check)
-def feedback_form_view(request):
+def feedback_form_view(request, partner_id):
+    partner = get_object_or_404(User, id=partner_id)
     form = FeedbackForm(request.POST or None)
+    form.fields["shop"].queryset = partner.user_profile.shop_partner.all()
     if form.is_valid():
         form = form.save(commit=False)
         form.responsible = form.shop.partner
@@ -886,7 +927,7 @@ def create_partner_view(request):
         form_user_profile.manager = request.user.user_profile
         form_user_profile.is_partner = True
         form_user_profile.save()
-        return HttpResponseRedirect(reverse("employee_info", args=[form_user.id]))
+        return HttpResponseRedirect(reverse("edit_partner", args=[form_user.id]))
     context = {
         "form_user": form_user,
         "form_user_profile": form_user_profile,
@@ -901,7 +942,11 @@ def create_partner_view(request):
 @login_required
 @user_passes_test(manager_check)
 def edit_partner_view(request, user_id):
-    user = get_object_or_404(User, id=user_id)
+    user = get_object_or_404(User, id=user_id, user_profile__is_partner=True)
+    profile = request.user.user_profile
+    if not profile.is_head and user.user_profile.manager != profile:
+        raise PermissionDenied
+
     form_user = EditEmployeeMainForm(
         request.POST or None,
         request.FILES or None,
@@ -931,7 +976,7 @@ def edit_partner_view(request, user_id):
         form_user.save()
         form_user_profile.save()
         form_wagtail.save()
-        return HttpResponseRedirect(reverse("employee_info", args=[user_id]))
+        return HttpResponseRedirect(reverse("partner_info", args=[user_id]))
     context = {
         "form_user": form_user,
         "form_user_profile": form_user_profile,
@@ -940,6 +985,7 @@ def edit_partner_view(request, user_id):
             {"title": "Личный кабинет", "url": reverse_lazy("manager_lk")},
             {"title": "Редактировать франчайзи"},
         ],
+        "is_visible_comment": request.user.user_profile.user_is_manager and user.user_profile.is_partner
     }
     return render(request, "user_edit.html", context)
 
@@ -985,9 +1031,10 @@ def create_employee_view(request):
 @login_required
 def edit_employee_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    if user != request.user:
+    if not (user == request.user or request.user.user_profile.is_head and not user.user_profile.is_head):
         if request.user.user_profile.is_partner:
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        raise PermissionDenied
     form_user = EditEmployeeMainForm(
         request.POST or None,
         request.FILES or None,
@@ -1040,11 +1087,12 @@ def shop_form_view(request):
         shop.signs.add(*sign)
         return HttpResponseRedirect(reverse_lazy("shop", args=[shop.id]))
     context = {
-        "form": form,
-        "breadcrumb": [
-            {"title": "Личный кабинет", "url": reverse_lazy("manager_lk")},
-            {"title": "Добавить магазин"},
+        'form': form,
+        'breadcrumb': [
+            {'title': "Личный кабинет", 'url': reverse_lazy("manager_lk")},
+            {'title': "Добавить магазин"},
         ],
+        'head': "Добавить магазин"
     }
     return render(request, "store_new.html", context)
 
@@ -1056,6 +1104,53 @@ def shop_form_view(request):
 #                                           'breadcrumb': [{'title': 'Личный кабинет',
 #                                                           'url': reverse_lazy('partner_lk')},
 #                                                          {'title': f"Магазин #{shop.id}"}]})
+
+class ShopFormView(UpdateView):
+    model = Shop
+    template_name = "store_new.html"
+    pk_url_kwarg = "shop_id"
+    form_class = ShopForm
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (
+                request.user.user_profile.user_is_manager or
+                self.request.user.user_profile.id == self.get_object().partner_id
+        ):
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['head'] = "Редактировать магазин"
+        return context
+
+    def get_success_url(self):
+        return reverse('shop', args=[self.kwargs['shop_id']])
+
+
+class PartnerDetailView(DetailView):
+    model = User
+    template_name = "partner.html"
+    pk_url_kwarg = "user_id"
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(User, pk=self.kwargs.get('user_id'), user_profile__is_partner=True)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (
+                request.user.user_profile.user_is_manager or
+                self.request.user.id == self.kwargs['user_id'] and self.request.user.user_profile.is_partner):
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        partner_user = self.get_object()
+        context['partner_user'] = partner_user
+        context['user'] = self.request.user
+        context['shop_list'] = partner_user.user_profile.shop_partner.all()
+        context['is_visible_comment'] = self.request.user.user_profile.user_is_manager
+        return context
 
 
 @login_required
@@ -1290,7 +1385,6 @@ def notification_settings_view(request):
             site_rules[event.event_type] = True
 
     sort_map = {j: i for i, j in enumerate(event_types)}
-
     context['names'] = [i[1] for i in sorted(user_available_choices, key=lambda x: sort_map[x[0]])]
     context['site_rules'] = _build_input_info(site_rules, site_rule_name, sort_map)
     context['email_rules'] = _build_input_info(email_rules, email_rule_name, sort_map)
@@ -1306,7 +1400,6 @@ def update_notification_rules(request):
     models = []
     for k, v in request.POST.items():
         prefix, event_type = k.split('_')
-
         key = (prefix, event_type)
 
         if key in subs_d:
@@ -1353,3 +1446,79 @@ def notifcation_events(request):
             NotificationEvents.objects.filter(pk__in=events).delete()
 
     return JsonResponse({})
+
+
+class PartnerDeleteView(DeleteView):
+    model = User
+    template_name = 'base_delete_template.html'
+    success_url = reverse_lazy('manager_lk')
+    http_method_names = ('get', 'post')
+    pk_url_kwarg = 'user_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_message'] = f"Вы действительно хотите удалить пользователя {self.get_object()}"
+        return context
+
+    def get_success_url(self):
+        return self.success_url
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.user_profile.user_is_manager:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if "cancel" in request.POST:
+            url = self.get_success_url()
+            return HttpResponseRedirect(url)
+
+        PartnerService.delete_partner(self.request.user, self.get_object())
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ShopDeleteView(DeleteView):
+    model = Shop
+    template_name = 'base_delete_template.html'
+    http_method_names = ('get', 'post')
+    pk_url_kwarg = 'shop_id'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (
+                self.request.user.user_profile.user_is_manager or
+                self.get_object().partner.id == self.request.user.user_profile.id):
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['delete_message'] = f"Вы действительно хотите удалить магазин {self.get_object()}"
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if "cancel" in request.POST:
+            url = self.get_success_url()
+            return HttpResponseRedirect(url)
+        ShopService.delete_shop(self.request.user, self.get_object())
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        if self.request.user.user_profile.user_is_manager:
+            return reverse('manager_lk')
+        elif self.request.user.user_profile.is_partner:
+            return reverse('partner_lk')
+
+
+class EmployeeTasksListView(ListView):
+    model = Task
+    paginate_by = 30
+    http_method_names = ['get']
+    template_name = 'tasks_list.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.user_profile.is_head:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return Task.objects.filter(manager__user_id=self.kwargs['user_id'])

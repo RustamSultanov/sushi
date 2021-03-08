@@ -3,14 +3,14 @@
 {% load wagtailcore_tags %}
 
 
-{% block title %}{{title}}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block page_title %}
-    <h2 class="text-light font-weight-normal mt-4 mb-1">{{title}}</h2>
+    <h2 class="text-light font-weight-normal mt-4 mb-1">{{ title }}</h2>
 {% endblock %}
 
-{% block  breadcrumb%}
-        {% include 'partials/breadcrumb.html' %}
+{% block  breadcrumb %}
+    {% include 'partials/breadcrumb.html' %}
 {% endblock %}
 
 {% block content %} 
@@ -92,35 +92,35 @@
     {% include 'partials/dropezone_script.html' %}
     <script src='{% static "js/file_previews.js" %}'></script>
     <script type="text/javascript">
-        $(document).ready(function(){
-                $('#show-preview-button').hide().click(function(){
-                        $(prKeySh(activePreviewId)).hide()
-                        $('#show-preview-button').hide()
-                });
-                let current_page = 1
-                let  page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
+        $(document).ready(function () {
+            $('#show-preview-button').hide().click(function () {
+                $(prKeySh(activePreviewId)).hide()
+                $('#show-preview-button').hide()
+            });
+            let current_page = 1
+            let page_param = window.location.search.match(/(\?|&)page\=([^&]*)/);
 
-                if(page_param){
-                    current_page = decodeURIComponent(page_param[2]);
-                }
+            if (page_param) {
+                current_page = decodeURIComponent(page_param[2]);
+            }
 
-                var path = "?page="+current_page+"&doc_type={{doc_type}}"
-                if($('.text-dark').length > 0 && $('.text-dark').data('id')){
-                    path += "&sub_type=" + $('.text-dark').data("id")
-                }
+            var path = "?page=" + current_page + "&doc_type={{doc_type}}"
+            if ($('.text-dark').length > 0 && $('.text-dark').data('id')) {
+                path += "&sub_type=" + $('.text-dark').data("id")
+            }
 
-                $('#documents_wraper').load("{% url 'load_docs' %}" + path);
-                $('#pagination').load("{% url 'load_paginations_docs' %}" + path);
-                bindPreviewEvents() 
+            $('#documents_wraper').load("{% url 'load_docs' %}" + path);
+            $('#pagination').load("{% url 'load_paginations_docs' %}" + path);
+            bindPreviewEvents()
         });
 
-        function load_tech_cards_docs(element){           
+        function load_tech_cards_docs(element) {
             event.preventDefault();
             $('.nav-mm').removeClass('text-dark');
             element.addClass('text-dark');
             $('input[name="sub_type"').val(element.data("id"));
             $('#documents_wraper').load("{% url 'load_docs' %}?doc_type={{doc_type}}&sub_type=" + element.data("id"))
-            $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}&sub_type="+ element.data("id"));
+            $('#pagination').load("{% url 'load_paginations_docs' %}?doc_type={{doc_type}}&sub_type=" + element.data("id"));
             bindPreviewEvents()
             return false;
         }
