@@ -1,7 +1,11 @@
+import os
+
+import wagtail.users.models
 import wagtail.users.models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 from phonenumber_field.modelfields import PhoneNumberField
 from wagtail.core.fields import RichTextField
 from wagtail.documents.models import Document, AbstractDocument
@@ -9,6 +13,31 @@ from wagtail.documents.models import Document, AbstractDocument
 from mickroservices.models import DocumentSushi
 from sushi_app.utils import create_dict_from_choices
 from .enums import *
+from .enums import *
+
+
+class Directory(MPTTModel):
+    title = models.CharField("Название", max_length=100)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
+    class Meta:
+        verbose_name = "Папка"
+        verbose_name_plural = "Папки"
+
+    def __str__(self):
+        return self.title
+
+
+def get_upload_path(instance, filename):
+    return os.path.join('directory_files', instance.directory.title, filename)
+
+
+class DirectoryFile(models.Model):
+    directory = models.ForeignKey(Directory, related_name='directory_files', on_delete=models.CASCADE)
+    dir_file = models.FileField("Файл", upload_to=get_upload_path)
+
+    def filename(self):
+        return os.path.basename(self.dir_file.name)
 
 
 class Department(models.Model):
@@ -124,6 +153,7 @@ class RequestFile(models.Model):
 class ShopSign(models.Model):
     title = models.CharField(max_length=255, verbose_name='Наименование')
     icon = models.ImageField('Иконка', blank=True, null=True)
+
     def __str__(self):
         return f"{self.title}"
 
@@ -155,7 +185,7 @@ class Shop(models.Model):
     file = models.FileField(blank=True)
     details = models.TextField(blank=True)
     signs = models.ManyToManyField(ShopSign, blank=True,
-                             related_name='shop_sings')
+                                   related_name='shop_sings')
 
     def __str__(self):
         return f"{self.city} {self.address}"
@@ -216,6 +246,7 @@ class Feedback(models.Model):
             create_dict_from_choices(STATUS_CHOICE)[self.status]
         )
 
+
 class Messeges(models.Model):
     from_user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='user_messeges')
     to_user = models.ForeignKey(on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL, related_name='to_user')
@@ -235,24 +266,25 @@ class Messeges(models.Model):
 
 
 class Subscribes(models.Model):
-    user_id = models.ForeignKey(on_delete=models.CASCADE, 
-                                to=settings.AUTH_USER_MODEL, 
+    user_id = models.ForeignKey(on_delete=models.CASCADE,
+                                to=settings.AUTH_USER_MODEL,
                                 related_name='user_subscribes')
 
-    event_type = models.CharField(choices=EVENT_TYPE_CHOICES, 
+    event_type = models.CharField(choices=EVENT_TYPE_CHOICES,
                                   max_length=10)
 
-    subscribe_type = models.CharField(choices=EVENT_TYPE_CHOICES, 
+    subscribe_type = models.CharField(choices=EVENT_TYPE_CHOICES,
                                       max_length=10)
 
+
 class NotificationEvents(models.Model):
-    #ForeginKey для интересующей модели 
+    # ForeginKey для интересующей модели
     event_id = models.IntegerField()
-    event_type = models.CharField(choices=EVENT_TYPE_CHOICES,  
+    event_type = models.CharField(choices=EVENT_TYPE_CHOICES,
                                   max_length=10)
     date_of_creation = models.DateTimeField(auto_now_add=True)
-    subscribe = models.ForeignKey(on_delete=models.CASCADE, 
-                                  to=Subscribes, 
+    subscribe = models.ForeignKey(on_delete=models.CASCADE,
+                                  to=Subscribes,
                                   related_name='subscribe_events')
     value = models.CharField(max_length=50, null=True)
 

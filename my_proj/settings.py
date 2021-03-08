@@ -58,6 +58,9 @@ INSTALLED_APPS = [
     'modelcluster',
     'taggit',
 
+    'mptt',
+    'feincms',
+
     'my_proj',
     'sushi_app',
     'tz_detect',
@@ -114,7 +117,6 @@ WAGTAIL_SITE_NAME = 'SushiShop'
 
 DATABASES = {
     'default': env.db(),
-
 }
 
 # Password validation
