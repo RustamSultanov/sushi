@@ -1,0 +1,238 @@
+{%extends 'layout.html'%}
+{%load static%}
+
+{%block content%}
+<!-- Page content -->
+<!-- Content -->
+<div class="container-fluid d-flex align-items-stretch flex-grow-1 p-0">
+
+    <!-- `.chat-wrapper` fills all available space of container -->
+    <div class="chat-wrapper container-p-x container-p-y">
+
+    <!-- Make card full height of `.chat-wrapper` -->
+    <div class="card flex-grow-1 position-relative overflow-hidden">
+
+        <!-- Make row full height of `.card` -->
+        <div class="row no-gutters h-100">
+        {%include 'chat/sidebox.html'%}
+        {%if chat_room%}
+        <div class="d-flex col flex-column">
+            <!-- Chat header -->
+
+            <div class="flex-grow-0 py-3 pr-4 pl-lg-4">
+
+            <div class="media align-items-center">
+                <a href="javascript:void(0)" class="chat-sidebox-toggler d-lg-none d-block text-muted text-large px-4 mr-2"><i class="ion ion-md-more"></i></a>
+                <!-- TODO: найти аватарку в модели пользователя -->
+                <!-- <div class="position-relative">
+                <span class="badge badge-dot badge-success indicator"></span>
+                <img src="{{chat_user.avatar}}" class="ui-w-40 rounded-circle" alt="">
+                </div> -->
+                <div class="media-body pl-3">
+                <strong>{{chat_room_companion}}</strong>
+                <!-- <div class="text-muted small"><em>Typing...</em></div> -->
+                </div>
+                <div>
+                <!-- <button type="button" class="btn btn-primary rounded-pill icon-btn mr-1"><i class="ion ion-ios-call"></i></button>
+                <button type="button" class="btn btn-secondary rounded-pill icon-btn mr-1"><i class="ion ion-md-videocam"></i></button>
+                <button type="button" class="btn btn-default rounded-pill icon-btn"><i class="ion ion-ios-more"></i></button> -->
+                </div>
+            </div>
+
+            </div>
+            <hr class="flex-grow-0 border-light m-0">
+            <!-- / Chat header -->
+
+            <!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
+            <div class="flex-grow-1 position-relative">
+
+            <!-- Remove `.chat-scroll` and add `.flex-grow-1` if you don't need scroll -->
+            <div id="dropZone" class="chat-messages chat-scroll p-4">
+              {%for mess in chat_messages%}
+                {%if mess.user_from == request.user%}
+                  <div class="chat-message-right mb-4">
+                  <div>
+                    {%if mess.user_from.avatar%}
+                      <img src="{{mess.user_from.avatar.url}}" class="ui-w-40 rounded-circle" alt>
+                    {%endif%}
+                      <div class="text-muted small text-nowrap mt-2">{{sent_time}}</div>
+                  </div>
+                  <div class="flex-shrink-1 bg-lighter rounded py-2 px-3 mr-3">
+                      <div class="font-weight-semibold mb-1">You</div>
+                      <span>{{mess.text}}</span>
+                  </div>
+                  </div>
+                {%else%}
+                  <div class="chat-message-left mb-4">
+                  <div>
+                      <img src="img/avatars/4.png" class="ui-w-40 rounded-circle" alt>
+                      <div class="text-muted small text-nowrap mt-2">{{mess.sent_time}}</div>
+                  </div>
+                  <div class="flex-shrink-1 bg-lighter rounded py-2 px-3 ml-3">
+                      <div class="font-weight-semibold mb-1">{{mess.user_from}}</div>
+                      {{mess.text}}
+                  </div>
+                  </div>
+                {%endif%}
+              {%endfor%}
+
+            </div><!-- / .chat-messages -->
+            </div>
+
+            <!-- Chat footer -->
+            <hr class="border-light m-0">
+            <div class="flex-grow-0 py-3 px-4">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Type your message">
+                <div class="input-group-append">
+                <button id="mess_snt" type="button" class="btn btn-primary">Send</button>
+                <input type="file" id='file' />
+                </div>
+            </div>
+            </div>
+            <!-- / Chat footer -->
+
+        </div>
+        {%endif%}
+        </div><!-- / .row -->
+
+    </div><!-- / .card -->
+
+    </div><!-- / .chat-wrapper -->
+
+</div>
+<script>
+$(document).ready(function(){
+    try{
+        var sock = new WebSocket('ws://' + window.location.host +':8080/ws/chat/');
+    }
+    catch(err){
+        var sock = new WebSocket('wss://' + window.location.host +'/ws/chat/');
+    }
+
+    sock.onmessage = function(mes){
+      mes_data = jQuery.parseJSON();
+      console.log(mes.data)
+        $('<div/>', {
+          // html: jQuery.parseJSON(mes.data).text,
+          class: 'chat-message-right mb-4',
+          append: $('<div/>', {
+            class: '',
+            append: $('<img/>',{
+              class: 'ui-w-40 rounded-circle',
+              src: mes_data.avatar,
+            })
+            .add('<div/>', {
+              class: 'text-muted small text-nowrap mt-2',
+              html: mes_data.time
+            })
+          }).add('<div/>', {
+            class: 'flex-shrink-1 bg-lighter rounded py-2 px-3 mr-3',
+            append: $('<div/>', {
+              class: 'font-weight-semibold mb-1',
+              html: mes_data.from_name,
+            }).add('<span/>', {html: mes_data.text,})
+          })
+        }).appendTo($('#dropZone'));
+
+        $('#chat_input').val('');
+    };
+
+    // DRAG AND DROP
+    if (typeof(window.FileReader) == 'undefined') {
+      console.log('Не поддерживается браузером!');
+    }
+    var dropZone = $('#dropZone'),
+        maxFileSize = 5000000;
+
+    console.log(dropZone[0]);
+    dropZone[0].ondragover = function() {
+      dropZone.addClass('hover');
+      return false;
+    };
+    dropZone[0].ondragleave = function() {
+      dropZone.removeClass('hover');
+      return false;
+    };
+    dropZone[0].ondrop = function(event) {
+      event.preventDefault();
+      dropZone.removeClass('hover');
+      dropZone.addClass('drop');
+      console.log('drop');
+      var file_drop = event.dataTransfer.files[0];
+
+      if (file_drop.size > maxFileSize) {
+          $('#filename').text('Файл слишком большой!');
+          console.log('Файл слишком большой!');
+          dropZone.addClass('error');
+          return false;
+      } else {
+        console.log(file_drop);
+        $('#file').prop("files", event.dataTransfer.files);
+        $('#filename').html(file_drop.name)
+        console.log($('#file')[0].files[0]);
+      }
+    };
+    $('#file').hide();
+  $('#mess_snt').click(function(){
+    var file = $('#file')[0].files[0];
+    if (typeof file == 'undefined') {
+      console.log('file udef');
+      sock.send(JSON.stringify(
+        {
+          "text":$('#chat_input').val(),
+          "room":$('#chat_room').val(),
+          "user_id":$('#user_id').val(),
+          "file": false,
+          "filename": false,
+        }));
+    } else {
+      var reader = new FileReader();
+      reader.onload = function(event) {
+          // console.log('File content:', event.target.result);
+          sock.send(JSON.stringify(
+            {
+              "text":$('#chat_input').val(),
+              "room":$('#chat_room').val(),
+              "user_id":$('#user_id').val(),
+              "file": event.target.result,
+              "filename": file.name,
+            }));
+      };
+      reader.readAsDataURL(file);
+      console.log(file.name)
+    }
+  });
+  sock.onopen = function (event) {
+      console.log(event);
+      console.log('Connection to server started');
+      sock.send(JSON.stringify(
+        {
+          'text': '',
+          "room":{{chat_room.id}},
+          "user_id":{{request.user.id}}
+          "file": null,
+          "filename": null,
+        }));
+  };
+  sock.onclose = function (event) {
+      console.log(event);
+      if(event.wasClean){
+          console.log('Clean connection end');
+      } else {
+          console.log('Connection broken');
+      }
+      {%if request.user.is_authenticated%}
+      // window.location.assign(window.location.href);
+      {%endif%}
+  };
+  sock.onerror = function (error) {
+      console.log(error);
+  };
+
+});
+</script>
+<!-- / Content -->
+<!-- / Page content -->
+
+{%endblock%}

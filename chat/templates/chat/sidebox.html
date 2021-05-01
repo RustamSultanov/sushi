@@ -1,0 +1,35 @@
+<div class="chat-sidebox col">
+
+  <!-- Chat contacts header -->
+  <div class="flex-grow-0 px-4">
+  <div class="media align-items-center">
+      <div class="media-body">
+      <input type="text" class="form-control chat-search my-3" placeholder="Search...">
+      </div>
+      <a href="javascript:void(0)" class="chat-sidebox-toggler d-lg-none d-block text-muted text-large font-weight-light pl-3">&times;</a>
+  </div>
+  <hr class="border-light m-0">
+  </div>
+  <!-- / Chat contacts header -->
+
+  <!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
+  <div class="flex-grow-1 position-relative">
+  <div class="chat-contacts list-group chat-scroll py-3">
+    {%for user in users%}
+      <!-- Online -->
+      <a href="/chat_page/?room={{chat_room.id}}"
+        class=" {%if user == chat_room_companion%} active {%endif%}list-group-item list-group-item-action online">
+        <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt="">
+        <div class="media-body ml-3">
+          {{user.user}}
+          <!-- <div class="chat-status small"><span class="badge badge-dot"></span>&nbsp; Online</div> -->
+        </div>
+        <div class="badge badge-outline-success">{{user.new_messages}}</div>
+      </a>
+    {%endfor%}
+
+
+  </div><!-- / .chat-contacts -->
+  </div>
+
+</div>

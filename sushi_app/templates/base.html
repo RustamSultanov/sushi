@@ -33,6 +33,8 @@
     <link rel="stylesheet" href="{% static "css/app.css" %}">
     <link rel="stylesheet" href="{% static "assets/vendor/libs/toastr/toastr.css" %}">
 
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+
     <!-- Layout helpers -->
     <script src="{% static "js/layout-helpers.js" %}"></script>
 
@@ -45,11 +47,11 @@
 </head>
     <body>
         {% block layout %}{% endblock %}
-        
+
 
         <!-- Core scripts -->
 
-        <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
         <script src="{% static "libs/popper/popper.js" %}"></script>
         <script src="{% static "js/bootstrap.js" %}"></script>
@@ -76,7 +78,7 @@
             });
         </script>
         {% block extrascripts %}{% endblock %}
-        {% block notifications %}    
+        {% block notifications %}
             <script type="text/javascript"  src="{% static "js/notifications.js" %}"></script>
         {% endblock %}
     </body>

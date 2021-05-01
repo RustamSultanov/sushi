@@ -20,6 +20,11 @@ pandas = "^1.1.0"
 xlrd = "^1.2.0"
 celery = "^4.4.7"
 
+# для чата:
+aiohttp==3.7.3
+aioreloader==0.4.0
+channels==3.0.2
+
 [tool.poetry.dev-dependencies]
 
 [build-system]
