@@ -44,10 +44,10 @@
             <!-- / Chat header -->
 
             <!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
-            <div class="flex-grow-1 position-relative">
+            <div id="dropZone" class="flex-grow-1 position-relative">
 
             <!-- Remove `.chat-scroll` and add `.flex-grow-1` if you don't need scroll -->
-            <div id="dropZone" class="chat-messages chat-scroll p-4">
+            <div class="chat-messages chat-scroll p-4">
               {%for mess in chat_messages%}
                 {%if mess.user_from == request.user%}
                   <div class="chat-message-right mb-4">
@@ -60,6 +60,9 @@
                   <div class="flex-shrink-1 bg-lighter rounded py-2 px-3 mr-3">
                       <div class="font-weight-semibold mb-1">You</div>
                       <span>{{mess.text}}</span>
+                      {%if mess.file%}
+                        <a href="{{mess.file.url}}">{{mess.file}}</a>
+                      {%endif%}
                   </div>
                   </div>
                 {%else%}
@@ -71,6 +74,9 @@
                   <div class="flex-shrink-1 bg-lighter rounded py-2 px-3 ml-3">
                       <div class="font-weight-semibold mb-1">{{mess.user_from}}</div>
                       {{mess.text}}
+                      {%if mess.file%}
+                        <a href="{{mess.file.url}}">Приложено: {{mess.file}}</a>
+                      {%endif%}
                   </div>
                   </div>
                 {%endif%}
@@ -83,10 +89,12 @@
             <hr class="border-light m-0">
             <div class="flex-grow-0 py-3 px-4">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Type your message">
+                <input id="chat_input" type="text" class="form-control" placeholder="Type your message or drop here you file">
                 <div class="input-group-append">
                 <button id="mess_snt" type="button" class="btn btn-primary">Send</button>
                 <input type="file" id='file' />
+                <input type="hidden" id="chat_room" value="{{chat_room.id}}" />
+                <input type="hidden" id="user_id", value="{{request.user.id}}" />
                 </div>
             </div>
             </div>
@@ -101,17 +109,22 @@
     </div><!-- / .chat-wrapper -->
 
 </div>
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+
 <script>
 $(document).ready(function(){
+    var sock = new WebSocket('ws:////167.172.172.23:8085/ws/chat/');
     try{
-        var sock = new WebSocket('ws://' + window.location.host +':8080/ws/chat/');
+    var sock = new WebSocket('ws:////167.172.172.23:8085/ws/chat/');
+    //     var sock = new WebSocket('ws://' + window.location.host +':8085/ws/chat/');
+
     }
     catch(err){
         var sock = new WebSocket('wss://' + window.location.host +'/ws/chat/');
     }
 
     sock.onmessage = function(mes){
-      mes_data = jQuery.parseJSON();
+      mes_data = jQuery.parseJSON(mes.data);
       console.log(mes.data)
         $('<div/>', {
           // html: jQuery.parseJSON(mes.data).text,
@@ -145,7 +158,6 @@ $(document).ready(function(){
     var dropZone = $('#dropZone'),
         maxFileSize = 5000000;
 
-    console.log(dropZone[0]);
     dropZone[0].ondragover = function() {
       dropZone.addClass('hover');
       return false;
@@ -173,7 +185,7 @@ $(document).ready(function(){
         console.log($('#file')[0].files[0]);
       }
     };
-    $('#file').hide();
+
   $('#mess_snt').click(function(){
     var file = $('#file')[0].files[0];
     if (typeof file == 'undefined') {
@@ -210,7 +222,7 @@ $(document).ready(function(){
         {
           'text': '',
           "room":{{chat_room.id}},
-          "user_id":{{request.user.id}}
+          "user_id":{{request.user.id}},
           "file": null,
           "filename": null,
         }));
@@ -229,7 +241,7 @@ $(document).ready(function(){
   sock.onerror = function (error) {
       console.log(error);
   };
-
+$('#file').hide();
 });
 </script>
 <!-- / Content -->

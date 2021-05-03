@@ -1,4 +1,4 @@
-import aioreloader
+import aioreloader, logging
 from aiohttp import web
 from django import setup
 from django.conf import settings
@@ -6,6 +6,7 @@ import os
 from my_proj import settings as my_settings
 from chat import aioviews
 
+logging.basicConfig(filename="task_book.log", level=logging.INFO)
 
 async def setup_django(app):
     os.environ['DJANGO_SETTINGS_MODULE'] = 'my_proj.settings'
@@ -28,4 +29,4 @@ async def app_factory():
     return app
 
 if __name__ == '__main__':
-    web.run_app(app_factory())
+    web.run_app(app_factory(), port=8085)

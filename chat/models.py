@@ -1,13 +1,13 @@
 from django.db import models
 import sushi_app.models
 from django.conf import settings
-# from mickroservices.models import QuestionModel, IdeaModel
+from mickroservices.models import QuestionModel, IdeaModel
 
 
-class Room(models.model):
+class Room(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
 
-class Message(models.Model):
+class ChatMessage(models.Model):
     STATUS = (('new', 'Непрочитано'), ('read', 'Прочитано'))
     user_from = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   on_delete=models.CASCADE)
@@ -21,7 +21,7 @@ class Message(models.Model):
 
 
 
-class Message1(models.Model):
+class Message(models.Model):
     ST_WAITNG, ST_READING = range(2)
     STATUS_CHOICE = (
         (ST_WAITNG, 'в ожидании'),

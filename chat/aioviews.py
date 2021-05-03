@@ -1,10 +1,13 @@
-import ujson, json, logging, datetime, os
+import json, logging, datetime, os, logging, base64
 from aiohttp import web, ClientSession, WSMsgType
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from channels.db import database_sync_to_async
+from django.conf import settings
+from django.core.files.base import ContentFile
 
+logging.basicConfig(filename="task_book.log", level=logging.INFO)
 
 class MixView():
 
@@ -14,12 +17,12 @@ class MixView():
 
     @database_sync_to_async
     def new_mes(self, text, room, user_id, file, filename=None):
-        Person = self.get_m('Manage.Person')
-        ChatRoom = self.get_m('Mess.ChatRoom')
-        ChatMessage = self.get_m('Mess.ChatMessage')
+        User = self.get_m(settings.AUTH_USER_MODEL)
+        Room = self.get_m('chat.Room')
+        ChatMessage = self.get_m('chat.ChatMessage')
         mes = ChatMessage(
-            user=Person.objects.get(pk=user_id),
-            room=ChatRoom.objects.get(pk=room),
+            user_from=User.objects.get(pk=user_id),
+            room=Room.objects.get(pk=room),
             text=text,
             # file=file,
         )
@@ -27,7 +30,7 @@ class MixView():
         if file:
             head, data = file.split(',')
             # decoded =data.decode('base64','strict');
-            print(head)
+            # print(head)
             fl = ContentFile(base64.b64decode(data), name=f'{mes.id}_{filename}')
             mes.file = fl
             mes.save()
@@ -35,7 +38,7 @@ class MixView():
 
 
 
-class WebSocket(web.View, MixView):
+class WSChat(web.View, MixView):
 
     async def get(self):
         ws = web.WebSocketResponse()
@@ -47,7 +50,7 @@ class WebSocket(web.View, MixView):
                 print(msg.extra)
             else:
                 mes_dict = json.loads(msg.data)
-                print(mes_dict)
+                # print(mes_dict)
                 if mes_dict['text'] or mes_dict['file']:
 
                     mes = await self.new_mes(
@@ -68,13 +71,17 @@ class WebSocket(web.View, MixView):
         # TODO: реализовать историю с прочитанными/непрочитанными сообщениями и с
         уведомлением о непрочитанных сообщениях при подключении пира
          """
-        for us, peer in self.request.app.wslist[room].items():
+        for us, peer in self.request.app.wslist[mes.room.id].items():
             try:
                 avatar = None
-                if mes.from_user.avatar:
-                    avatar = mes.from_user.avatar.url
+                # if mes.from_user.avatar:
+                #     avatar = mes.from_user.avatar.url
+                text = mes.text
+                if mes.file:
+                    text = f'{mes.text} приложено: <a href="{mes.file.url}">{mes.file.url}</a>'
+                    print(text)
                 await peer.send_json({
-                'text':mes.text,
+                'text':text,
                 'from_name': mes.user_from.username,
                 'time': mes.sent_time.strftime("%d.%m.%Y, %H:%M:%S"),
                 'avatar': avatar
