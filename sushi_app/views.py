@@ -45,6 +45,9 @@ import json
 import pandas as pd
 import secrets
 
+from mailing.models import Mailing
+
+
 User = get_user_model()
 
 
@@ -318,6 +321,21 @@ def base(request):
 @login_required
 def search(request):
     search_phrase = request.GET.get('search_phrase')
+
+    user_profile = request.user.user_profile
+    if user_profile.is_head:
+        mailing = Mailing.objects.all()
+    elif user_profile.is_manager:
+        mailing = Mailing.objects.filter(to_create=request.user)
+    elif user_profile.is_partner:
+        mailing = Mailing.objects.filter(senders__in=[user_profile, ])
+
+    if mailing.count() != 0:
+        mailing_list = mailing.filter(title__icontains=search_phrase) | mailing.filter(content__icontains=search_phrase)
+    else:
+        mailing_list = None
+
+
     if request.user.user_profile.is_manager:
         employees_list = UserProfile.objects.prefetch_related(
             "user", "wagtail_profile", "department"
@@ -336,6 +354,7 @@ def search(request):
     return render(request, "search.html", {"employee_list": employees_list, "news": news, "dirs": dir_all,
                                            "documents": documents_all,
                                            "is_manager": request.user.user_profile.is_manager,
+                                           "mailing": mailing_list,
                                            "search_phrase": search_phrase})
 
 

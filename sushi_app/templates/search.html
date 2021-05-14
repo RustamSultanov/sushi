@@ -26,6 +26,23 @@
             <a href="{% url 'mickroservices:news' %}" class="text-dark small">ВСЕ НОВОСТИ</a>
         </div>
     {% endif %}
+
+    {% if mailing %}
+        <div class="my-5">
+            <h2 class="text-light font-weight-normal mb-5">Рассылки</h2>
+            <div class="row">
+                {% for mail in mailing %}
+                <div class="col-md-4 mb-5">
+                     <h4 class="card-title mb-1">{{mail.title}}</h4>
+                    <div class="small text-muted mb-4">{{mail.date_create}}</div>
+                    <a href="{{new.url}}" class="text-dark">{{ mail.content|striptags|slice:":120"|safe  }}</a>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'mailing:mailing_view_list' %}" class="text-dark small">Все рассылки</a>
+        </div>
+    {% endif %}
+
 {% endblock %}
 
 {% block  additional_content %}

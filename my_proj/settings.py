@@ -61,6 +61,8 @@ INSTALLED_APPS = [
     'mptt',
     'feincms',
 
+    'mailing'
+
     'my_proj',
     'sushi_app',
     'tz_detect',

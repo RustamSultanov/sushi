@@ -1,0 +1,136 @@
+{% extends 'layout.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Создания рассылки{% endblock %}
+
+{% block  breadcrumb%}
+    {% include 'partials/breadcrumb.html' %}
+{% endblock %}
+    {% block css %}
+    <!-- `perfect-scrollbar` library required by SideNav plugin -->
+    <link rel="stylesheet" href="/static/libs/perfect-scrollbar/perfect-scrollbar.css">
+
+    <link rel="stylesheet" href="/static/libs/quill/typography.css">
+    <link rel="stylesheet" href="/static/libs/quill/editor.css">
+    <script>
+        // Quill does not support IE 10 and below so don't load it to prevent console errors
+        if (typeof document.documentMode !== 'number' || document.documentMode > 10) {
+            document.write('\x3Cscript src="/static/libs/quill/quill.js">\x3C/script>');
+        }
+    </script>
+
+    <!--  Datetime picker  -->
+    <link rel="stylesheet" href="/static/libs/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.css">
+    <!-- Multiselect -->
+    <link rel="stylesheet" href="/static/libs/bootstrap-multiselect/bootstrap-multiselect.css">
+
+{% endblock %}
+
+ {% block content %}
+ <h2 class="text-light  font-weight-normal mt-4 mb-1">Создание рассылки</h2>
+                        <ol class="breadcrumb small mb-4">
+                            <li class="breadcrumb-item">
+                                <a href="/">Главная</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'mailing:mailing_view_list' %}">Рассылки</a>
+                            </li>
+                            <li class="breadcrumb-item active">Создание рассылки</li>
+                        </ol>
+                        <form action="" id="mailing-form">
+                            <div class="form-group">
+                                <label class="form-label">Тема рассылки</label>
+                                <input type="text" class="form-control" placeholder="Тема рассылки" name="title">
+                            </div>
+                            <label class="form-label">Текст рассылки</label>
+                            <input type="hidden" name="content">
+                            <div id="quill-toolbar">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-script" value="sub"></button>
+                                    <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="1"></button>
+                                    <button class="ql-header" value="2"></button>
+                                    <button class="ql-blockquote"></button>
+                                    <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-direction" value="rtl"></button>
+                                    <select class="ql-align"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                    <button class="ql-image"></button>
+                                    <button class="ql-video"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div id="quill-editor"></div>
+
+                            <div class="form-group">
+                                <label class="form-label">Вложения</label>
+                                <input type="file" multiple="multiple" class="form-control" name="files[]">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Получатели</label>
+                                <select data-bs-ms="multiple" data-bs-ms-alltext="Все партнеры" multiple name="partners2[]">
+                                    {% for user in partners %}
+                                    <option value="{{user.pk}}">{{ user }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-round">Отправить рассылку</button>
+                            </div>
+
+                        </form>
+ {% endblock %}
+
+{% block extrascripts %}
+    <!-- / Layout wrapper -->
+    <div class="modal fade" id="modal-error">
+        <div class="modal-dialog">
+            <form class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Ошибка
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                </div>
+                <div class="modal-body">
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="/static/libs/moment/moment.js"></script>
+    <script src="/static/libs/bootstrap-material-datetimepicker/bootstrap-material-datetimepicker.js"></script>
+    <script src="/static/libs/bootstrap-multiselect/bootstrap-multiselect.js"></script>
+    <script src="/static/js/mail_form.js"></script>
+
+{% endblock %}

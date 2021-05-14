@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}{{ obj.title }}{% endblock %}
+
+ {% block content %}
+                    <h2 class="text-light  font-weight-normal mt-4 mb-1">{{ obj.title }}</h2>
+                    <ol class="breadcrumb small mb-4">
+                        <li class="breadcrumb-item">
+                            <a href="/">Главная</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'mailing:mailing_view_list' %}">Ваши новости</a>
+                        </li>
+                        <li class="breadcrumb-item active">Заголовок</li>
+                    </ol>
+                    <div class="mb-4 text-muted small text-uppercase">
+                        {{ obj.to_create.get_full_name}} {{ obj.date_create }}
+                    </div>
+                    <div class="ql-content">
+                        {{ obj.content|safe }}
+                    </div>
+                    <div class="card">
+                        <h6 class="card-header">Файлы</h6>
+                        <div class="card-body p-3">
+                            <div class="row no-gutters">
+                                {% for file in obj.files.all %}
+                                <div class="col-md-6 col-lg-4 p-1">
+                                    <div class="project-attachment ui-bordered p-2">
+                                        <div class="project-attachment-icon display-4">
+                                            <i class="far fa-file"></i>
+                                        </div>
+                                        <div class="media-body ml-3">
+                                            <strong class="project-attachment-filename">{{ file }}</strong>
+                                            <div class="text-muted small">{{ file.file.size |filesizeformat }}</div>
+                                            <div>
+                                                <a href="{{ file.download_url }}">Просмотреть</a> &nbsp;
+                                                <a href="{{ file.download_url }}" download>Загрузить</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+ {% endblock %}
+
