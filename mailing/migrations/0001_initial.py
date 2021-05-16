@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('sushi_app', '0044_auto_20210511_1106'),
+        ('sushi_app', '0046_merge_20210308_1644'),
     ]
 
     operations = [
