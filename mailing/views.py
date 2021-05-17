@@ -172,9 +172,16 @@ class MessageNewView(LoginRequiredMixin, View):
             )
 
     def get(self, *args, **kwargs):
-        partner_list = UserProfile.objects.prefetch_related(
+        # partner_list = UserProfile.objects.prefetch_related(
+        #     "user", "wagtail_profile"
+        # ).filter(manager=self.request.user.user_profile)
+        profile = self.request.user.user_profile
+        if not profile.is_head:
+            filter_kwargs = {'manager': profile}
+
+        partner_list = UserProfile.objects.filter(is_partner=True, **filter_kwargs).prefetch_related(
             "user", "wagtail_profile"
-        ).filter(manager=self.request.user.user_profile)
+        )
 
         return render(self.request, "mailing/create_form.html", {"partners": partner_list, })
 

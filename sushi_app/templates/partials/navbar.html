@@ -48,7 +48,7 @@
         <div class="dropdown-menu dropdown-menu-right">
             {% if user.user_profile.user_is_manager %}
                 <a href="{% url 'manager_lk' %}" class="dropdown-item">Личный кабинет</a>
-                <a href="{% url "mailing:mailing_view_list" %}" class="dropdown-item">Создать рассылку</a>
+                <a href="{% url "mailing:mailing_create" %}" class="dropdown-item">Создать рассылку</a>
             {% elif user.user_profile.is_partner %}
                 <a href="{% url 'partner_lk' %}" class="dropdown-item">Личный кабинет</a>
             {% else %}
