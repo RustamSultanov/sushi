@@ -9,9 +9,12 @@ from django.views.generic import View, ListView, TemplateView
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
+
 
 from .models import UserProfile, Mailing
-from mickroservices.utils import send_message
 
 
 def error_gen(meta: dict, link: str) -> str:
@@ -125,19 +128,13 @@ class MessageNewView(LoginRequiredMixin, View):
 
     def send_massage(self, obj, to_email):
         try:
-            error = send_message(
-                template='emails/mailing_news.html',
-                subject=" Появилась новая рассылка",
-                ctx={
-                    'obj': obj,
-                },
-                to_email=to_email,
-                request=self.request
-            )
-            if error:
+
+            template = 'emails/mailing_news.html'
+            message = render_to_string(template, obj)
+            error = send_mail("Появилась новая рассылка", message, settings.SERVER_EMAIL, [to_email, ])
+            if not error:
                 raise Exception('Ошибка отправления письма')
         except Exception as _:
-            print("mailing send massage ", _)
             raise Exception('Ошибка отправления письма')
 
     def post(self, *args, **kwargs):
@@ -172,17 +169,18 @@ class MessageNewView(LoginRequiredMixin, View):
             )
 
     def get(self, *args, **kwargs):
-        # partner_list = UserProfile.objects.prefetch_related(
-        #     "user", "wagtail_profile"
-        # ).filter(manager=self.request.user.user_profile)
-        profile = self.request.user.user_profile
-        if not profile.is_head:
-            filter_kwargs = {'manager': profile}
+        user_profile = self.request.user.user_profile
 
-        partner_list = UserProfile.objects.filter(is_partner=True, **filter_kwargs).prefetch_related(
-            "user", "wagtail_profile"
-        )
-
+        if user_profile.is_head:
+            partner_list = UserProfile.objects.prefetch_related(
+                "user", "wagtail_profile"
+            ).filter(is_partner=True)
+        elif user_profile.is_manager:
+            partner_list = UserProfile.objects.prefetch_related(
+                "user", "wagtail_profile"
+            ).filter(manager=self.request.user.user_profile)
+        else:
+            partner_list = []
         return render(self.request, "mailing/create_form.html", {"partners": partner_list, })
 
 
