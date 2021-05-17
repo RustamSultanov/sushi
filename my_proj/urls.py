@@ -13,7 +13,6 @@ urlpatterns = [
     path('', include('sushi_app.urls')),
     path('', include('mickroservices.urls')),
     path('', include('chat.urls')),
-    path('mailing/', include('mailing.urls', namespace='mailing')),
     re_path(r'^cms/', include(wagtailadmin_urls)),
     re_path(r'^documents/', include(wagtaildocs_urls)),
     re_path(r'^pages/', include(wagtail_urls)),
