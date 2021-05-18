@@ -130,12 +130,15 @@ class MessageNewView(LoginRequiredMixin, View):
         try:
 
             template = 'emails/mailing_news.html'
-            message = render_to_string(template, obj)
-            error = send_mail("Появилась новая рассылка", message, settings.SERVER_EMAIL, [to_email, ])
+            message = render_to_string(template, {"obj": obj, })
+            error = send_mail(obj.title, message, settings.SERVER_EMAIL, [to_email, ])
             if not error:
                 raise Exception('Ошибка отправления письма')
         except Exception as _:
-            raise Exception('Ошибка отправления письма')
+            if settings.DEBUG:
+                raise _
+            else:
+                raise Exception('Ошибка отправления письма')
 
     def post(self, *args, **kwargs):
         try:
