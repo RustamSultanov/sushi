@@ -123,14 +123,15 @@ class MessageNewView(LoginRequiredMixin, View):
         # send for emails
         for user_profile in obj.senders.all():
             if isinstance(user_profile.user.email, str):
-                self.send_massage(obj, user_profile.user.email)
+                url_to_obj = f"{ self.request.scheme }://{ self.request.get_host() }{ obj.url() }"
+                self.send_massage(obj, user_profile.user.email, url_to_obj)
         return obj
 
-    def send_massage(self, obj, to_email):
+    def send_massage(self, obj, to_email, url):
         try:
 
             template = 'emails/mailing_news.html'
-            message = render_to_string(template, {"obj": obj, })
+            message = render_to_string(template, {"obj": obj, "url_to":url })
             error = send_mail(obj.title, message, settings.SERVER_EMAIL, [to_email, ])
             if not error:
                 raise Exception('Ошибка отправления письма')
