@@ -31,7 +31,10 @@
     <!--<link rel="stylesheet" href="{% static "css/uikit.css" %}">-->
     <link rel="stylesheet" href="{% static "libs/swiper/swiper.css" %}">
     <link rel="stylesheet" href="{% static "css/app.css" %}">
+    <link rel="stylesheet" href="{% static "libs/dropzone/dropzone.css" %}">
+    <link rel="stylesheet" href="{% static "css/pages/chat.css" %}">
     <link rel="stylesheet" href="{% static "assets/vendor/libs/toastr/toastr.css" %}">
+    <link rel="stylesheet" href="{% static "css/pages/select2.css" %}">
 
     <!-- Layout helpers -->
     <script src="{% static "js/layout-helpers.js" %}"></script>
@@ -45,28 +48,178 @@
 </head>
     <body>
         {% block layout %}{% endblock %}
-        
+
 
         <!-- Core scripts -->
 
-        <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <script>
+        $(document).ready(function(){
+            var sock = new WebSocket('ws://167.172.172.23:8085/ws/chat/');
+            try{
+            var sock = new WebSocket('ws://167.172.172.23:8085/ws/chat/');
+            //     var sock = new WebSocket('ws://' + window.location.host +':8085/ws/chat/');
+
+            }
+            catch(err){
+                var sock = new WebSocket('wss://' + window.location.host +'/ws/chat/');
+            }
+
+            sock.onmessage = function(mes){
+              mes_data = jQuery.parseJSON(mes.data);
+              console.log(mes.data)
+                $('<div/>', {
+                  // html: jQuery.parseJSON(mes.data).text,
+                  class: 'chat-message-right mb-4',
+                  append: $('<div/>', {
+                    class: '',
+                    append: $('<img/>',{
+                      class: 'ui-w-40 rounded-circle',
+                      src: mes_data.avatar,
+                    })
+                    .add('<div/>', {
+                      class: 'text-muted small text-nowrap mt-2',
+                      html: mes_data.time
+                    })
+                  }).add('<div/>', {
+                    class: 'flex-shrink-1 bg-lighter rounded py-2 px-3 mr-3',
+                    append: $('<div/>', {
+                      class: 'font-weight-semibold mb-1',
+                      html: mes_data.from_name,
+                    }).add('<span/>', {html: mes_data.text,})
+                  })
+                }).appendTo($('#chat_div'));
+
+                $('#chat_input').val('');
+            };
+
+            // DRAG AND DROP
+            if (typeof(window.FileReader) == 'undefined') {
+              console.log('Не поддерживается браузером!');
+            }
+            var dropZone = $('#dropZone'),
+                maxFileSize = 5000000;
+
+            dropZone[0].ondragover = function() {
+              dropZone.addClass('hover');
+              return false;
+            };
+            dropZone[0].ondragleave = function() {
+              dropZone.removeClass('hover');
+              return false;
+            };
+            dropZone[0].ondrop = function(event) {
+              event.preventDefault();
+              dropZone.removeClass('hover');
+              dropZone.addClass('drop');
+              console.log('drop');
+              var file_drop = event.dataTransfer.files[0];
+
+              if (file_drop.size > maxFileSize) {
+                  $('#filename').text('Файл слишком большой!');
+                  console.log('Файл слишком большой!');
+                  dropZone.addClass('error');
+                  return false;
+              } else {
+                console.log(file_drop);
+                $('#file').prop("files", event.dataTransfer.files);
+                $('#filename').html(file_drop.name)
+                console.log($('#file')[0].files[0]);
+              }
+            };
+
+          $('#mess_snt').click(function(){
+            var file = $('#file')[0].files[0];
+            if (typeof file == 'undefined') {
+              console.log('file udef');
+              sock.send(JSON.stringify(
+                {
+                  "text":$('#chat_input').val(),
+                  "room":$('#chat_room').val(),
+                  "user_id":$('#user_id').val(),
+                  "file": false,
+                  "filename": false,
+                }));
+            } else {
+              var reader = new FileReader();
+              reader.onload = function(event) {
+                  // console.log('File content:', event.target.result);
+                  sock.send(JSON.stringify(
+                    {
+                      "text":$('#chat_input').val(),
+                      "room":$('#chat_room').val(),
+                      "user_id":$('#user_id').val(),
+                      "file": event.target.result,
+                      "filename": file.name,
+                    }));
+              };
+              reader.readAsDataURL(file);
+              console.log(file.name)
+            }
+          });
+          sock.onopen = function (event) {
+              console.log(event);
+              console.log('Connection to server started');
+              sock.send(JSON.stringify(
+                {
+                  'text': '',
+                  "room":{{chat_room.id}},
+                  "user_id":{{request.user.id}},
+                  "file": null,
+                  "filename": null,
+                }));
+          };
+          sock.onclose = function (event) {
+              console.log(event);
+              if(event.wasClean){
+                  console.log('Clean connection end');
+              } else {
+                  console.log('Connection broken');
+              }
+              {%if request.user.is_authenticated%}
+              // window.location.assign(window.location.href);
+              {%endif%}
+          };
+          sock.onerror = function (error) {
+              console.log(error);
+          };
+        $('#file').hide();
+        });
+        </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
         <script src="{% static "libs/popper/popper.js" %}"></script>
         <script src="{% static "js/bootstrap.js" %}"></script>
+        <script src="{% static "js/select2.js" %}"></script>
         <script src="{% static "js/sidenav.js" %}"></script>
         <script src="{% static "assets/vendor/libs/toastr/toastr.js" %}"></script>
         <script src="{% static "js/ion.sound.min.js" %}"></script>
 
         <!-- Libs -->
+      <script src="{% static "libs/dropzone/dropzone.js" %}"></script>
         <script src="{% static "libs/swiper/swiper.js" %}"></script>
-        <script src="{% static "libs/chartjs/chartjs.js" %}"></script>
 
         <!-- `perfect-scrollbar` library required by SideNav plugin -->
         <script src="{% static "libs/perfect-scrollbar/perfect-scrollbar.js" %}"></script>
 
 
-        <script src="{% static "js/landing.js" %}"></script>
+
         <script type="text/javascript">
+        $(function() {
+
+            $('.chat-scroll').each(function() {
+                new PerfectScrollbar(this, {
+                    suppressScrollX: true,
+                    wheelPropagation: true
+                });
+            });
+
+            $('.chat-sidebox-toggler').click(function(e) {
+                e.preventDefault();
+                $('.chat-wrapper').toggleClass('chat-sidebox-open');
+            });
+
+        });
             $(function() {
                 Dropzone.autoDiscover = false;
                 $('#notifications_dropdown_link').click(function (e) {
@@ -74,9 +227,21 @@
                     $(this).next('.dropdown-menu').toggleClass('show');
                 });
             });
+            $('.select2').each(function() {
+                $(this)
+                    .wrap('<div class="position-relative"></div>')
+                    .select2({
+                        dropdownParent: $(this).parent(),
+                        closeOnSelect: false,
+                        scrollAfterSelect: true,
+                    });
+            });
         </script>
+        <!-- <script src="{% static "js/landing.js" %}"></script> -->
+        <script src="{% static "libs/chartjs/chartjs.js" %}"></script>
+
         {% block extrascripts %}{% endblock %}
-        {% block notifications %}    
+        {% block notifications %}
             <script type="text/javascript"  src="{% static "js/notifications.js" %}"></script>
         {% endblock %}
     </body>

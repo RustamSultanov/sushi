@@ -3,6 +3,24 @@ import sushi_app.models
 from django.conf import settings
 from mickroservices.models import QuestionModel, IdeaModel
 
+
+class Room(models.Model):
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+
+class ChatMessage(models.Model):
+    STATUS = (('new', 'Непрочитано'), ('read', 'Прочитано'))
+    user_from = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                  on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    status = models.CharField('Статус', max_length=10, choices=STATUS,
+                              default='new')
+    text = models.TextField('Текст', null=True, blank=True)
+    sent_time = models.DateTimeField(auto_now_add=True)
+    file = models.FileField('Файл', null=True, blank=True)
+
+
+
+
 class Message(models.Model):
     ST_WAITNG, ST_READING = range(2)
     STATUS_CHOICE = (

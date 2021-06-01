@@ -19,9 +19,13 @@ wagtail = "^2.5"
 pandas = "^1.1.0"
 xlrd = "^1.2.0"
 celery = "^4.4.7"
-django-mptt = "^0.11.0"
-FeinCMS = "^1.18.0"
 
+# для чата:
+aiohttp = "3.7.3"
+aioreloader = "0.4.0"
+channels = "^3.0.3"
+django-mptt = "^0.12.0"
+FeinCMS = "^1.20.0"
 [tool.poetry.dev-dependencies]
 
 [build-system]

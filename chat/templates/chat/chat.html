@@ -1,0 +1,189 @@
+{%extends 'layout.html'%}
+{%load static%}
+
+{%block content%}
+<!-- Page content -->
+<!-- Content -->
+<div class="container-fluid d-flex align-items-stretch flex-grow-1 p-0">
+
+    <!-- `.chat-wrapper` fills all available space of container -->
+    <div class="chat-wrapper container-p-x container-p-y">
+
+    <!-- Make card full height of `.chat-wrapper` -->
+    <div class="card flex-grow-1 position-relative overflow-hidden">
+
+        <!-- Make row full height of `.card` -->
+        <div class="row no-gutters h-100">
+        {%include 'chat/sidebox.html'%}
+        {%if chat_room%}
+        <div id="dropZone" class="d-flex col flex-column">
+            <!-- Chat header -->
+
+            <div class="flex-grow-0 py-3 pr-4 pl-lg-4">
+
+            <div class="media align-items-center">
+                <a href="javascript:void(0)" class="chat-sidebox-toggler d-lg-none d-block text-muted text-large px-4 mr-2"><i class="ion ion-md-more"></i></a>
+                <!-- TODO: найти аватарку в модели пользователя -->
+                <!-- <div class="position-relative">
+                <span class="badge badge-dot badge-success indicator"></span>
+                <img src="{{chat_user.avatar}}" class="ui-w-40 rounded-circle" alt="">
+                </div> -->
+                <div class="media-body pl-3">
+                {%if request.GET.group%}
+                  <strong>
+                    {%for member in group_members%}
+                      {{member}}
+                    {%endfor%}
+                  </strong>
+                {%else%}
+                  <strong>{{chat_room_companion}}</strong>
+                {%endif%}
+                <!-- <div class="text-muted small"><em>Typing...</em></div> -->
+                </div>
+                <div>
+                <!-- <button type="button" class="btn btn-primary rounded-pill icon-btn mr-1"><i class="ion ion-ios-call"></i></button> -->
+                <!-- <button type="button" class="btn btn-secondary rounded-pill icon-btn mr-1"><i class="ion ion-md-videocam"></i></button> -->
+                <!-- <button type="button" class="btn btn-default rounded-pill icon-btn"><i class="ion ion-ios-more"></i></button> -->
+
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn btn-default rounded-pill icon-btn dropdown-toggle hide-arrow" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="list-group list-group-flush">
+                            <a href="javascript:void(0)" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#modal-group-details">Участники</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            </div>
+            <hr class="flex-grow-0 border-light m-0">
+            <!-- / Chat header -->
+
+            <!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
+            <div  class="flex-grow-1 position-relative">
+
+            <!-- Remove `.chat-scroll` and add `.flex-grow-1` if you don't need scroll -->
+            <div id="chat_div" class="chat-messages chat-scroll p-4">
+              {%for mess in chat_messages%}
+                {%if mess.user_from == request.user%}
+                  <div class="chat-message-right mb-4">
+                  <div>
+                    {%if mess.user_from.avatar%}
+                      <img src="{{mess.user_from.avatar.url}}" class="ui-w-40 rounded-circle" alt>
+                    {%endif%}
+                      <div class="text-muted small text-nowrap mt-2">{{mess.sent_time}}</div>
+                  </div>
+                  <div class="flex-shrink-1 bg-lighter rounded py-2 px-3 mr-3">
+                      <div class="font-weight-semibold mb-1">You</div>
+                      <span>{{mess.text}}</span>
+                      {%if mess.file%}
+                        <a href="{{mess.file.url}}">{{mess.file}}</a>
+                      {%endif%}
+                  </div>
+                  </div>
+                {%else%}
+                  <div class="chat-message-left mb-4">
+                  <div>
+                      <img src="img/avatars/4.png" class="ui-w-40 rounded-circle" alt>
+                      <div class="text-muted small text-nowrap mt-2">{{mess.sent_time}}</div>
+                  </div>
+                  <div class="flex-shrink-1 bg-lighter rounded py-2 px-3 ml-3">
+                      <div class="font-weight-semibold mb-1">{{mess.user_from}}</div>
+                      {{mess.text}}
+                      {%if mess.file%}
+                        <a href="{{mess.file.url}}">Приложено: {{mess.file}}</a>
+                      {%endif%}
+                  </div>
+                  </div>
+                {%endif%}
+              {%endfor%}
+
+            </div><!-- / .chat-messages -->
+            </div>
+
+            <!-- Chat footer -->
+            <hr class="border-light m-0">
+            <div class="flex-grow-0 py-3 px-4">
+            <div class="input-group">
+                <input id="chat_input" type="text" class="form-control" placeholder="Type your message or drop here you file">
+                <div class="input-group-append">
+                  <button id="mess_snt" type="button" class="btn btn-primary">Send</button>
+                  <input type="file" id='file' />
+                  <input type="hidden" id="chat_room" value="{{chat_room.id}}" />
+                  <input type="hidden" id="user_id", value="{{request.user.id}}" />
+                </div>
+            </div><span id="filename"></span>
+            </div>
+            <!-- / Chat footer -->
+
+        </div>
+        {%endif%}
+        </div><!-- / .row -->
+
+    </div><!-- / .card -->
+
+    </div><!-- / .chat-wrapper -->
+
+</div>
+<!-- <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script> -->
+
+<!-- / Content -->
+<!-- / Page content -->
+
+<!-- / Layout wrapper -->
+    <div class="modal fade" id="modal-group-details">
+        <div class="modal-dialog">
+            <form class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Участники
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="chat-contacts list-group py-3">
+                        <!-- Online -->
+                        {%for member in group_members%}
+                          <div class="list-group-item list-group-item-action online">
+                            <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt="">
+                            <div class="media-body ml-3">
+                                {{member}}
+                                <!-- <div class="chat-status small"><span class="badge badge-dot"></span>&nbsp; Online</div> -->
+                            </div>
+                            <div class="btn-group d-inline-block align-self-start">
+                              <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                  <i class="ion ion-ios-more"></i>
+                              </button>
+                              <div class="dropdown-menu dropdown-menu-right">
+                                <!-- <a class="dropdown-item" href="javascript:void(0)">Профиль</a> -->
+                                <!-- <a class="dropdown-item" href="javascript:void(0)">Удалить</a> -->
+                              </div>
+                            </div>
+                          </div>
+                        {%endfor%}
+                        <!-- Offline -->
+                        <!-- <div class="list-group-item list-group-item-action">
+                            <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt="">
+                            <div class="media-body ml-3">
+                                Leon Wilson
+                                <div class="chat-status small"><span class="badge badge-dot"></span>&nbsp; Offline</div>
+                            </div>
+                            <div class="btn-group d-inline-block align-self-start">
+                                <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
+                                    <i class="ion ion-ios-more"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="javascript:void(0)">Профиль</a>
+                                    <a class="dropdown-item" href="javascript:void(0)">Удалить</a>
+                                </div>
+                            </div>
+                        </div> -->
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{%endblock%}
