@@ -40,7 +40,7 @@ class ChatPage(TemplateView):
 
         context['chat_room'] = chat_room
         context['chat_messages'] = ChatMessage.objects.filter(room=chat_room)
-        new_messages = ChatMessage.objects.filter(room=chat_room).filter(status=new)
+        new_messages = ChatMessage.objects.filter(room=chat_room).filter(status='new')
         # all_new_messages = 
         return context
 
@@ -58,10 +58,10 @@ def new_group(request):
 def close_message(request):
     if 'message_id' in request.POST:
         try:
-            message = Message.objects.get(pk=request.POST['message_id'])
+            message = ChatMessage.objects.get(pk=request.POST['message_id'])
         except ObjectDoesNotExist:
             return JsonResponse(status=404, data={"message": "Message not found"})
         else:
-            message.status =Message.ST_READING
+            message.status =ChatMessage.ST_READING
             message.save()
             return JsonResponse(status=200, data={"message": "Message reading"})
