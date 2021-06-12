@@ -4,8 +4,17 @@ from django.conf import settings
 from mickroservices.models import QuestionModel, IdeaModel
 
 
+from django import forms
+
 class Room(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+    @property
+    def group_name(self):
+        """
+        Returns the Channels Group name that sockets should subscribe to to get sent
+        messages as they are generated.
+        """
+        return "room-%s" % self.id
 
 class ChatMessage(models.Model):
     STATUS = (('new', 'Непрочитано'), ('read', 'Прочитано'))
@@ -16,8 +25,7 @@ class ChatMessage(models.Model):
                               default='new')
     text = models.TextField('Текст', null=True, blank=True)
     sent_time = models.DateTimeField(auto_now_add=True)
-    file = models.FileField('Файл', null=True, blank=True)
-
+    file = models.FileField('Файл',upload_to='chat/', null=True, blank=True)
 
 
 

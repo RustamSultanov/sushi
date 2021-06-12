@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'feincms',
 
     'mailing',
-
+    'channels',
     'my_proj',
     'sushi_app',
     'tz_detect',
@@ -159,6 +159,16 @@ LOGIN_REDIRECT_URL = 'base'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# Channels
+ASGI_APPLICATION = 'my_proj.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("172.18.1.3", 6379)],
+        },
+    },
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

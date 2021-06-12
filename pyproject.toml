@@ -26,6 +26,7 @@ aioreloader = "0.4.0"
 channels = "^3.0.3"
 django-mptt = "^0.12.0"
 FeinCMS = "^1.20.0"
+channels-redis = "^3.2.0"
 [tool.poetry.dev-dependencies]
 
 [build-system]

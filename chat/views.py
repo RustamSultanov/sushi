@@ -40,8 +40,7 @@ class ChatPage(TemplateView):
 
         context['chat_room'] = chat_room
         context['chat_messages'] = ChatMessage.objects.filter(room=chat_room)
-        new_messages = ChatMessage.objects.filter(room=chat_room).filter(status='new')
-        # all_new_messages = 
+        context['new_messages'] = ChatMessage.objects.filter(room=chat_room).filter(status='new')
         return context
 
 
