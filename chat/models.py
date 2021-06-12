@@ -8,6 +8,7 @@ from django import forms
 
 class Room(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+    name = models.CharField(max_length=120, default="Group")
     @property
     def group_name(self):
         """

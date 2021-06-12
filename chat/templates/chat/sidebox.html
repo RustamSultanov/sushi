@@ -18,6 +18,19 @@
   <!-- Wrap `.chat-scroll` to properly position scroll area. Remove this wtapper if you don't need scroll -->
   <div class="flex-grow-1 position-relative">
   <div class="chat-contacts list-group chat-scroll py-3">
+      {%for room in rooms %}
+      <!-- Online -->
+      <a href="/chat_page/?with_user={{user.id}}"
+        class=" {%if user == chat_room_companion%} active {%endif%}list-group-item list-group-item-action online">
+        <!-- <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt=""> -->
+        <div class="media-body ml-3">
+          {{ room.name }}
+          <!-- <div class="chat-status small"><span class="badge badge-dot"></span>&nbsp; Online</div> -->
+        </div>
+        <div class="badge badge-outline-success">{{user.new_messages}}</div>
+      </a>
+    {%endfor%}
+
     {%for user in users%}
       <!-- Online -->
       <a href="/chat_page/?with_user={{user.id}}"
