@@ -14,6 +14,45 @@
     </button>
     <div class="order-xl-last navbar-nav">
 <div class="d-inline-flex flex-row align-items-center">
+    <div class="demo-navbar-messages nav-item dropdown mr-lg-3">
+                            <a class="nav-link dropdown-toggle hide-arrow" href="#" data-toggle="dropdown">
+                                <i class="ion ion-ios-mail navbar-icon align-middle"></i>
+                                <span class="badge badge-primary badge-dot indicator"></span>
+                                <span class="d-lg-none align-middle">&nbsp; Сообщения</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <div class="bg-primary text-center text-white font-weight-bold p-3">
+                                    {{ new_chat_message.count }} Новыe Сообщения
+                                </div>
+                                <div class="list-group list-group-flush">
+                                    {% for message in new_chat_message.users|slice:":4" %}
+                                    <a href="/chat_page/?user={{ message.user_from }}" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt="">
+                                        <div class="media-body ml-3">
+                                            <div class="text-body line-height-condenced">{{ message.text }}</div>
+                                            <div class="text-light small mt-1">
+                                                {{ message.user_from }} &nbsp;·&nbsp; {{ message.sent_time }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                    {% endfor %}
+                                    {% for message in new_chat_message.groups|slice:":4" %}
+                                    <a href="/chat_page/?group={{ message.room.id }}" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                        <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt="">
+                                        <div class="media-body ml-3">
+                                            <div class="text-body line-height-condenced">{{ message.text }}</div>
+                                            <div class="text-light small mt-1">
+                                                {{ message.room.name }} &nbsp;·&nbsp; {{ message.sent_time }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                    {% endfor %}
+
+                                </div>
+
+                                <a href="/chat_page/" class="d-block text-center text-light small p-2 my-1">Все сообщения</a>
+                            </div>
+                        </div>
                     <div class="demo-navbar-notifications nav-item dropdown mr-2">
                         <a class="nav-link dropdown-toggle hide-arrow" href="#" id="notifications_dropdown_link">
                             <i class="ion ion-md-notifications-outline navbar-icon align-middle"></i>

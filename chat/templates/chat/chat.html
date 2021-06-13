@@ -156,8 +156,8 @@
                                   <i class="ion ion-ios-more"></i>
                               </button>
                               <div class="dropdown-menu dropdown-menu-right">
-                                <!-- <a class="dropdown-item" href="javascript:void(0)">Профиль</a> -->
-                                <!-- <a class="dropdown-item" href="javascript:void(0)">Удалить</a> -->
+                                 <a class="dropdown-item" href="/employee/{{member.pk}}">Профиль</a>
+                                 <a class="dropdown-item" href="{% url "dell_chat_group" %}?user={{member.pk}}&room_id={{ chat_room.pk }}">Удалить</a>
                               </div>
                             </div>
                           </div>
