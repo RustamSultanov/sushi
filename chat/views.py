@@ -31,12 +31,10 @@ class ChatPage(TemplateView):
                 chat_room.save()
                 chat_room.users.add(*users)
             context['chat_room_companion'] = chat_room.users.all().exclude(pk=self.request.user.id).first()
-            # print(chat_room)
         if 'group' in self.request.GET:
             chat_room = Room.objects.get(pk=self.request.GET['group'])
             group_members = chat_room.users.all().exclude(pk=self.request.user.id)
             context['group_members'] = group_members
-            print(group_members)
 
         context['chat_room'] = chat_room
         context['chat_messages'] = ChatMessage.objects.filter(room=chat_room)
@@ -47,10 +45,24 @@ class ChatPage(TemplateView):
 def new_group(request):
     members = User.objects.filter(pk__in=request.POST.getlist('users'))
     new_room = Room()
+    new_room.name = request.POST.get("title", "groups")
     new_room.save()
     new_room.users.add(*members)
     new_room.users.add(request.user)
     return HttpResponseRedirect(f'/chat_page/?group={new_room.id}')
+
+
+
+def dell_group(request):
+    try:
+        member = User.objects.get(pk=request.GET.get('user'))
+        room:Room = Room.objects.get(pk=request.GET.get('room_id'))
+        room.users.remove(member)
+        room.save()
+    except ValueError:
+        return HttpResponse('fail')
+
+    return HttpResponseRedirect(f'/chat_page/?group={room.pk}')
 
 
 @require_POST

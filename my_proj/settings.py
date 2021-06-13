@@ -166,7 +166,7 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             # "hosts": [("redis://:password@172.18.1.3", 6379)],
-            "hosts": ["redis://:passwd@172.19.0.3:6379/0"],
+            "hosts": ["redis://172.19.0.3:6379/0"],
             "symmetric_encryption_keys": [SECRET_KEY],
         },
     },

@@ -20,8 +20,8 @@
   <div class="chat-contacts list-group chat-scroll py-3">
       {%for room in rooms %}
       <!-- Online -->
-      <a href="/chat_page/?with_user={{user.id}}"
-        class=" {%if user == chat_room_companion%} active {%endif%}list-group-item list-group-item-action online">
+      <a href="/chat_page/?group={{room.id}}"
+        class=" {%if request.group == room.id%} active {%endif%}list-group-item list-group-item-action online">
         <!-- <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt=""> -->
         <div class="media-body ml-3">
           {{ room.name }}
