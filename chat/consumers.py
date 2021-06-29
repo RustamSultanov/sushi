@@ -5,7 +5,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.core.files.base import ContentFile
 
 from .exceptions import ClientError
-from .models import ChatMessage
+from .models import ChatMessage , ChatMessageFile
 from .utils import get_room_or_error
 
 
@@ -49,7 +49,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
         if content['filename']:
             meta, img_str = content['file'].split(';base64,')
-            file = ContentFile(name=content['filename'], content=b64decode(img_str))
+            cf = ContentFile(name=content['filename'], content=b64decode(img_str))
+            file = ChatMessageFile(
+                name=content['filename'],
+                file = cf
+            )
+            file.save()
         else:
             file = None
         if content['text'] != '' or file != None:
@@ -141,6 +146,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             "time": message.sent_time.strftime('%d.%m.%Y %H:%M'),
             "text": message.text,
         }
+        if message.file:
+            obj["file"] = message.file.name,
+            obj["file_url"] = message.file.file.url
         await self.channel_layer.group_send(
             room.group_name, obj
         )
@@ -174,7 +182,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             },
         )
 
-    async def chat_message(self, event):
+    async def chat_message(self, event: dict):
         """
         Called when someone has messaged our chat.
         """
@@ -186,6 +194,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             "time": event['time'],
             "text": event["text"],
         }
+        if event.get("file"):
+            data["file"] = event["file"],
+            data["file_url"] = event["file_url"]
+
         if event['avatar'] != '/':
             data["avatar"] = event['avatar']
         if event['from_name'] == self.scope['user'].username:

@@ -5,7 +5,6 @@ from django.views.generic.base import TemplateView
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-
 from .models import ChatMessage, Room
 
 
@@ -39,6 +38,8 @@ class ChatPage(TemplateView):
         context['chat_room'] = chat_room
         context['chat_messages'] = ChatMessage.objects.filter(room=chat_room)
         context['new_messages'] = ChatMessage.objects.filter(room=chat_room).filter(status='new')
+
+        for msg in context['new_messages']: msg.change_status()
         return context
 
 

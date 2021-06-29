@@ -25,24 +25,13 @@
                                     {{ new_chat_message.count }} Новыe Сообщения
                                 </div>
                                 <div class="list-group list-group-flush">
-                                    {% for message in new_chat_message.users|slice:":4" %}
-                                    <a href="/chat_page/?user={{ message.user_from }}" class="list-group-item list-group-item-action media d-flex align-items-center">
+                                    {% for message in new_chat_message.message|slice:":6" %}
+                                    <a href="{{ message.url }}" class="list-group-item list-group-item-action media d-flex align-items-center">
                                         <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt="">
                                         <div class="media-body ml-3">
                                             <div class="text-body line-height-condenced">{{ message.text }}</div>
                                             <div class="text-light small mt-1">
-                                                {{ message.user_from }} &nbsp;·&nbsp; {{ message.sent_time }}
-                                            </div>
-                                        </div>
-                                    </a>
-                                    {% endfor %}
-                                    {% for message in new_chat_message.groups|slice:":4" %}
-                                    <a href="/chat_page/?group={{ message.room.id }}" class="list-group-item list-group-item-action media d-flex align-items-center">
-                                        <img src="img/avatars/2.png" class="d-block ui-w-40 rounded-circle" alt="">
-                                        <div class="media-body ml-3">
-                                            <div class="text-body line-height-condenced">{{ message.text }}</div>
-                                            <div class="text-light small mt-1">
-                                                {{ message.room.name }} &nbsp;·&nbsp; {{ message.sent_time }}
+                                                {{ message.text_light }}
                                             </div>
                                         </div>
                                     </a>

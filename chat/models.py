@@ -17,6 +17,13 @@ class Room(models.Model):
         """
         return "room-%s" % self.id
 
+class ChatMessageFile(models.Model):
+    name = models.CharField("Имя файла", max_length=120)
+    file = models.FileField('Файл',upload_to='chat/', null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
 class ChatMessage(models.Model):
     STATUS = (('new', 'Непрочитано'), ('read', 'Прочитано'))
     user_from = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -26,9 +33,11 @@ class ChatMessage(models.Model):
                               default='new')
     text = models.TextField('Текст', null=True, blank=True)
     sent_time = models.DateTimeField(auto_now_add=True)
-    file = models.FileField('Файл',upload_to='chat/', null=True, blank=True)
+    file = models.ForeignKey(ChatMessageFile, on_delete=models.CASCADE, null=True, blank=True)
 
-
+    def change_status(self):
+        self.status = 'read'
+        self.save()
 
 class Message(models.Model):
     ST_WAITNG, ST_READING = range(2)
