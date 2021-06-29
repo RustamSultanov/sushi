@@ -21,6 +21,9 @@ class ChatMessageFile(models.Model):
     name = models.CharField("Имя файла", max_length=120)
     file = models.FileField('Файл',upload_to='chat/', null=True, blank=True)
 
+    def url(self):
+        return self.file.url
+
     def __str__(self):
         return self.name
 

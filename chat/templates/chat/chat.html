@@ -78,7 +78,7 @@
                       <div class="font-weight-semibold mb-1">You</div>
                       <span>{{mess.text}}</span>
                       {%if mess.file%}
-                        <a href="{{mess.file.url}}">{{mess.file}}</a>
+                        <a href="{{mess.file.url}}" download="{{mess.file}}">{{mess.file}}</a>
                       {%endif%}
                   </div>
                   </div>
@@ -92,7 +92,7 @@
                       <div class="font-weight-semibold mb-1">{{mess.user_from}}</div>
                       {{mess.text}}
                       {%if mess.file%}
-                        <a href="{{mess.file.url}}">Приложено: {{mess.file}}</a>
+                        <a href="{{mess.file.url}}" download="{{mess.file}}" >Приложено: {{mess.file}}</a>
                       {%endif%}
                   </div>
                   </div>
