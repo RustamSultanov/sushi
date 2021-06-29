@@ -52,6 +52,15 @@ def new_group(request):
     new_room.users.add(request.user)
     return HttpResponseRedirect(f'/chat_page/?group={new_room.id}')
 
+def update_group(request):
+    members = User.objects.filter(pk__in=request.POST.getlist('users'))
+    id_room = request.POST.get("room_id")
+    new_room = Room.objects.get(pk = id_room)
+    new_room.name = request.POST.get("title", "groups")
+    new_room.save()
+    new_room.users.add(*members)
+    new_room.users.add(request.user)
+    return HttpResponseRedirect(f'/chat_page/?group={new_room.id}')
 
 
 def dell_group(request):

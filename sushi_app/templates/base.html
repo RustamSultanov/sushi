@@ -90,7 +90,7 @@
                     }).add('<span/>', {html: mes_data.text,})
                   })
                 }).appendTo($('#chat_div'));
-
+$('#chat_div').scrollTop($('#chat_div').prop('scrollHeight'));
                 $('#chat_input').val('');
             };
 
@@ -244,5 +244,13 @@
         {% block notifications %}
             <script type="text/javascript"  src="{% static "js/notifications.js" %}"></script>
         {% endblock %}
+                <script>
+                function scroll() {
+                $('#chat_div').scrollTop($('#chat_div').prop('scrollHeight'));
+}
+
+setTimeout(scroll, 1000);
+    </script>
+
     </body>
 </html>
