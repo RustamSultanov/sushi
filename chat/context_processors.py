@@ -17,7 +17,7 @@ def messages_for_user(request):
         #                                                                           recipient=request.user).count
         room = request.user.room_set.all()
         users = get_user_model().objects.all().exclude(pk=request.user.id)
-        messages_chat_groups = ChatMessage.objects.filter(room__in=room, ).filter(status='new').order_by('sent_time')
+        messages_chat_groups = ChatMessage.objects.filter(room__in=room, user_from__in=users ).filter(status='new').order_by('sent_time')
         messages_chat_user = ChatMessage.objects.filter(user_from__in=users).filter(status='new')
         messages_chat_user = messages_chat_user.difference(messages_chat_groups).order_by('sent_time')
 
