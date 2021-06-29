@@ -87,7 +87,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'tz_detect.middleware.TimezoneMiddleware',
-    'wagtail.core.middleware.SiteMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
@@ -166,7 +165,7 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             # "hosts": [("redis://:password@172.18.1.3", 6379)],
-            "hosts": ["redis://172.19.0.3:6379/0"],
+            "hosts": ["redis://127.0.0.1:6379/0"],
             "symmetric_encryption_keys": [SECRET_KEY],
         },
     },
