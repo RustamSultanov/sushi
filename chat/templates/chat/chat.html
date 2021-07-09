@@ -114,13 +114,12 @@
                                         </label>
                                         <input type="file" id="file" style="display: none;" name="file">
                                         <input type="hidden" id="chat_room" value="{{chat_room.id}}" />
-                                        <input type="hidden" id="user_id", value="{{request.user.id}}" />
+                                        <input type="hidden" id="user_id" value="{{request.user.id}}" />
                                         <button id="mess_snt" type="button" class="btn btn-primary">Send</button>
                                     </div>
                                 </div>
                                 <span id="filename"></span>
                                 </div>            <!-- / Chat footer -->
-
         </div>
         {%endif%}
         </div><!-- / .row -->
@@ -226,7 +225,6 @@
        </div>
    </div>
    <!-- /Group update -->
-
 {%endblock%}
         {% block extrascripts %}
     <script>
@@ -255,5 +253,11 @@
 
         });
     </script>
-
+$('#file').on('change', function (e) {
+                var fileName = '';
+                if( this.files && this.files.length > 0 ){
+                    fileName = Array.from(this.files).map(i => i.name).join(', ');
+                }
+                $('#filename').html(fileName);
+            });
 {% endblock %}
