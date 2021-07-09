@@ -253,6 +253,7 @@
 
         });
     </script>
+<script>
 $('#file').on('change', function (e) {
                 var fileName = '';
                 if( this.files && this.files.length > 0 ){
@@ -260,4 +261,5 @@ $('#file').on('change', function (e) {
                 }
                 $('#filename').html(fileName);
             });
+</script>
 {% endblock %}
