@@ -349,8 +349,10 @@ def search(request):
         news = news_all
     else:
         news = news_all[len(news_all) - 3:]
-    documents_all = DocumentSushi.objects.filter(Q(title__icontains=search_phrase))[:20]
-    dir_all = Subjects.objects.filter(name__icontains=search_phrase)[:20]
+
+    docks = SushiDocListView.ordering_date(request,DocumentSushi.objects.all())
+    documents_all = docks.filter(Q(title__icontains=search_phrase))[:20]
+    dir_all = docks.filter(name__icontains=search_phrase)[:20]
     return render(request, "search.html", {"employee_list": employees_list, "news": news, "dirs": dir_all,
                                            "documents": documents_all,
                                            "is_manager": request.user.user_profile.is_manager,
@@ -555,7 +557,8 @@ def manager_lk_view(request):
     request_list = get_filtered_request(request)
     task_list = get_filtered_tasks(request)
     feedback_list = get_filtered_feedback(request)
-    page_object = Paginator(DocumentSushi.objects.all(), 9)
+    docks = SushiDocListView.ordering_date(request,DocumentSushi.objects.all())
+    page_object = Paginator(docks, 9)
     is_paginated = False
     page = request.GET['page'] if 'page' in request.GET else 1
     page_obj = documents = page_object.get_page(page)
@@ -798,7 +801,7 @@ def partner_lk_view(request):
     request_list = get_filtered_request(request)
     task_list = get_filtered_tasks(request)
     feedback_list = get_filtered_feedback(request)
-    documents = DocumentSushi.objects.all()
+    documents = SushiDocListView.ordering_date(request,DocumentSushi.objects.all())
     page_object = Paginator(documents, 9)
     is_paginated = False
     page_obj = documents = []

@@ -35,7 +35,6 @@ class SushiDocListView(ListView):
         subjects = Subjects.objects.filter(type=self.doc_type)
         if subjects:
             documents = documents.filter(sub_type=subjects[0])
-
         return documents
 
     @staticmethod
@@ -51,7 +50,6 @@ class SushiDocListView(ListView):
         else:
             ordering = 'title'
         documents = documents.order_by(ordering)
-        print(documents)
         return documents
 
     def get_queryset(self):
