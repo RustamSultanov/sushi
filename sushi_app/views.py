@@ -796,7 +796,7 @@ def partner_lk_view(request):
                                           responsible=request.user).count()
     feedback_not_solved = Feedback.objects.filter(status=Feedback.ST_NOT_SOLVED,
                                                   responsible=request.user.user_profile).count()
-    requests_not_solved = Requests.objects.filter(status=ST_IN_PROGRESS,
+    requests_not_solved = Requests.objects.filter(status__in=[ST_IN_PROGRESS,ST_IN_START],
                                                   responsible=request.user).count()
     request_list = get_filtered_request(request)
     task_list = get_filtered_tasks(request)
