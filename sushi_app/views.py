@@ -46,7 +46,7 @@ import pandas as pd
 import secrets
 
 from mailing.models import Mailing
-
+from mickroservices.views.tech_cards import SushiDocListView
 
 User = get_user_model()
 
@@ -658,14 +658,14 @@ def _load_docs(request, current_page=1, doc_type=None, sub_type=None):
     count_objects = 9
     offset = (current_page * count_objects) - count_objects
     limmit = (current_page * count_objects)
+    docs = SushiDocListView.ordering_date(request, DocumentSushi.objects.all())
     if doc_type:
-        docs = DocumentSushi.objects.filter(doc_type=doc_type)[offset: limmit]
+        docs = docs.filter(doc_type=doc_type)[offset: limmit]
     else:
         docs = []
 
     if sub_type:
-        docs = DocumentSushi.objects.filter(sub_type=sub_type)[offset: limmit]
-
+        docs = docs.filter(sub_type=sub_type)[offset: limmit]
     return docs
 
 
@@ -686,9 +686,8 @@ def load_docs_info(request):
     ''' принимиет json со спискос id документов '''
 
     ids = [int(i) for i in json.loads(request.body)]
-    docs = DocumentSushi.objects.filter(pk__in=ids)
+    docs = SushiDocListView.ordering_date(request, DocumentSushi.objects.filter(pk__in=ids))
     urls = {doc.id: doc.url for doc in docs}
-
     # сопоставляем каждому документу ссылку на выделенное превью в случае её наличия
     preview_docs = DocumentPreview.objects.filter(base_document_id__in=(doc.id for doc in docs))
     for pdoc in preview_docs:

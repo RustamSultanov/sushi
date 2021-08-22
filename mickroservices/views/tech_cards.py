@@ -38,21 +38,25 @@ class SushiDocListView(ListView):
 
         return documents
 
-    def get_queryset(self):
-
-        # Get documents (filtered by user permission)
-        documents = self.get_documents()
+    @staticmethod
+    def ordering_date(request,documents):
         # Ordering
         ordering = None
-        if 'ordering' in self.request.GET \
-                and self.request.GET['ordering'] in ['title',
+        if 'ordering' in request.GET \
+                and request.GET['ordering'] in ['title',
                                                      '-created_at',
                                                      'file_size']:
-            ordering = self.request.GET['ordering']
+
+            ordering = request.GET['ordering']
         else:
             ordering = 'title'
         documents = documents.order_by(ordering)
+        print(documents)
+        return documents
 
+    def get_queryset(self):
+        # Get documents (filtered by user permission)
+        documents = self.ordering_date(self.request,self.get_documents())
         # Search
         query_string = None
         if 'q' in self.request.GET:
@@ -159,6 +163,4 @@ class RegulationsListView(SushiDocListView):
         context['breadcrumb'] = [{'title': context['title']}]
         context['doc_type'] = DocumentSushi.T_REGULATIONS
         context['subjects'] = subjects
-        nodes = Directory.objects.all()
-        print(nodes)
         return context

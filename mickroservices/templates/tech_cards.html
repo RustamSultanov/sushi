@@ -111,7 +111,7 @@
                 current_page = decodeURIComponent(page_param[2]);
             }
 
-            var path = "?page=" + current_page + "&doc_type={{doc_type}}"
+            var path = window.location.search+"&page=" + current_page + "&doc_type={{doc_type}}"
             if ($('.text-dark').length > 0 && $('.text-dark').data('id')) {
                 path += "&sub_type=" + $('.text-dark').data("id")
             }

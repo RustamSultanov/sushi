@@ -59,7 +59,7 @@ const loadDocInfo = function(ids) {
     }
     $.ajax({
         type: 'POST',
-        url: getBaseUrl() + 'load_docs_info/',
+        url: getBaseUrl() + 'load_docs_info/'+window.location.search,
         dataType: 'json',
         data: JSON.stringify(ids),
         success: final
