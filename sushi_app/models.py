@@ -134,7 +134,7 @@ class Requests(models.Model):
     title = models.CharField(max_length=256)
     description = models.TextField()
     date_create = models.DateTimeField(auto_now_add=True)
-    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_PROGRESS)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=ST_IN_START)
 
     def __str__(self):
         return '{0} | {1} | {2}'.format(

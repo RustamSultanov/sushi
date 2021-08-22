@@ -1,7 +1,8 @@
-ST_SOLVED, ST_IN_PROGRESS, ST_NOT_SOLVED = range(3)
+ST_SOLVED, ST_IN_PROGRESS, ST_NOT_SOLVED,ST_IN_START = range(4)
 STATUS_CHOICE = (
     (ST_SOLVED, "Решен"),
     (ST_IN_PROGRESS, "Обрабатывается"),
+    (ST_IN_START, "Создана"),
     (ST_NOT_SOLVED, "Не решен"),
 )
 
