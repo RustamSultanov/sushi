@@ -1,8 +1,8 @@
 from babel import Locale
 from django import forms
 from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model, password_validation
+from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django.forms import Select, TextInput
 from django.forms.widgets import MultiWidget
 from django.utils import translation
@@ -325,6 +325,38 @@ class LoginForm(AuthenticationForm):
             'class': "form-control"}))
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': "form-control"}))
+
+class ResetUserForm(PasswordResetForm):
+    email = forms.CharField(label = "Email",
+                            widget=forms.TextInput(
+                                attrs={
+                                    'class': "form-control"}
+                            ),
+                            max_length=254
+                            )
+
+class ConfurmResetUserForm(SetPasswordForm):
+    error_messages = {
+        'password_mismatch': "Два поля пароля не совпадают." ,
+    }
+
+    new_password1 = forms.CharField(
+        label="Новый пароль",
+        widget=forms.PasswordInput(
+                                attrs={
+                                    'class': "form-control"}
+                            ),
+        strip=False,
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    new_password2 = forms.CharField(
+        label="Повторите новый пароль",
+        strip=False,
+        widget=forms.PasswordInput(
+                                attrs={
+                                    'class': "form-control"}
+                            ),
+    )
 
 
 class MessegesForm(forms.ModelForm):

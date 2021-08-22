@@ -44,43 +44,15 @@
           <!-- / Logo -->
 
           <h5 class="text-center text-muted font-weight-normal mb-4">Авторизация</h5>
-
-          <!-- Form -->
-          <form method="post">
+          <form  method="post">
             {% csrf_token %}
-            <div class="form-group">
-              <label class="form-label">Логин</label>
-              {{ form.username }}
-              <span class="helper-text" data-error="Неправильный формат почты"></span>
+            <label for="id_email">Email:</label>
+            <input type="text" name="email" class="form-control" maxlength="254" required="" id="id_email">
+            <div class="d-flex justify-content-between flex-row-reverse align-items-center m-2">
+              <button type="submit" class="btn btn-success btn-my-color" style="">Отправить</button>
             </div>
-            <div class="form-group">
-              {% for message in form.errors.values %}
-                                    {{ message }}
-                                  {% endfor %}{# for message in form.errors.values #}
-              <label class="form-label d-flex justify-content-between align-items-end">
-                <div>Пароль</div>
-            
-              </label>
-              {{ form.password }}
-            </div>
-            <div class="d-flex justify-content-between align-items-center m-0">
-              <label class="custom-control custom-checkbox m-0">
-                <input type="checkbox" class="custom-control-input" >
-                <span class="custom-control-label">Запомнить меня</span>
-              </label>
-              <button type="submit" class="btn btn-success btn-my-color" style="">Войти</button>
-            </div>
-          </form>
-          <!-- / Form -->
-
+        </form>
         </div>
-        <div class="card-footer py-3 px-4 px-sm-5">
-          <div class="text-center text-muted">
-            Забыли пароль? Перейдите на <a href="{% url 'password_reset' %}">страницу сброса</a>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
   {% endblock %}

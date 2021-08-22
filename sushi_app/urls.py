@@ -1,8 +1,10 @@
-from django.contrib.auth import views as auth_view
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.urls import path
+
 from . import views
 from .forms import LoginForm
+from .reset_views import PasswordResetView,PasswordResetCompleteView,PasswordResetDoneView,PasswordResetConfirmView
 
 urlpatterns = [
     path('delete-directory', views.delete_directory),
@@ -14,12 +16,25 @@ urlpatterns = [
         '', views.base, name='base'),
     path(
         'accounts/login/',
-        auth_view.LoginView.as_view(
+        auth_views.LoginView.as_view(
             template_name='authentication_login.html',
             authentication_form=LoginForm), name='login'),
     path(
+        'accounts/reset/',
+        PasswordResetView.as_view(), name='password_reset'),
+    path('accounts/password_reset/done/',
+         PasswordResetDoneView.as_view(),
+         name='password_reset_done'),
+
+    path('accounts/reset/<uidb64>/<token>/',
+         PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm'),
+    path('accounts/reset/done/',
+         PasswordResetCompleteView.as_view(),
+         name='password_reset_complete'),
+    path(
         'logout',
-        auth_view.LogoutView.as_view(next_page="login"),
+        auth_views.LogoutView.as_view(next_page="login"),
         name='logout'),
     path(
         'search', views.search, name='search'),
