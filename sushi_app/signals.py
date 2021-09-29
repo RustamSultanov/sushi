@@ -57,10 +57,12 @@ def handle_request(instance, event_type, **kwargs):
 @receiver(post_save, sender=Feedback)
 @register_event_type(FEEDBACK_T)
 def handle_feedback(instance, event_type, **kwargs):
-    is_responsible_request = instance._request_user == instance.responsible.user 
-    recepient = instance.responsible.user 
-    if is_responsible_request:
-        recepient =  instance.manager.user
+    try:
+        is_responsible_request = instance._request_user == instance.responsible.user  
+        if is_responsible_request:
+            recepient =  instance.manager.user
+    except AttributeError:
+        recepient = instance.responsible.user
 
     subs = Subscribes.objects.filter(event_type=event_type,
                                      user_id=recepient)
