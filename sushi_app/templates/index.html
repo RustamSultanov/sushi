@@ -32,79 +32,79 @@
 {% endblock %}
 
 {% block  additional_content %}
-    <div class="bg-light">
-        <div class="container my-5">
-            <h2 class="text-light font-weight-normal mb-5">Документы для работы</h2>
-            <div class="row">
-                <div class="col-lg-8 mb-4">
-                    <div class="card h-100 hoverable">
-                        <div class="card-body h-100 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3>Маркетинг</h3>
-                                <i class="icon-star icon-xl"></i>
-                            </div>
-                            <div class="row flex-grow-1">
-                                <div class="col-md-6 d-flex flex-column">
-                                    <div class="small text-muted flex-grow-1 mb-4">В разделе представлены основные маркетинговые материалы и документы, необходимые для работы точек продаж.</div>
-                                    <div>
-                                        <a href="{% url 'mickroservices:marketing' %}" class="btn btn-outline-dark btn-round">Подробнее</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="ui-bg-circle-180 d-none d-md-flex align-items-center text-center mt--3" style="background-image: url('{% static 'img/bg-image-circle-1.png' %}')">
-                                        <div class="text-white h4 m-0 text-center w-100 px-2">Новое меню
-                                            для магазинов</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="card h-100 hoverable">
-                        <div class="card-body h-100 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3>Техкарты</h3>
-                                <i class="icon-settings icon-xl"></i>
-                            </div>
-                            <div class="row flex-grow-1">
-                                <div class="col-12 d-flex flex-column">
-                                    <div class="small text-muted flex-grow-1 mb-4">В разделе представлены все технологические карты для ваших ресторанов.</div>
-                                    <div>
-                                        <a href="{% url 'mickroservices:tech_cards' %}" class="btn btn-outline-dark btn-round">Подробнее</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-8 mb-4">
-                    <div class="card h-100 hoverable">
-                        <div class="card-body h-100 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3>Регламенты</h3>
-                                <i class="icon-folder icon-xl"></i>
-                            </div>
-                            <div class="row flex-grow-1">
-                                <div class="col-12 d-flex flex-column">
-                                    <div class="flex-grow-1 mb-4">
-                                        <div class="small text-muted mb-2">В разделе размещены все основные регламенты.</div>
-                                        <div class="small text-muted">
-                                            <a href="#" class="text-primary">Открытие точки</a>(PDF)
-                                            <a href="#" class="text-primary">Закупочный регламент</a>(PDF)
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <a href="{% url 'mickroservices:regulations' %}" class="btn btn-outline-dark btn-round">Подробнее</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+{#    <div class="bg-light">#}
+{#        <div class="container my-5">#}
+{#            <h2 class="text-light font-weight-normal mb-5">Документы для работы</h2>#}
+{#            <div class="row">#}
+{#                <div class="col-lg-8 mb-4">#}
+{#                    <div class="card h-100 hoverable">#}
+{#                        <div class="card-body h-100 d-flex flex-column">#}
+{#                            <div class="d-flex justify-content-between align-items-center">#}
+{#                                <h3>Маркетинг</h3>#}
+{#                                <i class="icon-star icon-xl"></i>#}
+{#                            </div>#}
+{#                            <div class="row flex-grow-1">#}
+{#                                <div class="col-md-6 d-flex flex-column">#}
+{#                                    <div class="small text-muted flex-grow-1 mb-4">В разделе представлены основные маркетинговые материалы и документы, необходимые для работы точек продаж.</div>#}
+{#                                    <div>#}
+{#                                        <a href="{% url 'mickroservices:marketing' %}" class="btn btn-outline-dark btn-round">Подробнее</a>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                                <div class="col-md-6">#}
+{#                                    <div class="ui-bg-circle-180 d-none d-md-flex align-items-center text-center mt--3" style="background-image: url('{% static 'img/bg-image-circle-1.png' %}')">#}
+{#                                        <div class="text-white h4 m-0 text-center w-100 px-2">Новое меню#}
+{#                                            для магазинов</div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-lg-4 mb-4">#}
+{#                    <div class="card h-100 hoverable">#}
+{#                        <div class="card-body h-100 d-flex flex-column">#}
+{#                            <div class="d-flex justify-content-between align-items-center">#}
+{#                                <h3>Техкарты</h3>#}
+{#                                <i class="icon-settings icon-xl"></i>#}
+{#                            </div>#}
+{#                            <div class="row flex-grow-1">#}
+{#                                <div class="col-12 d-flex flex-column">#}
+{#                                    <div class="small text-muted flex-grow-1 mb-4">В разделе представлены все технологические карты для ваших ресторанов.</div>#}
+{#                                    <div>#}
+{#                                        <a href="{% url 'mickroservices:tech_cards' %}" class="btn btn-outline-dark btn-round">Подробнее</a>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-lg-8 mb-4">#}
+{#                    <div class="card h-100 hoverable">#}
+{#                        <div class="card-body h-100 d-flex flex-column">#}
+{#                            <div class="d-flex justify-content-between align-items-center">#}
+{#                                <h3>Регламенты</h3>#}
+{#                                <i class="icon-folder icon-xl"></i>#}
+{#                            </div>#}
+{#                            <div class="row flex-grow-1">#}
+{#                                <div class="col-12 d-flex flex-column">#}
+{#                                    <div class="flex-grow-1 mb-4">#}
+{#                                        <div class="small text-muted mb-2">В разделе размещены все основные регламенты.</div>#}
+{#                                        <div class="small text-muted">#}
+{#                                            <a href="#" class="text-primary">Открытие точки</a>(PDF)#}
+{#                                            <a href="#" class="text-primary">Закупочный регламент</a>(PDF)#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div>#}
+{#                                        <a href="{% url 'mickroservices:regulations' %}" class="btn btn-outline-dark btn-round">Подробнее</a>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
 {#    <div class="container my-5">#}
 {#        <h2 class="text-light font-weight-normal mb-5">Обучение</h2>#}
 {#        <div class="row">#}
@@ -155,45 +155,45 @@
 {#            </div>#}
 {#        </div>#}
 {#    </div>#}
-    <div class="container my-5">
-        <h2 class="text-light font-weight-normal mb-5">Сотрудники</h2>
-        <div class="row">
-            {% for employee in employee_list %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card hoverable">
-                    <div class="card-body">
-                      {% if employee.department %}  <h4>{{ employee.department }}</h4>
-                        {% else %}
-                        {% endif %}
-                        <div class="media align-items-center mb-3">
-                            {% if employee.wagtail_profile.avatar %}
-                                <a href="{% url 'employee_info' employee.user.id %}"><img src="{{ employee.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>
-                        {% else %}
-                        {% endif %}
-                            <div class="small ml-3">
-                                <a href="{% url 'employee_info' employee.user.id %}" class="text-primary">{{ employee.user.get_full_name }}</a>
-                                <div class="small text-muted">{{ employee.position }}</div>
-                            </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">
-                                <i class="ion ion-ios-more"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-left">
-                                <a class="dropdown-item" href="{% url 'form_task' employee.id %}">Добавить задачу</a>
-                                <a class="dropdown-item" href="{% url 'edit_employee' employee.user.id %}">Редактировать сотрудника</a>
-                            </div>
-                        </div>
-                        </div>
-                        <div class="small text-muted mb-3">
-                            {{ employee.phone_number }}
-                            <br>Whatsapp {{ employee.whatsapp }}
-                            <br>{{ employee.user.email }}
-                        </div>
+{#    <div class="container my-5">#}
+{#        <h2 class="text-light font-weight-normal mb-5">Сотрудники</h2>#}
+{#        <div class="row">#}
+{#            {% for employee in employee_list %}#}
+{#            <div class="col-md-6 col-lg-4 mb-4">#}
+{#                <div class="card hoverable">#}
+{#                    <div class="card-body">#}
+{#                      {% if employee.department %}  <h4>{{ employee.department }}</h4>#}
+{#                        {% else %}#}
+{#                        {% endif %}#}
+{#                        <div class="media align-items-center mb-3">#}
+{#                            {% if employee.wagtail_profile.avatar %}#}
+{#                                <a href="{% url 'employee_info' employee.user.id %}"><img src="{{ employee.wagtail_profile.avatar.url }}" alt="" class="ui-w-60 rounded-circle"></a>#}
+{#                        {% else %}#}
+{#                        {% endif %}#}
+{#                            <div class="small ml-3">#}
+{#                                <a href="{% url 'employee_info' employee.user.id %}" class="text-primary">{{ employee.user.get_full_name }}</a>#}
+{#                                <div class="small text-muted">{{ employee.position }}</div>#}
+{#                            </div>#}
+{#                        <div class="btn-group">#}
+{#                            <button type="button" class="btn btn-sm btn-default icon-btn borderless btn-round md-btn-flat dropdown-toggle hide-arrow" data-toggle="dropdown">#}
+{#                                <i class="ion ion-ios-more"></i>#}
+{#                            </button>#}
+{#                            <div class="dropdown-menu dropdown-menu-left">#}
+{#                                <a class="dropdown-item" href="{% url 'form_task' employee.id %}">Добавить задачу</a>#}
+{#                                <a class="dropdown-item" href="{% url 'edit_employee' employee.user.id %}">Редактировать сотрудника</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        </div>#}
+{#                        <div class="small text-muted mb-3">#}
+{#                            {{ employee.phone_number }}#}
+{#                            <br>Whatsapp {{ employee.whatsapp }}#}
+{#                            <br>{{ employee.user.email }}#}
+{#                        </div>#}
 {#                        <a href="#" class="btn btn-round btn-outline-dark">Написать в чат</a>#}
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
 {% endblock %}
