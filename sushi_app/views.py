@@ -311,11 +311,7 @@ def base(request):
     ).filter(head=request.user.user_profile)
     news_all = NewsPage.objects.live().public().order_by(
         'first_published_at')
-    if len(news_all) == 0 or len(news_all) <= 3:
-        news = news_all
-    else:
-        news = news_all[len(news_all) - 3:]
-    return render(request, "index.html", {"employee_list": employees_list, "news": news})
+    return render(request, "index.html", {"employee_list": employees_list, "news": news_all})
 
 
 @login_required
