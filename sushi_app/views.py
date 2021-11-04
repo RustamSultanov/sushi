@@ -349,10 +349,9 @@ def search(request):
         news = news_all
     else:
         news = news_all[len(news_all) - 3:]
-
     docks = SushiDocListView.ordering_date(request,DocumentSushi.objects.all())
     documents_all = docks.filter(Q(title__icontains=search_phrase))[:20]
-    dir_all = docks.filter(name__icontains=search_phrase)[:20]
+    dir_all = DocumentSushi.objects.filter(sub_type__in = Subjects.objects.filter(name__icontains=search_phrase)[:20])
     return render(request, "search.html", {"employee_list": employees_list, "news": news, "dirs": dir_all,
                                            "documents": documents_all,
                                            "is_manager": request.user.user_profile.is_manager,
