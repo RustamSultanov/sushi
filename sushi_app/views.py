@@ -370,7 +370,7 @@ def employee_list(request):
         else UserProfile.objects.prefetch_related(
         "user", "wagtail_profile", "department"
     ).filter(is_manager=True)
-    return render(request, "employees.html", {"employee_list": employees_list, "breadcrumb": [{"title": "Сотрудники"}]})
+    return render(request, "employees.html", {"employee_list": employees_list, "breadcrumb": [{"title": "Контакты"}]})
 
 
 @login_required
