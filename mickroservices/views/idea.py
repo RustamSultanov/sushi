@@ -45,7 +45,6 @@ class IdeaView(FormView):
                 settings.DEFAULT_SUPORT_EMAIL,
                 self.get_context_data(**kwargs)))
             ctx['status'] = 'Ваша идея принята на рассмотрение!'
-            ctx.pop('errors')
         else:
             ctx['errors'] = f'Ошибка заполнения полей: {form.errors}'
 

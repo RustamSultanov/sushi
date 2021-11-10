@@ -44,7 +44,6 @@ class QuestionView(FormView):
                        settings.DEFAULT_SUPORT_EMAIL,
                        self.get_context_data(**kwargs)))
             ctx['status'] = 'Ваш вопрос принят на рассмотрение!'
-            ctx.pop('errors')
         else:
             ctx['errors'] = f'Ошибка заполнения полей: {form.errors}'
 
