@@ -489,7 +489,6 @@ def get_filtered_idea(request):
 
 
 @login_required
-@user_passes_test(manager_check)
 def faq_list(request):
     faq_all = QuestionModel.objects.all()
     return render(request, "faq_list.html", {"faq_all": faq_all})
