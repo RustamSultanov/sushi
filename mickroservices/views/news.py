@@ -18,6 +18,13 @@ class NewsView(ListView):
     context_object_name = 'news'
     ordering = 'first_published_at'
 
+    def get_queryset(self):
+        news_all = self.model.objects.filter(
+            live=True,
+            go_live_at__lt=timezone.now()
+        ).order_by('first_published_at')
+        return news_all
+
     def get_context_data(self, **kwargs):
         context = super(NewsView, self).get_context_data(**kwargs)
         context['breadcrumb'] = [{'title': 'Новости'}]
