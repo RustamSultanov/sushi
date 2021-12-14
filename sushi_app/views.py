@@ -312,7 +312,7 @@ def base(request):
     ).filter(head=request.user.user_profile)
     news_all = NewsPage.objects.filter(
         live=True,
-        approved_go_live_at__lt=timezone.now()
+        go_live_at__lt=timezone.now()
     ).order_by('first_published_at')
     return render(request, "index.html", {"employee_list": employees_list, "news": news_all})
 
