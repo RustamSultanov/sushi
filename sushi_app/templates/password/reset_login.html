@@ -50,7 +50,7 @@
             <input type="text" name="email" class="form-control" maxlength="254" required="" id="id_email">
             <div class="d-flex justify-content-between flex-row-reverse align-items-center m-2">
               <button type="submit" class="btn btn-success btn-my-color" style="">Отправить</button>
-              <a href="{% url 'login' %}" ><button type="submit" class="btn btn-info btn-my-color" >Назад</button></a>
+              <button type="submit" class="btn btn-info btn-my-color" onclick="window.open('{% url 'login' %}','_parent')" >Назад</button>
             </div>
         </form>
         </div>
