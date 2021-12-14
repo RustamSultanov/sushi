@@ -1,4 +1,5 @@
 from itertools import chain
+from django.utils import dateparse, timezone
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -309,8 +310,10 @@ def base(request):
     employees_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile", "department"
     ).filter(head=request.user.user_profile)
-    news_all = NewsPage.objects.live().public().order_by(
-        'first_published_at')
+    news_all = NewsPage.objects.filter(
+        live=True,
+        approved_go_live_at__lt=timezone.now()
+    ).order_by('first_published_at')
     return render(request, "index.html", {"employee_list": employees_list, "news": news_all})
 
 
