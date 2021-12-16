@@ -9,7 +9,7 @@ from wagtail.core.models import Page
 
 from mickroservices.forms import NewsForm
 from mickroservices.models import NewsPage
-
+from django.utils import timezone
 
 class NewsView(ListView):
     template_name = 'news.html'
