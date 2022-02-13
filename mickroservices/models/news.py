@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.db.models import Q
 
 from wagtail.core.models import Page
 from wagtail.core.fields import RichTextField
@@ -26,6 +27,12 @@ class NewsPage(Page):
 
     class Meta:
         verbose_name = "Новости"
+
+    @classmethod
+    def get_live(cls):
+        return cls.object.filter(
+            Q(live=True) & Q(go_live_at=None) | Q(go_live_at__lt=timezone.now())
+        )
 
     def get_context(self, request):
         context = super(NewsPage, self).get_context(request)

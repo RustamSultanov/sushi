@@ -310,10 +310,7 @@ def base(request):
     employees_list = UserProfile.objects.prefetch_related(
         "user", "wagtail_profile", "department"
     ).filter(head=request.user.user_profile)
-    news_all = NewsPage.objects.filter(
-        live=True,
-        go_live_at__lt=timezone.now()
-    ).order_by('first_published_at')
+    news_all = NewsPage.get_live().order_by('first_published_at')
     return render(request, "index.html", {"employee_list": employees_list, "news": news_all})
 
 
