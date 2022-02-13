@@ -30,9 +30,12 @@ class NewsPage(Page):
 
     @classmethod
     def get_live(cls):
-        return cls.object.filter(
-            Q(live=True) & Q(go_live_at=None) | Q(go_live_at__lt=timezone.now())
-        )
+        # получения в статусе опубликованна
+        is_live = cls.objects.filter(live=True)
+        # wagtail публикация
+        wagtail_pub = is_live.filter(Q(go_live_at=None) | Q(go_live_at__lt=timezone.now()))
+        # Реализация в проекте
+        return wagtail_pub.filter(Q(first_published_at=None) | Q(first_published_at__lt=timezone.now()))
 
     def get_context(self, request):
         context = super(NewsPage, self).get_context(request)
