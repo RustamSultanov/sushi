@@ -56,14 +56,12 @@
 
         <script>
         $(document).ready(function(){
-            var sock = new WebSocket('ws://167.172.172.23:8085/ws/chat/');
             try{
-            var sock = new WebSocket('ws://167.172.172.23:8085/ws/chat/');
-            //     var sock = new WebSocket('ws://' + window.location.host +':8085/ws/chat/');
-
+           // var sock = new WebSocket('ws://83.220.174.240:4000/ws/chat/');
+            var sock = new WebSocket('ws://' + window.location.host +':4000/ws/chat/');
             }
             catch(err){
-                var sock = new WebSocket('wss://' + window.location.host +'/ws/chat/');
+                var sock = new WebSocket('wss://' + window.location.host +':4000/ws/chat/');
             }
 
             sock.onmessage = function(mes){
